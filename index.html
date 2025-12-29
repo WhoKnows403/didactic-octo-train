@@ -1,435 +1,417 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fa" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Soul Mirror Analysis</title>
+    <title>تست شخصیت شناسی</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        /* --- تعریف رنگ‌های تم (از روی عکس) --- */
         :root {
-            --bg-color: #FDF6EC;      /* کرم روشن */
-            --card-bg: #FFFFFF;       /* سفید */
-            --primary: #1E5F74;       /* آبی نفتی (کت مرد) */
-            --accent: #FCD059;        /* زرد (کراوات) */
-            --text-main: #2C3E50;     /* خاکستری تیره */
-            --text-light: #95A5A6;    /* خاکستری روشن */
-            --shadow: 0 10px 30px rgba(30, 95, 116, 0.1);
+            --primary: var(--tg-theme-button-color, #3390ec);
+            --bg: var(--tg-theme-bg-color, #ffffff);
+            --card-bg: var(--tg-theme-secondary-bg-color, #f4f4f5);
+            --text: var(--tg-theme-text-color, #000000);
+            --hint: var(--tg-theme-hint-color, #999999);
+            --transition-speed: 0.4s;
+            --success: #2ecc71; /* رنگ سبز برای آیکون پایان */
         }
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-main);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
             margin: 0;
             padding: 0;
             height: 100vh;
             display: flex;
             flex-direction: column;
-            overflow: hidden; /* جلوگیری از اسکرول اضافه */
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            user-select: none;
         }
 
-        /* صفحه لودینگ و امنیت */
-        #access-denied { display: none; color: red; text-align: center; padding: 50px; }
-
-        /* کانتینر اصلی */
-        .app-container {
-            flex: 1;
+        .container {
+            width: 100%;
+            max-width: 480px;
+            padding: 20px;
             display: flex;
             flex-direction: column;
-            padding: 20px;
-            max-width: 500px;
-            margin: 0 auto;
-            width: 100%;
-            display: none; /* پیش‌فرض مخفی */
+            height: 100%;
+            justify-content: space-between;
         }
 
-        /* --- نوار پیشرفت --- */
+        /* نوار پیشرفت */
         .progress-container {
             width: 100%;
             height: 6px;
-            background-color: rgba(30, 95, 116, 0.1);
+            background: rgba(0,0,0,0.05);
             border-radius: 10px;
             margin-bottom: 30px;
             overflow: hidden;
-        }
-        .progress-bar {
-            height: 100%;
-            background: linear-gradient(90deg, var(--primary), #2a8aae);
-            width: 0%;
-            border-radius: 10px;
-            transition: width 0.4s ease-out;
-            box-shadow: 0 0 10px rgba(30, 95, 116, 0.3);
+            position: relative;
+            transition: opacity 0.5s; /* برای محو شدن نرم در پایان */
         }
 
-        /* --- کارت سوال --- */
-        .card {
+        .progress-bar {
+            height: 100%;
+            background: var(--primary);
+            width: 0%;
+            border-radius: 10px;
+            transition: width 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+            box-shadow: 0 0 10px rgba(51, 144, 236, 0.3);
+        }
+
+        /* کارت سوال */
+        .card-container {
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            perspective: 1000px;
+        }
+
+        .question-card {
             background: var(--card-bg);
-            border-radius: 25px;
             padding: 30px 25px;
-            box-shadow: var(--shadow);
-            text-align: center;
-            flex: 1;
+            border-radius: 24px;
+            width: 100%;
+            min-height: 220px;
             display: flex;
             flex-direction: column;
             justify-content: center;
-            position: relative;
-            transition: transform 0.3s ease, opacity 0.3s ease;
+            align-items: center;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.04);
+
+            opacity: 1;
+            transform: translateX(0) scale(1);
+            transition: all var(--transition-speed) cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: absolute;
         }
 
-        .question-meta {
-            font-size: 0.85rem;
+        /* استایل آیکون پایان */
+        .finish-icon {
+            font-size: 60px;
+            color: var(--success);
+            margin-bottom: 20px;
+            animation: popIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        /* انیمیشن‌ها */
+        .slide-out-left { opacity: 0; transform: translateX(-50px) scale(0.9); pointer-events: none; }
+        .slide-in-right { opacity: 0; transform: translateX(50px) scale(0.95); }
+
+        .q-number {
+            font-size: 14px;
             color: var(--primary);
             font-weight: 700;
             margin-bottom: 15px;
             text-transform: uppercase;
             letter-spacing: 1px;
+            background: rgba(51, 144, 236, 0.1);
+            padding: 5px 12px;
+            border-radius: 20px;
         }
 
-        .question-text {
-            font-size: 1.3rem;
-            font-weight: 600;
-            line-height: 1.5;
-            color: var(--text-main);
-            margin-bottom: 40px;
-            min-height: 80px; /* جلوگیری از پرش ارتفاع */
+        .q-text { font-size: 18px; font-weight: 600; line-height: 1.6; margin: 0; color: var(--text); }
+
+        /* دکمه‌ها */
+        .options-wrapper {
+            margin-top: 30px;
+            margin-bottom: 20px;
+            width: 100%;
+            transition: opacity 0.5s; /* برای محو شدن نرم */
         }
 
-        /* --- دکمه‌های پاسخ --- */
-        .options-grid {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: auto;
-            position: relative;
-        }
+        .labels { display: flex; justify-content: space-between; font-size: 12px; color: var(--hint); margin-bottom: 15px; padding: 0 10px; font-weight: 500; }
 
-        /* خط اتصال پشت دکمه‌ها */
-        .options-grid::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 10px;
-            right: 10px;
-            height: 2px;
-            background: #eee;
-            z-index: 0;
-            transform: translateY(-50%);
-        }
+        .buttons-grid { display: flex; justify-content: space-between; align-items: center; position: relative; }
+        .buttons-grid::before { content: ''; position: absolute; top: 50%; left: 10px; right: 10px; height: 2px; background: rgba(0,0,0,0.05); z-index: 0; transform: translateY(-50%); }
 
         .option-btn {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            border: none;
-            background: var(--card-bg);
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-            border: 2px solid #eee;
-            color: var(--text-light);
-            font-weight: bold;
-            font-size: 1.1rem;
-            cursor: pointer;
-            z-index: 1;
-            transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* افکت فنری */
+            width: 45px; height: 45px; border-radius: 50%; border: none; background: var(--bg); color: var(--text);
+            font-weight: bold; font-size: 16px; cursor: pointer; z-index: 1;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+            transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
+            display: flex; justify-content: center; align-items: center; position: relative; overflow: hidden;
         }
 
-        /* رنگ‌بندی دکمه‌ها بر اساس شدت */
-        .btn-1 { border-color: #FF6B6B; color: #FF6B6B; }
-        .btn-2 { border-color: #FFB86B; color: #FFB86B; }
-        .btn-3 { border-color: #eee; color: #aaa; transform: scale(0.8); } /* وسطی کوچکتر */
-        .btn-4 { border-color: #4ECDC4; color: #4ECDC4; }
-        .btn-5 { border-color: var(--primary); color: var(--primary); }
+        .option-btn[data-val="1"] { width: 38px; height: 38px; color: #ff4757; }
+        .option-btn[data-val="2"] { width: 42px; height: 42px; color: #ff6b81; }
+        .option-btn[data-val="3"] { width: 46px; height: 46px; color: var(--hint); }
+        .option-btn[data-val="4"] { width: 50px; height: 50px; color: #2ed573; }
+        .option-btn[data-val="5"] { width: 54px; height: 54px; color: #26de81; font-size: 18px; }
 
-        /* حالت اکتیو و هاور */
-        .option-btn:active { transform: scale(0.9); }
-        .btn-1:active { background: #FF6B6B; color: white; }
-        .btn-5:active { background: var(--primary); color: white; }
+        .option-btn:active { transform: scale(0.85); background: var(--primary); color: #fff !important; box-shadow: 0 0 15px var(--primary); }
+        .option-btn::after { content: ''; position: absolute; width: 100%; height: 100%; top: 0; left: 0; background: rgba(0,0,0,0.1); opacity: 0; border-radius: 50%; transition: opacity 0.3s; }
+        .option-btn:active::after { opacity: 1; }
 
-        .labels {
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.75rem;
-            color: var(--text-light);
-            margin-top: 15px;
-            font-weight: 500;
+        #loader {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg);
+            display: flex; justify-content: center; align-items: center; z-index: 999; transition: opacity 0.5s;
         }
-
-        /* --- صفحه شروع و پایان --- */
-        .screen {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: var(--bg-color);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 10;
-            text-align: center;
-            padding: 30px;
-            transition: opacity 0.5s;
-        }
-        
-        .start-icon {
-            font-size: 4rem;
-            margin-bottom: 20px;
-            color: var(--primary);
-            text-shadow: 0 5px 15px rgba(30, 95, 116, 0.2);
-        }
-
-        .hero-btn {
-            background: var(--primary);
-            color: white;
-            padding: 15px 40px;
-            border-radius: 50px;
-            font-size: 1.1rem;
-            font-weight: bold;
-            border: none;
-            margin-top: 30px;
-            box-shadow: 0 10px 20px rgba(30, 95, 116, 0.3);
-            cursor: pointer;
-            transition: transform 0.2s;
-        }
-        .hero-btn:active { transform: scale(0.95); }
-
-        /* انیمیشن‌ها */
-        .fade-out { opacity: 0; transform: translateY(-10px) scale(0.98); }
-        .fade-in { opacity: 1; transform: translateY(0) scale(1); }
-        .hidden { display: none !important; }
+        .spinner { width: 40px; height: 40px; border: 4px solid rgba(0,0,0,0.1); border-top-color: var(--primary); border-radius: 50%; animation: spin 1s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
 
     </style>
 </head>
 <body>
 
-    <!-- پیام عدم دسترسی -->
-    <div id="access-denied">⛔ لطفا از طریق ربات تلگرام وارد شوید.</div>
+    <div id="loader"><div class="spinner"></div></div>
 
-    <!-- صفحه شروع (Landing) -->
-    <div id="start-screen" class="screen">
-        <div class="start-icon">✨</div>
-        <h1 style="color: var(--primary); margin:0;">خودت را ببین</h1>
-        <p style="color: var(--text-light); margin-top:10px;">تحلیل شخصیت با هوش مصنوعی</p>
-        <button class="hero-btn" onclick="startQuiz()">شروع تحلیل</button>
-    </div>
-
-    <!-- صفحه پایان (Loading/Sending) -->
-    <div id="end-screen" class="screen hidden" style="background: var(--card-bg);">
-        <div class="start-icon">🧠</div>
-        <h2 style="color: var(--primary);">تحلیل کامل شد</h2>
-        <p style="color: var(--text-light);">در حال ارسال به هوش مصنوعی...</p>
-    </div>
-
-    <!-- بدنه اصلی سوالات -->
-    <div class="app-container" id="quiz-app">
-        <div class="progress-container">
-            <div class="progress-bar" id="progress"></div>
+    <div class="container" id="app">
+        <!-- اضافه کردن ID برای مخفی کردن در پایان -->
+        <div id="progress-container-wrap">
+            <div class="progress-container">
+                <div class="progress-bar" id="progress"></div>
+            </div>
         </div>
 
-        <div class="card" id="question-card">
-            <div>
-                <div class="question-meta">Question <span id="curr-q">1</span> / <span id="total-q">96</span></div>
-                <div class="question-text" id="q-text">Loading...</div>
+        <div class="card-container">
+            <div class="question-card" id="card">
+                <div class="q-number" id="q-num">سوال ۱</div>
+                <p class="q-text" id="q-text">در حال بارگذاری...</p>
             </div>
+        </div>
 
-            <div>
-                <div class="options-grid">
-                    <button class="option-btn btn-1" onclick="selectAnswer(1)">1</button>
-                    <button class="option-btn btn-2" onclick="selectAnswer(2)">2</button>
-                    <button class="option-btn btn-3" onclick="selectAnswer(3)">3</button>
-                    <button class="option-btn btn-4" onclick="selectAnswer(4)">4</button>
-                    <button class="option-btn btn-5" onclick="selectAnswer(5)">5</button>
-                </div>
-                <div class="labels">
-                    <span style="color:#FF6B6B">مخالفم</span>
-                    <span style="color:var(--primary)">موافقم</span>
-                </div>
+        <!-- اضافه کردن ID برای مخفی کردن در پایان -->
+        <div class="options-wrapper" id="options-container">
+            <div class="labels">
+                <span>کاملاً مخالفم 👎</span>
+                <span>کاملاً موافقم 👍</span>
+            </div>
+            <div class="buttons-grid">
+                <button class="option-btn" data-val="1" onclick="handleAnswer(1)">1</button>
+                <button class="option-btn" data-val="2" onclick="handleAnswer(2)">2</button>
+                <button class="option-btn" data-val="3" onclick="handleAnswer(3)">3</button>
+                <button class="option-btn" data-val="4" onclick="handleAnswer(4)">4</button>
+                <button class="option-btn" data-val="5" onclick="handleAnswer(5)">5</button>
             </div>
         </div>
     </div>
 
 <script>
-    // 1. تنظیمات تلگرام
     const tg = window.Telegram.WebApp;
-    tg.expand(); 
+    tg.expand();
 
-    // چک کردن محیط اجرا
-    if (tg.platform === 'unknown' && !window.location.hash.includes('debug')) {
-        document.getElementById('access-denied').style.display = 'block';
-        document.getElementById('start-screen').style.display = 'none';
+    // تنظیم رنگ‌ها
+    if(tg.themeParams) {
+        document.documentElement.style.setProperty('--bg', tg.themeParams.bg_color || '#ffffff');
+        document.documentElement.style.setProperty('--text', tg.themeParams.text_color || '#000000');
+        document.documentElement.style.setProperty('--primary', tg.themeParams.button_color || '#3390ec');
+        document.documentElement.style.setProperty('--card-bg', tg.themeParams.secondary_bg_color || '#f4f4f5');
     }
 
-    // ===========================================
-    // ⚠️ اینجا لیست کامل سوالات خودت رو کپی کن! 
-    // ===========================================
+    // سوالات (بخش کوتاه شده برای نمونه، شما کل آرایه را دارید)
     const questionsDB = [
-            {"key": "q42", "text": "You thrive on new and exciting experiences."},
-            {"key": "q93", "text": "You are described as “stuck in your ways.”"},
-            {"key": "q88", "text": "You are drawn to the new, novel, and original."},
-            {"key": "q19", "text": "You may be viewed as selfish or self-centered."},
-            {"key": "q23", "text": "You believe that arriving at a truth is more important than winning an argument."},
-            {"key": "q18", "text": "You imagine things that aren’t directly connected to the real world."},
-            {"key": "q90", "text": "You become upset when your care for others goes unappreciated."},
-            {"key": "q36", "text": "You easily sympathize with others’ struggles."},
-            {"key": "q73", "text": "You have a strong tendency to see things as either good or bad."},
-            {"key": "q67", "text": "You consider yourself an organized person and take control of situations before they get out of hand."},
-            {"key": "q15", "text": "You dislike change."},
-            {"key": "q52", "text": "You may be described as ditzy or scatterbrained."},
-            {"key": "q32", "text": "You try to help people to the point where you begin to forget taking care of your own needs."},
-            {"key": "q92", "text": "You prefer living in your dreams to living in the real world."},
-            {"key": "q31", "text": "You greatly value social harmony and often go out of your way to maintain it."},
-            {"key": "q70", "text": "You always try to communicate tactfully with people."},
-            {"key": "q81", "text": "You find it difficult to concentrate on a single subject."},
-            {"key": "q43", "text": "You follow a consistent routine."},
-            {"key": "q84", "text": "You believe your presence is greatly felt in a room."},
-            {"key": "q57", "text": "You cannot help but get hung up on small details."},
-            {"key": "q2", "text": "You place a lot of value on details and past experiences."},
-            {"key": "q20", "text": "You are drawn toward the abstract and often obsess over meanings."},
-            {"key": "q58", "text": "You often feel awkward and aimless during leisure time."},
-            {"key": "q5", "text": "You easily recognize internal bodily sensations and act to suit your body’s needs."},
-            {"key": "q41", "text": "You tend to express sympathy only after you empathize with someone."},
-            {"key": "q45", "text": "You live in the present, not the past or the future."},
-            {"key": "q40", "text": "You work through problems by yourself and detach yourself from other people to arrive at a conclusion."},
-            {"key": "q56", "text": "You modify internal logical frameworks to account for new data, and you sometimes find yourself re-evaluating them when new data is incompatible with it."},
-            {"key": "q26", "text": "You are unnerved by uncertainty and the unknown."},
-            {"key": "q95", "text": "You explore things in depth for purely for the sake of exploring them in depth."},
-            {"key": "q91", "text": "You see the world as a bundle of possibilities waiting to be explored."},
-            {"key": "q51", "text": "You feel as though your insights often go misunderstood."},
-            {"key": "q64", "text": "You frequently have hunches or insights about the future that turn out to be correct."},
-            {"key": "q53", "text": "Generally, you would prefer a solution be thorough before putting it into action (at the cost of time)."},
-            {"key": "q12", "text": "You live in the “here and now.”"},
-            {"key": "q17", "text": "You greatly value tradition and duty."},
-            {"key": "q55", "text": "You have a strict internal moral code that comes from within regardless of any external standards."},
-            {"key": "q16", "text": "You see so many possibilities that you have trouble committing to a single one."},
-            {"key": "q29", "text": "You become stubborn and resolute in the face of opposition when it comes to your personal beliefs."},
-            {"key": "q75", "text": "You have trouble communicating with those who do not think like you."},
-            {"key": "q78", "text": "You feel as though you are one of the only truly nice people left in this world."},
-            {"key": "q66", "text": "You often use analogies and similes to communicate new ideas."},
-            {"key": "q89", "text": "You generally work through problems with others and involve yourself with other people to arrive at a conclusion."},
-            {"key": "q63", "text": "You stay true to yourself."},
-            {"key": "q79", "text": "You have trouble communicating your ideas with people."},
-            {"key": "q38", "text": "You express yourself honestly and authentically."},
-            {"key": "q9", "text": "You are blunt and straight-to-the-point in communication."},
-            {"key": "q48", "text": "You are an excellent problem solver and have an incredible ability to analyze things in depth."},
-            {"key": "q54", "text": "You constantly set yourself on goals and objectives."},
-            {"key": "q35", "text": "You are extremely objective and “tell it as it is.”"},
-            {"key": "q46", "text": "You understand a concept by logically recognizing and drawing patterns between different, already known concepts."},
-            {"key": "q47", "text": "You exude charisma and are usually viewed as charming by others."},
-            {"key": "q33", "text": "You take on subjects with a burning interest only to drop them once they no longer feel new to you."},
-            {"key": "q10", "text": "You rely only on past experiences to guide yourself through the present."},
-            {"key": "q1", "text": "You are fiercely individualistic and pride yourself on your uniqueness."},
-            {"key": "q72", "text": "You have an excellent sense of direction and instantly know your way around a new place."},
-            {"key": "q80", "text": "You are attracted to symbolism, mysticism and the unknown."},
-            {"key": "q82", "text": "You value truth and logic more than anything else."},
-            {"key": "q85", "text": "You absorb information from the outside world without additional processing."},
-            {"key": "q94", "text": "You are hesitant to strictly conform to social roles."},
-            {"key": "q28", "text": "You are often the first to react to a question."},
-            {"key": "q44", "text": "You are a brainstormer: you offer a multitude of different ideas in a given situation."},
-            {"key": "q11", "text": "You have a tendency to go off-topic in conversation."},
-            {"key": "q69", "text": "You may be viewed as whiny and/or depressive."},
-            {"key": "q62", "text": "You may be viewed as “meddling” or “controlling” to others."},
-            {"key": "q68", "text": "You may be seen as reckless and unknowingly hurt those around you."},
-            {"key": "q77", "text": "You would rather sugarcoat a problem than upset someone."},
-            {"key": "q83", "text": "You have been consistently logical throughout your life."},
-            {"key": "q34", "text": "You would question anything."},
-            {"key": "q13", "text": "You can easily think of something random to say."},
-            {"key": "q37", "text": "You have an uncanny ability of recognizing others’ needs."},
-            {"key": "q50", "text": "You like to organize things for pleasure."},
-            {"key": "q30", "text": "You place a great amount of trust in the mysterious and unconscious world."},
-            {"key": "q60", "text": "You are a risk-taker."},
-            {"key": "q6", "text": "You find yourself agreeing with those who claim that the ends justify the means."},
-            {"key": "q87", "text": "You would do whatever it takes to win a debate."},
-            {"key": "q49", "text": "You start many different projects, but you finish few."},
-            {"key": "q39", "text": "You sometimes fail to adapt to new data because it is not consistent with your personal understanding of an idea."},
-            {"key": "q8", "text": "You feel a strong sense of unity when communicating with others in a group."},
-            {"key": "q25", "text": "You trust hard facts and data more than anything else."},
-            {"key": "q96", "text": "You are aware of your surroundings and aren’t likely to miss something right in front of you."},
-            {"key": "q59", "text": "You often use metaphors to communicate new ideas."},
-            {"key": "q74", "text": "You streamline existing systems for the sake of efficiency and productivity."},
-            {"key": "q61", "text": "You are able to manipulate conversations by reading others’ body language."},
-            {"key": "q65", "text": "You see the big picture in a sea of details."},
-            {"key": "q22", "text": "You often arrive at conclusions that seem to come out of nowhere; you relate to “realizing” answers."},
-            {"key": "q14", "text": "You relate present experiences back to past experiences."},
-            {"key": "q4", "text": "You have an eye for aesthetics and “enjoy the finer things in life.”"},
-            {"key": "q27", "text": "You rely on external sources to support your argument."},
-            {"key": "q3", "text": "You are skilled at recognizing whether the details in front of you match what you are used to."},
-            {"key": "q21", "text": "You come up with internal logical frameworks, theories, and systems to describe the world around you."},
-            {"key": "q86", "text": "You value inclusion and try your best to involve everyone in a group."},
-            {"key": "q71", "text": "Fake people bother you."},
-            {"key": "q24", "text": "You may be viewed as “fake” or “manipulative” to others."},
-            {"key": "q76", "text": "You consider yourself a practical and realistic person, free from imagination."},
-            {"key": "q7", "text": "You “just know” things without being able to consciously put them into words."}
+        { "key": "q42", "text": "شما با تجربه‌های جدید و هیجان‌انگیز شکوفا می‌شوید و انرژی می‌گیرید." },
+        { "key": "q93", "text": "دیگران معتقدند که شما کمی روی عادت‌ها و روش‌های خودتان پافشاری می‌کنید." },
+        { "key": "q88", "text": "شما همیشه جذب چیزهای نو، بدیع و ابتکاری می‌شوید." },
+        { "key": "q19", "text": "ممکن است گاهی دیگران شما را کمی خودخواه یا خودمحور ببینند." },
+        { "key": "q23", "text": "برای شما، رسیدن به حقیقت خیلی مهم‌تر از برنده شدن در یک بحث است." },
+        { "key": "q18", "text": "شما چیزهایی را تصور می‌کنید که شاید ارتباط مستقیمی با دنیای واقعی نداشته باشند." },
+        { "key": "q90", "text": "وقتی محبت و توجه شما به دیگران نادیده گرفته می‌شود، ناراحت می‌شوید." },
+        { "key": "q36", "text": "خیلی راحت با مشکلات و دردهای دیگران همدردی می‌کنید." },
+        { "key": "q73", "text": "تمایل شدیدی دارید که همه چیز را یا «خوب» ببینید یا «بد» (سیاه و سفید)." },
+        { "key": "q67", "text": "خودتان را فردی منظم می‌دانید و قبل از اینکه اوضاع از کنترل خارج شود، مدیریت می‌کنید." },
+        { "key": "q15", "text": "از تغییر خوشتان نمی‌آید و ثبات را ترجیح می‌دهید." },
+        { "key": "q52", "text": "ممکن است دیگران شما را کمی سربه‌هوا یا پراکنده توصیف کنند." },
+        { "key": "q32", "text": "آنقدر سعی می‌کنید به دیگران کمک کنید که گاهی نیازهای خودتان را فراموش می‌کنید." },
+        { "key": "q92", "text": "ترجیح می‌دهید در دنیای رویاهایتان زندگی کنید تا در دنیای واقعی." },
+        { "key": "q31", "text": "هماهنگی و صلح در جمع برایتان بسیار ارزشمند است." },
+        { "key": "q70", "text": "همیشه سعی می‌کنید با ملاحظه و با سیاست با مردم صحبت کنید." },
+        { "key": "q81", "text": "تمرکز کردن روی تنها یک موضوع برایتان دشوار است." },
+        { "key": "q43", "text": "شما طبق یک روتین و برنامه مشخص و ثابت پیش می‌روید." },
+        { "key": "q84", "text": "معتقدید که حضور شما در یک جمع، کاملاً حس می‌شود و تأثیرگذار است." },
+        { "key": "q57", "text": "نمی‌توانید جلوی خودتان را بگیرید و گاهی بیش از حد درگیر جزئیات ریز می‌شوید." },
+        { "key": "q2", "text": "ارزش زیادی برای جزئیات دقیق و تجربیات گذشته قائل هستید." },
+        { "key": "q20", "text": "جذب مفاهیم انتزاعی می‌شوید و اغلب ذهنتان درگیر کشف معانی پنهان است." },
+        { "key": "q58", "text": "اوقات فراغت و بیکاری معمولاً برایتان معذب‌کننده است و حس بی‌هدفی می‌کنید." },
+        { "key": "q5", "text": "به راحتی متوجه حس‌های بدنی خود (مثل گرسنگی) می‌شوید و سریعاً رفعش می‌کنید." },
+        { "key": "q41", "text": "تنها زمانی ابراز دلسوزی می‌کنید که واقعاً شرایط طرف مقابل را درک کرده باشید." },
+        { "key": "q45", "text": "شما در «زمان حال» زندگی می‌کنید، نه در گذشته و نه در آینده." },
+        { "key": "q40", "text": "برای حل مشکلات، ترجیح می‌دهید از دیگران فاصله بگیرید و به تنهایی فکر کنید." },
+        { "key": "q56", "text": "اگر اطلاعات جدید با منطق‌تان ناسازگار باشد، چارچوب‌های ذهنی‌تان را اصلاح می‌کنید." },
+        { "key": "q26", "text": "بی‌ثباتی و ناشناخته‌ها شما را مضطرب و ناآرام می‌کند." },
+        { "key": "q95", "text": "دوست دارید موضوعات را عمیقاً بررسی کنید، صرفاً برای لذتِ فهمیدن." },
+        { "key": "q91", "text": "جهان را مجموعه‌ای از احتمالات و فرصت‌ها می‌بینید." },
+        { "key": "q51", "text": "حس می‌کنید که دیگران اغلب نظرات عمیق شما را درست درک نمی‌کنند." },
+        { "key": "q64", "text": "اغلب حس ششم یا بینش‌هایی درباره آینده دارید که بعداً درست از آب در می‌آیند." },
+        { "key": "q53", "text": "ترجیح می‌دهید یک راه‌حل کاملاً بی‌نقص باشد، حتی اگر زمان زیادی ببرد." },
+        { "key": "q12", "text": "شما دقیقاً در «اینجا و اکنون» زندگی می‌کنید." },
+        { "key": "q17", "text": "سنت‌ها و وظیفه‌شناسی برای شما ارزش بسیار زیادی دارند." },
+        { "key": "q55", "text": "یک کد اخلاقی سفت و سخت درونی دارید و به آن پایبندید." },
+        { "key": "q16", "text": "آنقدر احتمالات مختلف می‌بینید که انتخاب کردنِ یکی از آن‌ها سخت می‌شود." },
+        { "key": "q29", "text": "وقتی پای باورهای شخصی‌تان در میان باشد، سرسختانه ایستادگی می‌کنید." },
+        { "key": "q75", "text": "ارتباط برقرار کردن با کسانی که مثل شما فکر نمی‌کنند، برایتان دشوار است." },
+        { "key": "q78", "text": "گاهی حس می‌کنید که انگار تنها آدم واقعاً مهربان باقی‌مانده در دنیا هستید." },
+        { "key": "q66", "text": "برای توضیح ایده‌های جدید، اغلب از مثال‌ها و تشبیه‌ها استفاده می‌کنید." },
+        { "key": "q89", "text": "معمولاً مشکلات را با کمک دیگران و مشارکت در گروه حل می‌کنید." },
+        { "key": "q63", "text": "همیشه سعی می‌کنید خودِ واقعی‌تان باشید و تظاهر نکنید." },
+        { "key": "q79", "text": "گاهی در بیان کردن و انتقال ایده‌هایتان به دیگران مشکل دارید." },
+        { "key": "q38", "text": "احساسات و افکار خود را صادقانه و اصیل ابراز می‌کنید." },
+        { "key": "q9", "text": "در گفتگوها رُک، صریح و مستقیم هستید و حاشیه نمی‌روید." },
+        { "key": "q48", "text": "شما یک حلالِ مشکلاتِ عالی هستید و مسائل را عمیق تحلیل می‌کنید." },
+        { "key": "q54", "text": "مدام برای خودتان هدف‌گذاری می‌کنید و برنامه می‌ریزید." },
+        { "key": "q35", "text": "بسیار واقع‌بین هستید و مسائل را دقیقاً همان‌طور که هست بیان می‌کنید." },
+        { "key": "q46", "text": "مفاهیم جدید را با پیدا کردن الگوی منطقی بین آن‌ها درک می‌کنید." },
+        { "key": "q47", "text": "شما کاریزماتیک هستید و معمولاً فردی جذاب و دلنشین به نظر می‌رسید." },
+        { "key": "q33", "text": "با اشتیاق سراغ موضوعات جدید می‌روید، اما زود رهایشان می‌کنید." },
+        { "key": "q10", "text": "برای هدایت زندگی در زمان حال، فقط به تجربیات گذشته تکیه می‌کنید." },
+        { "key": "q1", "text": "شما به شدت فردگرا هستید و به خاص بودن خود افتخار می‌کنید." },
+        { "key": "q72", "text": "جهت‌یابی عالی دارید و در مکان‌های جدید سریعاً راهتان را پیدا می‌کنید." },
+        { "key": "q80", "text": "جذب نمادها، عرفان و چیزهای ناشناخته می‌شوید." },
+        { "key": "q82", "text": "برای شما «حقیقت» و «منطق» بیشتر از هر چیز دیگری ارزش دارد." },
+        { "key": "q85", "text": "اطلاعات محیط بیرون را همان‌طور که هست جذب می‌کنید." },
+        { "key": "q94", "text": "در برابر پذیرش نقش‌های اجتماعیِ تحمیل‌شده مقاومت می‌کنید." },
+        { "key": "q28", "text": "معمولاً اولین کسی هستید که به یک سوال یا اتفاق واکنش نشان می‌دهد." },
+        { "key": "q44", "text": "شما یک ایده‌پرداز هستید؛ در هر موقعیت کلی ایده به ذهنتان می‌رسد." },
+        { "key": "q11", "text": "در گفتگوها عادت دارید که از موضوع اصلی منحرف شوید." },
+        { "key": "q69", "text": "ممکن است دیگران شما را فردی گله‌مند یا کمی افسرده ببینند." },
+        { "key": "q62", "text": "ممکن است دیگران فکر کنند که شما می‌خواهید کنترلشان کنید." },
+        { "key": "q68", "text": "ممکن است گاهی بی‌پروا به نظر برسید و ناخواسته به اطرافیان آسیب بزنید." },
+        { "key": "q77", "text": "ترجیح می‌دهید واقعیت را تلطیف کنید تا اینکه کسی را ناراحت کنید." },
+        { "key": "q83", "text": "در تمام طول زندگی‌تان فردی منطقی بوده‌اید." },
+        { "key": "q34", "text": "شما تقریباً همه چیز را زیر سوال می‌برید تا منطقش را درک کنید." },
+        { "key": "q13", "text": "به راحتی می‌توانید یک موضوع تصادفی و بامزه برای صحبت پیدا کنید." },
+        { "key": "q37", "text": "استعداد عجیبی در تشخیص نیازهای دیگران دارید." },
+        { "key": "q50", "text": "از مرتب کردن و سازماندهی وسایل و کارها لذت می‌برید." },
+        { "key": "q30", "text": "به دنیای اسرارآمیز و ناخودآگاه اعتماد زیادی دارید." },
+        { "key": "q60", "text": "شما اهل ریسک کردن هستید." },
+        { "key": "q6", "text": "اغلب موافقید که «هدف وسیله را توجیه می‌کند»." },
+        { "key": "q87", "text": "برای برنده شدن در یک بحث، هر کاری لازم باشد انجام می‌دهید." },
+        { "key": "q49", "text": "پروژه‌های زیادی را شروع می‌کنید، اما تعداد کمی را تمام می‌کنید." },
+        { "key": "q39", "text": "گاهی نمی‌توانید اطلاعات جدید را بپذیرید چون با درک قبلی شما ناسازگار است." },
+        { "key": "q8", "text": "در گروه احساس یگانگی و وحدت قوی‌ای می‌کنید." },
+        { "key": "q25", "text": "شما به حقایق محکم و داده‌ها بیشتر از هر چیز اعتماد دارید." },
+        { "key": "q96", "text": "امکان ندارد چیزی که جلوی چشمتان است را نبینید." },
+        { "key": "q59", "text": "اغلب برای بیان ایده‌ها از استعاره و تشبیه استفاده می‌کنید." },
+        { "key": "q74", "text": "سیستم‌های موجود را برای کارایی بیشتر، اصلاح می‌کنید." },
+        { "key": "q61", "text": "می‌توانید با خواندن زبان بدن، گفتگو را هدایت کنید." },
+        { "key": "q65", "text": "در میان انبوهی از جزئیات، تصویر کلی را می‌بینید." },
+        { "key": "q22", "text": "اغلب به نتایجی می‌رسید که انگار یک‌دفعه به ذهنتان خطور کرده." },
+        { "key": "q14", "text": "تجربیات حال حاضر را مدام با گذشته مقایسه می‌کنید." },
+        { "key": "q4", "text": "از «چیزهای ظریف و لوکس زندگی» لذت می‌برید." },
+        { "key": "q27", "text": "برای اثبات حرفتان به منابع بیرونی تکیه می‌کنید." },
+        { "key": "q3", "text": "سریع می‌فهمید آیا جزئیات با آنچه قبلاً بوده مطابقت دارد یا نه." },
+        { "key": "q21", "text": "برای توصیف جهان، سیستم‌های منطقیِ درونی خودتان را می‌سازید." },
+        { "key": "q86", "text": "تلاش می‌کنید که همه را در جمع مشارکت دهید." },
+        { "key": "q71", "text": "آدم‌های ظاهرساز و غیرواقعی (فیک) شما را اذیت می‌کنند." },
+        { "key": "q24", "text": "ممکن است گاهی از نظر دیگران «غیرواقعی» یا «دغل‌باز» به نظر برسید." },
+        { "key": "q76", "text": "خودتان را فردی عملی می‌دانید و خیلی اهل تخیل نیستید." },
+        { "key": "q7", "text": "خیلی وقت‌ها چیزها را «همین‌طوری» می‌دانید، بدون دلیل خاصی." }
     ];
 
     let currentIndex = 0;
     let userAnswers = {};
+    let isAnimating = false;
+    let isSubmitting = false; // 🔒 قفل امنیتی مهم
 
-    function startQuiz() {
-        // انیمیشن محو شدن صفحه شروع
-        const startScreen = document.getElementById('start-screen');
-        startScreen.style.opacity = '0';
-        setTimeout(() => {
-            startScreen.classList.add('hidden');
-            document.getElementById('quiz-app').style.display = 'flex';
-            loadQuestion();
-        }, 500);
-    }
+    const card = document.getElementById('card');
+    const qText = document.getElementById('q-text');
+    const qNum = document.getElementById('q-num');
+    const progressBar = document.getElementById('progress');
 
-    function loadQuestion() {
-        const qText = document.getElementById('q-text');
-        const card = document.getElementById('question-card');
-        
-        // ریست انیمیشن
-        card.classList.remove('fade-out');
-        card.classList.add('fade-in');
+    window.onload = () => {
+        document.getElementById('loader').style.opacity = '0';
+        setTimeout(() => document.getElementById('loader').remove(), 500);
+        renderQuestion(false);
+    };
 
-        // لود دیتا
+    function renderQuestion(animate = true) {
         const q = questionsDB[currentIndex];
-        document.getElementById('curr-q').innerText = currentIndex + 1;
-        document.getElementById('total-q').innerText = questionsDB.length;
-        qText.innerText = q.text;
-
-        // آپدیت پروگرس بار
         const percent = ((currentIndex) / questionsDB.length) * 100;
-        document.getElementById('progress').style.width = percent + '%';
+
+        qNum.innerText = `سوال ${currentIndex + 1} از ${questionsDB.length}`;
+        qText.innerText = q.text;
+        progressBar.style.width = percent + '%';
+
+        if (animate) {
+            card.classList.remove('slide-out-left');
+            card.classList.add('slide-in-right');
+            setTimeout(() => card.classList.remove('slide-in-right'), 400);
+        }
     }
 
-    function selectAnswer(score) {
-        // ویبره تلگرام
-        if(tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
+    function handleAnswer(score) {
+        if (isAnimating) return;
+        isAnimating = true;
 
-        const card = document.getElementById('question-card');
-        
-        // ذخیره جواب
-        userAnswers[questionsDB[currentIndex].key] = score;
+        if(tg.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
 
-        // انیمیشن خروج کارت
-        card.classList.remove('fade-in');
-        card.classList.add('fade-out');
+        const currentQ = questionsDB[currentIndex];
+        userAnswers[currentQ.key] = score;
+
+        card.classList.add('slide-out-left');
 
         setTimeout(() => {
             currentIndex++;
-            if (currentIndex < questionsDB.length) {
-                loadQuestion();
+            if (currentIndex >= questionsDB.length) {
+                showFinishScreen(); // 🛑 تغییر: به جای ارسال، صفحه پایان را نشان بده
             } else {
-                finishQuiz();
+                renderQuestion(true);
+                isAnimating = false;
             }
-        }, 250); // صبر میکنیم تا انیمیشن تموم شه
+        }, 300);
     }
 
-    function finishQuiz() {
-        document.getElementById('quiz-app').style.display = 'none';
-        const endScreen = document.getElementById('end-screen');
-        endScreen.classList.remove('hidden');
-        
-        // تغییر دکمه اصلی تلگرام
-        tg.MainButton.text = "مشاهده نتیجه";
+    // 🏁 تابع جدید: نمایش صفحه پایان
+    function showFinishScreen() {
+        progressBar.style.width = '100%';
+
+        // 1. مخفی کردن دکمه‌ها و نوار پیشرفت (UI Clean up)
+        document.getElementById('options-container').style.opacity = '0';
+        document.getElementById('progress-container-wrap').style.opacity = '0';
+
+        // 2. تغییر محتوای کارت به "پایان"
+        card.innerHTML = `
+            <div class="finish-icon">✅</div>
+            <h3>آزمون به پایان رسید!</h3>
+            <p style="font-size: 14px; opacity: 0.8; margin-top: 10px;">
+                تمام پاسخ‌های شما ثبت شد.<br>
+                برای دریافت تحلیل شخصیت، دکمه پایین را بزنید.
+            </p>
+        `;
+
+        // انیمیشن ورود کارت پایان
+        card.classList.remove('slide-out-left');
+        card.classList.add('slide-in-right');
+
+        // 3. تنظیم دکمه اصلی تلگرام
+        tg.MainButton.text = "مشاهده تحلیل  🧠";
         tg.MainButton.show();
-        
-        // ارسال خودکار بعد از ۱ ثانیه (یا با دکمه)
+
+        // جلوگیری از باگ: حذف لیسنرهای احتمالی قبلی
+        tg.MainButton.offClick(sendDataToBot);
+        // اتصال تابع امن به دکمه
+        tg.MainButton.onClick(sendDataToBot);
+    }
+
+    // 🔒 تابع ارسال نهایی (با قفل امنیتی)
+    function sendDataToBot() {
+        // لایه اول: اگر قبلاً ارسال شده، برگرد
+        if (isSubmitting) return;
+        isSubmitting = true; // قفل کردن
+
+        // لایه دوم: فیدبک بصری و حسی
+        if(tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+        tg.MainButton.showProgress(); // نمایش لودینگ
+        tg.MainButton.disable();      // غیرفعال کردن فیزیکی دکمه
+
+        // لایه سوم: ارسال دیتا
+        // یک مکث کوتاه برای اینکه کاربر انیمیشن لودینگ را ببیند
         setTimeout(() => {
             tg.sendData(JSON.stringify(userAnswers));
-        }, 1500);
+        }, 500);
     }
 
 </script>
