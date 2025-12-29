@@ -207,23 +207,25 @@
 <script>
     const tg = window.Telegram.WebApp;
 
-    // ==========================================
-    // 🛡️ بخش امنیت پلتفرم
-    // ==========================================
-    if (tg.initDataUnsafe && Object.keys(tg.initDataUnsafe).length > 0) {
-        // کاربر معتبر تلگرام است
+
+    const isTelegram = tg.platform && tg.platform !== 'unknown';
+
+    // نکته: برای تست لوکال (localhost) یا اگر باگ خورد، این خط پایین رو true کن:
+    const debugMode = false;
+
+    if (isTelegram || debugMode) {
+        // کاربر معتبر (یا حالت دیباگ)
         document.getElementById('access-denied').style.display = 'none';
         document.getElementById('intro-screen').style.display = 'flex';
 
-        // تنظیمات ظاهری تلگرام
         tg.expand();
-        tg.setHeaderColor('#1e1b4b'); // همرنگ هدر گرادینت
+        tg.setHeaderColor('#1e1b4b');
         tg.setBackgroundColor('#1e1b4b');
-        tg.enableClosingConfirmation(); // جلوگیری از بسته شدن تصادفی
+        tg.enableClosingConfirmation();
     } else {
-        // کاربر غیرمجاز (مرورگر خارجی) -> صفحه ارور باقی می‌ماند
+        // اگر واقعا بیرون تلگرام بود
+        // نکته: اگر بازم ارور داد، کلا شرط if/else رو بردار و فقط کد داخل if رو بذار
     }
-
     // ==========================================
     // 🗄️ دیتابیس سوالات (جایگزین کنید)
     // ==========================================
