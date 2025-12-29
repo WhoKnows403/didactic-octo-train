@@ -2,118 +2,266 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Personality Analysis</title>
-    <!-- این اسکریپت حیاتی تلگرامه -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Soul Mirror Analysis</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
+        /* --- تعریف رنگ‌های تم (از روی عکس) --- */
+        :root {
+            --bg-color: #FDF6EC;      /* کرم روشن */
+            --card-bg: #FFFFFF;       /* سفید */
+            --primary: #1E5F74;       /* آبی نفتی (کت مرد) */
+            --accent: #FCD059;        /* زرد (کراوات) */
+            --text-main: #2C3E50;     /* خاکستری تیره */
+            --text-light: #95A5A6;    /* خاکستری روشن */
+            --shadow: 0 10px 30px rgba(30, 95, 116, 0.1);
+        }
+
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden; /* جلوگیری از اسکرول اضافه */
+        }
+
+        /* صفحه لودینگ و امنیت */
+        #access-denied { display: none; color: red; text-align: center; padding: 50px; }
+
+        /* کانتینر اصلی */
+        .app-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
             padding: 20px;
+            max-width: 500px;
+            margin: 0 auto;
+            width: 100%;
+            display: none; /* پیش‌فرض مخفی */
+        }
+
+        /* --- نوار پیشرفت --- */
+        .progress-container {
+            width: 100%;
+            height: 6px;
+            background-color: rgba(30, 95, 116, 0.1);
+            border-radius: 10px;
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), #2a8aae);
+            width: 0%;
+            border-radius: 10px;
+            transition: width 0.4s ease-out;
+            box-shadow: 0 0 10px rgba(30, 95, 116, 0.3);
+        }
+
+        /* --- کارت سوال --- */
+        .card {
+            background: var(--card-bg);
+            border-radius: 25px;
+            padding: 30px 25px;
+            box-shadow: var(--shadow);
             text-align: center;
-            background-color: var(--tg-theme-bg-color, #fff);
-            color: var(--tg-theme-text-color, #000);
-            user-select: none; /* جلوگیری از کپی متن */
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+            transition: transform 0.3s ease, opacity 0.3s ease;
         }
 
-        /* استایل مخفی برای وقتی که داخل تلگرام نیست */
-        #access-denied { display: none; color: red; font-weight: bold; margin-top: 50px;}
-
-        .container { max-width: 600px; margin: 0 auto; display: none; } /* پیش‌فرض مخفی */
-
-        .question-card {
-            background: var(--tg-theme-secondary-bg-color, #f5f5f5);
-            padding: 20px;
-            border-radius: 15px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        .question-meta {
+            font-size: 0.85rem;
+            color: var(--primary);
+            font-weight: 700;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
-        .question-text { font-size: 1.1em; margin-bottom: 25px; font-weight: 500; line-height: 1.4; }
+        .question-text {
+            font-size: 1.3rem;
+            font-weight: 600;
+            line-height: 1.5;
+            color: var(--text-main);
+            margin-bottom: 40px;
+            min-height: 80px; /* جلوگیری از پرش ارتفاع */
+        }
 
+        /* --- دکمه‌های پاسخ --- */
         .options-grid {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-top: 20px;
+            margin-top: auto;
+            position: relative;
+        }
+
+        /* خط اتصال پشت دکمه‌ها */
+        .options-grid::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 10px;
+            right: 10px;
+            height: 2px;
+            background: #eee;
+            z-index: 0;
+            transform: translateY(-50%);
         }
 
         .option-btn {
-            width: 45px;
-            height: 45px;
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
-            border: 2px solid var(--tg-theme-button-color, #3390ec);
-            background: transparent;
-            color: var(--tg-theme-button-color, #3390ec);
+            border: none;
+            background: var(--card-bg);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            border: 2px solid #eee;
+            color: var(--text-light);
             font-weight: bold;
-            font-size: 16px;
+            font-size: 1.1rem;
             cursor: pointer;
-            transition: all 0.2s;
+            z-index: 1;
+            transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* افکت فنری */
         }
 
-        /* دکمه‌های بزرگتر برای موبایل */
-        .option-btn:active { transform: scale(0.9); background: var(--tg-theme-button-color, #3390ec); color: white; }
+        /* رنگ‌بندی دکمه‌ها بر اساس شدت */
+        .btn-1 { border-color: #FF6B6B; color: #FF6B6B; }
+        .btn-2 { border-color: #FFB86B; color: #FFB86B; }
+        .btn-3 { border-color: #eee; color: #aaa; transform: scale(0.8); } /* وسطی کوچکتر */
+        .btn-4 { border-color: #4ECDC4; color: #4ECDC4; }
+        .btn-5 { border-color: var(--primary); color: var(--primary); }
 
-        .progress-bar {
-            height: 5px;
-            background: #ddd;
-            border-radius: 3px;
+        /* حالت اکتیو و هاور */
+        .option-btn:active { transform: scale(0.9); }
+        .btn-1:active { background: #FF6B6B; color: white; }
+        .btn-5:active { background: var(--primary); color: white; }
+
+        .labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.75rem;
+            color: var(--text-light);
+            margin-top: 15px;
+            font-weight: 500;
+        }
+
+        /* --- صفحه شروع و پایان --- */
+        .screen {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--bg-color);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+            text-align: center;
+            padding: 30px;
+            transition: opacity 0.5s;
+        }
+        
+        .start-icon {
+            font-size: 4rem;
             margin-bottom: 20px;
-            overflow: hidden;
-        }
-        .progress-fill {
-            height: 100%;
-            background: var(--tg-theme-button-color, #3390ec);
-            width: 0%;
-            transition: width 0.3s;
+            color: var(--primary);
+            text-shadow: 0 5px 15px rgba(30, 95, 116, 0.2);
         }
 
-        .labels { display: flex; justify-content: space-between; font-size: 0.8em; color: #888; margin-top: 5px; }
+        .hero-btn {
+            background: var(--primary);
+            color: white;
+            padding: 15px 40px;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border: none;
+            margin-top: 30px;
+            box-shadow: 0 10px 20px rgba(30, 95, 116, 0.3);
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .hero-btn:active { transform: scale(0.95); }
+
+        /* انیمیشن‌ها */
+        .fade-out { opacity: 0; transform: translateY(-10px) scale(0.98); }
+        .fade-in { opacity: 1; transform: translateY(0) scale(1); }
+        .hidden { display: none !important; }
+
     </style>
 </head>
 <body>
 
-    <!-- پیام خطای دسترسی -->
-    <div id="access-denied">Access Denied: Please open via Telegram Bot.</div>
+    <!-- پیام عدم دسترسی -->
+    <div id="access-denied">⛔ لطفا از طریق ربات تلگرام وارد شوید.</div>
 
-    <!-- محتوای اصلی -->
-    <div class="container" id="app-content">
-        <div class="progress-bar"><div class="progress-fill" id="progress"></div></div>
+    <!-- صفحه شروع (Landing) -->
+    <div id="start-screen" class="screen">
+        <div class="start-icon">✨</div>
+        <h1 style="color: var(--primary); margin:0;">خودت را ببین</h1>
+        <p style="color: var(--text-light); margin-top:10px;">تحلیل شخصیت با هوش مصنوعی</p>
+        <button class="hero-btn" onclick="startQuiz()">شروع تحلیل</button>
+    </div>
 
-        <div class="question-card">
-            <div style="font-size: 0.9em; color: #888; margin-bottom: 10px;">Question <span id="q-curr">1</span> of 96</div>
-            <p class="question-text" id="q-text">Loading...</p>
+    <!-- صفحه پایان (Loading/Sending) -->
+    <div id="end-screen" class="screen hidden" style="background: var(--card-bg);">
+        <div class="start-icon">🧠</div>
+        <h2 style="color: var(--primary);">تحلیل کامل شد</h2>
+        <p style="color: var(--text-light);">در حال ارسال به هوش مصنوعی...</p>
+    </div>
 
-            <div class="options-grid">
-                <button class="option-btn" onclick="selectAnswer(1)">1</button>
-                <button class="option-btn" onclick="selectAnswer(2)">2</button>
-                <button class="option-btn" onclick="selectAnswer(3)">3</button>
-                <button class="option-btn" onclick="selectAnswer(4)">4</button>
-                <button class="option-btn" onclick="selectAnswer(5)">5</button>
+    <!-- بدنه اصلی سوالات -->
+    <div class="app-container" id="quiz-app">
+        <div class="progress-container">
+            <div class="progress-bar" id="progress"></div>
+        </div>
+
+        <div class="card" id="question-card">
+            <div>
+                <div class="question-meta">Question <span id="curr-q">1</span> / <span id="total-q">96</span></div>
+                <div class="question-text" id="q-text">Loading...</div>
             </div>
-            <div class="labels">
-                <span>Disagree</span>
-                <span>Agree</span>
+
+            <div>
+                <div class="options-grid">
+                    <button class="option-btn btn-1" onclick="selectAnswer(1)">1</button>
+                    <button class="option-btn btn-2" onclick="selectAnswer(2)">2</button>
+                    <button class="option-btn btn-3" onclick="selectAnswer(3)">3</button>
+                    <button class="option-btn btn-4" onclick="selectAnswer(4)">4</button>
+                    <button class="option-btn btn-5" onclick="selectAnswer(5)">5</button>
+                </div>
+                <div class="labels">
+                    <span style="color:#FF6B6B">مخالفم</span>
+                    <span style="color:var(--primary)">موافقم</span>
+                </div>
             </div>
         </div>
     </div>
 
 <script>
-    // 1. امنیت: بررسی اینکه داخل تلگرام هستیم یا نه
+    // 1. تنظیمات تلگرام
     const tg = window.Telegram.WebApp;
+    tg.expand(); 
 
-    // اگر پلتفرم ناشناخته بود (یعنی مرورگر)، محتوا رو نشون نده
+    // چک کردن محیط اجرا
     if (tg.platform === 'unknown' && !window.location.hash.includes('debug')) {
         document.getElementById('access-denied').style.display = 'block';
-    } else {
-        document.getElementById('app-content').style.display = 'block';
-        tg.expand(); // تمام صفحه کردن در تلگرام
+        document.getElementById('start-screen').style.display = 'none';
     }
 
-    // ==========================================
-    // دیتابیس سوالات (مستر لیست)
-    // !!! اینجا باید کل ۹۶ سوال رو کپی کنی !!!
-    // ==========================================
+    // ===========================================
+    // ⚠️ اینجا لیست کامل سوالات خودت رو کپی کن! 
+    // ===========================================
     const questionsDB = [
             {"key": "q42", "text": "You thrive on new and exciting experiences."},
             {"key": "q93", "text": "You are described as “stuck in your ways.”"},
@@ -211,54 +359,78 @@
             {"key": "q24", "text": "You may be viewed as “fake” or “manipulative” to others."},
             {"key": "q76", "text": "You consider yourself a practical and realistic person, free from imagination."},
             {"key": "q7", "text": "You “just know” things without being able to consciously put them into words."}
-    ];  
+    ];
 
     let currentIndex = 0;
     let userAnswers = {};
 
+    function startQuiz() {
+        // انیمیشن محو شدن صفحه شروع
+        const startScreen = document.getElementById('start-screen');
+        startScreen.style.opacity = '0';
+        setTimeout(() => {
+            startScreen.classList.add('hidden');
+            document.getElementById('quiz-app').style.display = 'flex';
+            loadQuestion();
+        }, 500);
+    }
+
     function loadQuestion() {
-        if (currentIndex >= questionsDB.length) {
-            submitData();
-            return;
-        }
+        const qText = document.getElementById('q-text');
+        const card = document.getElementById('question-card');
+        
+        // ریست انیمیشن
+        card.classList.remove('fade-out');
+        card.classList.add('fade-in');
 
+        // لود دیتا
         const q = questionsDB[currentIndex];
-        document.getElementById('q-curr').innerText = currentIndex + 1;
-        document.getElementById('q-text').innerText = q.text;
+        document.getElementById('curr-q').innerText = currentIndex + 1;
+        document.getElementById('total-q').innerText = questionsDB.length;
+        qText.innerText = q.text;
 
-        // آپدیت نوار پیشرفت
+        // آپدیت پروگرس بار
         const percent = ((currentIndex) / questionsDB.length) * 100;
         document.getElementById('progress').style.width = percent + '%';
     }
 
     function selectAnswer(score) {
-        const currentQ = questionsDB[currentIndex];
-        userAnswers[currentQ.key] = score; // ذخیره با کلید
-
-        currentIndex++;
-
-        // ویبره ریز برای حس بهتر (Haptic Feedback)
+        // ویبره تلگرام
         if(tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
 
-        loadQuestion();
+        const card = document.getElementById('question-card');
+        
+        // ذخیره جواب
+        userAnswers[questionsDB[currentIndex].key] = score;
+
+        // انیمیشن خروج کارت
+        card.classList.remove('fade-in');
+        card.classList.add('fade-out');
+
+        setTimeout(() => {
+            currentIndex++;
+            if (currentIndex < questionsDB.length) {
+                loadQuestion();
+            } else {
+                finishQuiz();
+            }
+        }, 250); // صبر میکنیم تا انیمیشن تموم شه
     }
 
-    function submitData() {
-        // تغییر متن دکمه اصلی تلگرام
-        tg.MainButton.text = "Sending Results...";
+    function finishQuiz() {
+        document.getElementById('quiz-app').style.display = 'none';
+        const endScreen = document.getElementById('end-screen');
+        endScreen.classList.remove('hidden');
+        
+        // تغییر دکمه اصلی تلگرام
+        tg.MainButton.text = "مشاهده نتیجه";
         tg.MainButton.show();
-        tg.MainButton.showProgress();
-
-        // ارسال دیتا به ربات پایتون
-        tg.sendData(JSON.stringify(userAnswers));
+        
+        // ارسال خودکار بعد از ۱ ثانیه (یا با دکمه)
+        setTimeout(() => {
+            tg.sendData(JSON.stringify(userAnswers));
+        }, 1500);
     }
-
-    // شروع
-    loadQuestion();
-
-    // تنظیم رنگ‌ها بر اساس تم تلگرام کاربر
-    document.body.style.backgroundColor = tg.themeParams.bg_color;
-    document.body.style.color = tg.themeParams.text_color;
 
 </script>
 </body>
