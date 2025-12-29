@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Personality Analysis</title>
+    <!-- این اسکریپت حیاتی تلگرامه -->
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            padding: 20px;
+            text-align: center;
+            background-color: var(--tg-theme-bg-color, #fff);
+            color: var(--tg-theme-text-color, #000);
+            user-select: none; /* جلوگیری از کپی متن */
+        }
+
+        /* استایل مخفی برای وقتی که داخل تلگرام نیست */
+        #access-denied { display: none; color: red; font-weight: bold; margin-top: 50px;}
+
+        .container { max-width: 600px; margin: 0 auto; display: none; } /* پیش‌فرض مخفی */
+
+        .question-card {
+            background: var(--tg-theme-secondary-bg-color, #f5f5f5);
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .question-text { font-size: 1.1em; margin-bottom: 25px; font-weight: 500; line-height: 1.4; }
+
+        .options-grid {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        .option-btn {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            border: 2px solid var(--tg-theme-button-color, #3390ec);
+            background: transparent;
+            color: var(--tg-theme-button-color, #3390ec);
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        /* دکمه‌های بزرگتر برای موبایل */
+        .option-btn:active { transform: scale(0.9); background: var(--tg-theme-button-color, #3390ec); color: white; }
+
+        .progress-bar {
+            height: 5px;
+            background: #ddd;
+            border-radius: 3px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            background: var(--tg-theme-button-color, #3390ec);
+            width: 0%;
+            transition: width 0.3s;
+        }
+
+        .labels { display: flex; justify-content: space-between; font-size: 0.8em; color: #888; margin-top: 5px; }
+    </style>
+</head>
+<body>
+
+    <!-- پیام خطای دسترسی -->
+    <div id="access-denied">Access Denied: Please open via Telegram Bot.</div>
+
+    <!-- محتوای اصلی -->
+    <div class="container" id="app-content">
+        <div class="progress-bar"><div class="progress-fill" id="progress"></div></div>
+
+        <div class="question-card">
+            <div style="font-size: 0.9em; color: #888; margin-bottom: 10px;">Question <span id="q-curr">1</span> of 96</div>
+            <p class="question-text" id="q-text">Loading...</p>
+
+            <div class="options-grid">
+                <button class="option-btn" onclick="selectAnswer(1)">1</button>
+                <button class="option-btn" onclick="selectAnswer(2)">2</button>
+                <button class="option-btn" onclick="selectAnswer(3)">3</button>
+                <button class="option-btn" onclick="selectAnswer(4)">4</button>
+                <button class="option-btn" onclick="selectAnswer(5)">5</button>
+            </div>
+            <div class="labels">
+                <span>Disagree</span>
+                <span>Agree</span>
+            </div>
+        </div>
+    </div>
+
+<script>
+    // 1. امنیت: بررسی اینکه داخل تلگرام هستیم یا نه
+    const tg = window.Telegram.WebApp;
+
+    // اگر پلتفرم ناشناخته بود (یعنی مرورگر)، محتوا رو نشون نده
+    if (tg.platform === 'unknown' && !window.location.hash.includes('debug')) {
+        document.getElementById('access-denied').style.display = 'block';
+    } else {
+        document.getElementById('app-content').style.display = 'block';
+        tg.expand(); // تمام صفحه کردن در تلگرام
+    }
+
+    // ==========================================
+    // دیتابیس سوالات (مستر لیست)
+    // !!! اینجا باید کل ۹۶ سوال رو کپی کنی !!!
+    // ==========================================
+    const questionsDB = [
+            {"key": "q42", "text": "You thrive on new and exciting experiences."},
+            {"key": "q93", "text": "You are described as “stuck in your ways.”"},
+            {"key": "q88", "text": "You are drawn to the new, novel, and original."},
+            {"key": "q19", "text": "You may be viewed as selfish or self-centered."},
+            {"key": "q23", "text": "You believe that arriving at a truth is more important than winning an argument."},
+            {"key": "q18", "text": "You imagine things that aren’t directly connected to the real world."},
+            {"key": "q90", "text": "You become upset when your care for others goes unappreciated."},
+            {"key": "q36", "text": "You easily sympathize with others’ struggles."},
+            {"key": "q73", "text": "You have a strong tendency to see things as either good or bad."},
+            {"key": "q67", "text": "You consider yourself an organized person and take control of situations before they get out of hand."},
+            {"key": "q15", "text": "You dislike change."},
+            {"key": "q52", "text": "You may be described as ditzy or scatterbrained."},
+            {"key": "q32", "text": "You try to help people to the point where you begin to forget taking care of your own needs."},
+            {"key": "q92", "text": "You prefer living in your dreams to living in the real world."},
+            {"key": "q31", "text": "You greatly value social harmony and often go out of your way to maintain it."},
+            {"key": "q70", "text": "You always try to communicate tactfully with people."},
+            {"key": "q81", "text": "You find it difficult to concentrate on a single subject."},
+            {"key": "q43", "text": "You follow a consistent routine."},
+            {"key": "q84", "text": "You believe your presence is greatly felt in a room."},
+            {"key": "q57", "text": "You cannot help but get hung up on small details."},
+            {"key": "q2", "text": "You place a lot of value on details and past experiences."},
+            {"key": "q20", "text": "You are drawn toward the abstract and often obsess over meanings."},
+            {"key": "q58", "text": "You often feel awkward and aimless during leisure time."},
+            {"key": "q5", "text": "You easily recognize internal bodily sensations and act to suit your body’s needs."},
+            {"key": "q41", "text": "You tend to express sympathy only after you empathize with someone."},
+            {"key": "q45", "text": "You live in the present, not the past or the future."},
+            {"key": "q40", "text": "You work through problems by yourself and detach yourself from other people to arrive at a conclusion."},
+            {"key": "q56", "text": "You modify internal logical frameworks to account for new data, and you sometimes find yourself re-evaluating them when new data is incompatible with it."},
+            {"key": "q26", "text": "You are unnerved by uncertainty and the unknown."},
+            {"key": "q95", "text": "You explore things in depth for purely for the sake of exploring them in depth."},
+            {"key": "q91", "text": "You see the world as a bundle of possibilities waiting to be explored."},
+            {"key": "q51", "text": "You feel as though your insights often go misunderstood."},
+            {"key": "q64", "text": "You frequently have hunches or insights about the future that turn out to be correct."},
+            {"key": "q53", "text": "Generally, you would prefer a solution be thorough before putting it into action (at the cost of time)."},
+            {"key": "q12", "text": "You live in the “here and now.”"},
+            {"key": "q17", "text": "You greatly value tradition and duty."},
+            {"key": "q55", "text": "You have a strict internal moral code that comes from within regardless of any external standards."},
+            {"key": "q16", "text": "You see so many possibilities that you have trouble committing to a single one."},
+            {"key": "q29", "text": "You become stubborn and resolute in the face of opposition when it comes to your personal beliefs."},
+            {"key": "q75", "text": "You have trouble communicating with those who do not think like you."},
+            {"key": "q78", "text": "You feel as though you are one of the only truly nice people left in this world."},
+            {"key": "q66", "text": "You often use analogies and similes to communicate new ideas."},
+            {"key": "q89", "text": "You generally work through problems with others and involve yourself with other people to arrive at a conclusion."},
+            {"key": "q63", "text": "You stay true to yourself."},
+            {"key": "q79", "text": "You have trouble communicating your ideas with people."},
+            {"key": "q38", "text": "You express yourself honestly and authentically."},
+            {"key": "q9", "text": "You are blunt and straight-to-the-point in communication."},
+            {"key": "q48", "text": "You are an excellent problem solver and have an incredible ability to analyze things in depth."},
+            {"key": "q54", "text": "You constantly set yourself on goals and objectives."},
+            {"key": "q35", "text": "You are extremely objective and “tell it as it is.”"},
+            {"key": "q46", "text": "You understand a concept by logically recognizing and drawing patterns between different, already known concepts."},
+            {"key": "q47", "text": "You exude charisma and are usually viewed as charming by others."},
+            {"key": "q33", "text": "You take on subjects with a burning interest only to drop them once they no longer feel new to you."},
+            {"key": "q10", "text": "You rely only on past experiences to guide yourself through the present."},
+            {"key": "q1", "text": "You are fiercely individualistic and pride yourself on your uniqueness."},
+            {"key": "q72", "text": "You have an excellent sense of direction and instantly know your way around a new place."},
+            {"key": "q80", "text": "You are attracted to symbolism, mysticism and the unknown."},
+            {"key": "q82", "text": "You value truth and logic more than anything else."},
+            {"key": "q85", "text": "You absorb information from the outside world without additional processing."},
+            {"key": "q94", "text": "You are hesitant to strictly conform to social roles."},
+            {"key": "q28", "text": "You are often the first to react to a question."},
+            {"key": "q44", "text": "You are a brainstormer: you offer a multitude of different ideas in a given situation."},
+            {"key": "q11", "text": "You have a tendency to go off-topic in conversation."},
+            {"key": "q69", "text": "You may be viewed as whiny and/or depressive."},
+            {"key": "q62", "text": "You may be viewed as “meddling” or “controlling” to others."},
+            {"key": "q68", "text": "You may be seen as reckless and unknowingly hurt those around you."},
+            {"key": "q77", "text": "You would rather sugarcoat a problem than upset someone."},
+            {"key": "q83", "text": "You have been consistently logical throughout your life."},
+            {"key": "q34", "text": "You would question anything."},
+            {"key": "q13", "text": "You can easily think of something random to say."},
+            {"key": "q37", "text": "You have an uncanny ability of recognizing others’ needs."},
+            {"key": "q50", "text": "You like to organize things for pleasure."},
+            {"key": "q30", "text": "You place a great amount of trust in the mysterious and unconscious world."},
+            {"key": "q60", "text": "You are a risk-taker."},
+            {"key": "q6", "text": "You find yourself agreeing with those who claim that the ends justify the means."},
+            {"key": "q87", "text": "You would do whatever it takes to win a debate."},
+            {"key": "q49", "text": "You start many different projects, but you finish few."},
+            {"key": "q39", "text": "You sometimes fail to adapt to new data because it is not consistent with your personal understanding of an idea."},
+            {"key": "q8", "text": "You feel a strong sense of unity when communicating with others in a group."},
+            {"key": "q25", "text": "You trust hard facts and data more than anything else."},
+            {"key": "q96", "text": "You are aware of your surroundings and aren’t likely to miss something right in front of you."},
+            {"key": "q59", "text": "You often use metaphors to communicate new ideas."},
+            {"key": "q74", "text": "You streamline existing systems for the sake of efficiency and productivity."},
+            {"key": "q61", "text": "You are able to manipulate conversations by reading others’ body language."},
+            {"key": "q65", "text": "You see the big picture in a sea of details."},
+            {"key": "q22", "text": "You often arrive at conclusions that seem to come out of nowhere; you relate to “realizing” answers."},
+            {"key": "q14", "text": "You relate present experiences back to past experiences."},
+            {"key": "q4", "text": "You have an eye for aesthetics and “enjoy the finer things in life.”"},
+            {"key": "q27", "text": "You rely on external sources to support your argument."},
+            {"key": "q3", "text": "You are skilled at recognizing whether the details in front of you match what you are used to."},
+            {"key": "q21", "text": "You come up with internal logical frameworks, theories, and systems to describe the world around you."},
+            {"key": "q86", "text": "You value inclusion and try your best to involve everyone in a group."},
+            {"key": "q71", "text": "Fake people bother you."},
+            {"key": "q24", "text": "You may be viewed as “fake” or “manipulative” to others."},
+            {"key": "q76", "text": "You consider yourself a practical and realistic person, free from imagination."},
+            {"key": "q7", "text": "You “just know” things without being able to consciously put them into words."}
+    ];  
+
+    let currentIndex = 0;
+    let userAnswers = {};
+
+    function loadQuestion() {
+        if (currentIndex >= questionsDB.length) {
+            submitData();
+            return;
+        }
+
+        const q = questionsDB[currentIndex];
+        document.getElementById('q-curr').innerText = currentIndex + 1;
+        document.getElementById('q-text').innerText = q.text;
+
+        // آپدیت نوار پیشرفت
+        const percent = ((currentIndex) / questionsDB.length) * 100;
+        document.getElementById('progress').style.width = percent + '%';
+    }
+
+    function selectAnswer(score) {
+        const currentQ = questionsDB[currentIndex];
+        userAnswers[currentQ.key] = score; // ذخیره با کلید
+
+        currentIndex++;
+
+        // ویبره ریز برای حس بهتر (Haptic Feedback)
+        if(tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
+
+        loadQuestion();
+    }
+
+    function submitData() {
+        // تغییر متن دکمه اصلی تلگرام
+        tg.MainButton.text = "Sending Results...";
+        tg.MainButton.show();
+        tg.MainButton.showProgress();
+
+        // ارسال دیتا به ربات پایتون
+        tg.sendData(JSON.stringify(userAnswers));
+    }
+
+    // شروع
+    loadQuestion();
+
+    // تنظیم رنگ‌ها بر اساس تم تلگرام کاربر
+    document.body.style.backgroundColor = tg.themeParams.bg_color;
+    document.body.style.color = tg.themeParams.text_color;
+
+</script>
+</body>
+</html>
