@@ -4,13 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>تحلیل شخصیت MBTI</title>
-
     <!-- تلگرام وب‌اپ -->
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-
     <!-- فونت وزیرمتن -->
     <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;600;800&display=swap" rel="stylesheet">
-
     <style>
         :root {
             --bg-dark: #0f172a;
@@ -22,9 +19,7 @@
             --success: #34d399;
             --danger: #f87171;
         }
-
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-
         body {
             font-family: 'Vazirmatn', sans-serif;
             background: var(--bg-gradient);
@@ -56,7 +51,6 @@
         @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
         .intro-h1 { font-size: 32px; font-weight: 800; margin-bottom: 10px; letter-spacing: -1px; }
         .intro-p { color: var(--text-muted); font-size: 16px; line-height: 1.8; margin-bottom: 40px; max-width: 320px; }
-
         .btn-start {
             background: linear-gradient(90deg, #6366f1, #8b5cf6);
             color: white; border: none; padding: 18px 60px;
@@ -73,7 +67,6 @@
             display: none; flex-direction: column; padding: 24px;
             opacity: 0; transform: translateY(20px); transition: opacity 0.6s, transform 0.6s;
         }
-
         .progress-track {
             width: 100%; height: 6px; background: rgba(255,255,255,0.1);
             border-radius: 10px; margin-top: 10px; margin-bottom: 40px; overflow: hidden;
@@ -83,7 +76,6 @@
             width: 0%; border-radius: 10px; transition: width 0.4s ease;
             box-shadow: 0 0 10px rgba(99, 102, 241, 0.5);
         }
-
         .card-stage { flex-grow: 1; position: relative; perspective: 1000px; display: flex; align-items: center; justify-content: center; }
         .glass-card {
             background: var(--card-glass);
@@ -96,12 +88,10 @@
             position: absolute; opacity: 1; transform: translateX(0);
             transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
-
         .q-badge { background: rgba(129, 140, 248, 0.15); color: var(--accent); font-size: 13px; font-weight: 700; padding: 6px 16px; border-radius: 12px; margin-bottom: 25px; }
         .q-text-content { font-size: 20px; font-weight: 600; line-height: 1.6; }
         .exit-left { opacity: 0; transform: translateX(-80px) rotate(-5deg); pointer-events: none; }
         .enter-right { opacity: 0; transform: translateX(80px) rotate(5deg); }
-
         .interaction-area { margin-bottom: 20px; }
         .labels-row { display: flex; justify-content: space-between; color: var(--text-muted); font-size: 13px; margin-bottom: 15px; padding: 0 15px; font-weight: 500; }
         .options-grid {
@@ -109,7 +99,6 @@
             background: rgba(15, 23, 42, 0.5); padding: 15px 20px; border-radius: 24px;
             border: 1px solid rgba(255,255,255,0.05);
         }
-
         .circle-btn {
             width: 48px; height: 48px; border-radius: 50%; border: none;
             cursor: pointer; font-family: 'Vazirmatn'; font-weight: 700; font-size: 16px;
@@ -122,7 +111,7 @@
         .circle-btn[data-val="4"] { background: #34d399; width: 44px; height: 44px; opacity: 0.7; }
         .circle-btn[data-val="5"] { background: #10b981; width: 40px; height: 40px; opacity: 0.9; }
         .circle-btn:active { transform: scale(1.2); opacity: 1; filter: brightness(1.2); }
-
+        
         .finish-anim { font-size: 80px; margin-bottom: 20px; animation: popUp 0.6s cubic-bezier(0.68, -0.55, 0.27, 1.55); }
         @keyframes popUp { 0% { transform: scale(0); } 100% { transform: scale(1); } }
     </style>
@@ -149,7 +138,7 @@
         <div class="progress-track">
             <div class="progress-glow" id="progress"></div>
         </div>
-
+        
         <div class="card-stage">
             <div class="glass-card" id="card">
                 <div class="q-badge" id="q-num">سوال ۱</div>
@@ -174,7 +163,11 @@
 
     <script>
         const tg = window.Telegram.WebApp;
-        const isTelegram = tg.platform && tg.platform !== 'unknown';
+        
+        // 🔧 تغییر مهم: استفاده از initData برای تشخیص مطمئن تلگرام
+        // اگر initData طولش بیشتر از 0 باشد یعنی داخل تلگرام هستیم
+        const isTelegram = tg.initData.length > 0;
+        
         const debugMode = false; // برای تست در کروم این را true کنید
 
         // ==========================================
@@ -187,6 +180,7 @@
                 if (saved && savedIndex) {
                     userAnswers = JSON.parse(saved);
                     currentIndex = parseInt(savedIndex);
+                    // اگر دیتای قبلی خراب بود یا تمام شده بود ریست کن
                     if (currentIndex >= questionsDB.length) {
                         currentIndex = 0;
                         userAnswers = {};
@@ -205,7 +199,7 @@
         // ==========================================
         // 🔧 دیتابیس سوالات
         // ==========================================
-
+      
         const questionsDB = [
             { "key": "q42", "text": "شما با تجربه‌های جدید و هیجان‌انگیز شکوفا می‌شوید و انرژی می‌گیرید." },
             { "key": "q93", "text": "دیگران معتقدند که شما کمی روی عادت‌ها و روش‌های خودتان پافشاری می‌کنید." },
@@ -321,15 +315,18 @@
         // ▶️ Start
         function startApp() {
             if (isTelegram) {
+                tg.ready(); // اعلام آمادگی به تلگرام
                 tg.expand();
                 tg.enableClosingConfirmation();
             }
+            
             loadSavedAnswers();
-
+            
+            // نمایش اپلیکیشن
             document.getElementById('access-denied').style.display = 'none';
             intro.style.display = 'none';
             app.style.display = 'flex';
-
+            
             setTimeout(() => {
                 app.style.opacity = '1';
                 app.style.transform = 'translateY(0)';
@@ -343,7 +340,6 @@
                 finishQuiz();
                 return;
             }
-
             const q = questionsDB[currentIndex];
             const percent = ((currentIndex) / questionsDB.length) * 100;
 
@@ -362,6 +358,7 @@
         function handleAnswer(score) {
             if (isAnimating) return;
             isAnimating = true;
+            
             if (tg.HapticFeedback) tg.HapticFeedback.selectionChanged();
 
             const currentQ = questionsDB[currentIndex];
@@ -380,7 +377,6 @@
             }, 300);
         }
 
-        // 🏁 Finish (DEBUG MODE)
         // 🏁 Finish Clean UI
         function finishQuiz() {
             progress.style.width = '100%';
@@ -397,18 +393,17 @@
             `;
 
             tg.MainButton.text = "دریافت تحلیل شخصیت 🧠";
-            tg.MainButton.color = "#34d399"; // رنگ سبز برای حس موفقیت
+            tg.MainButton.color = "#34d399";
             tg.MainButton.textColor = "#ffffff";
             tg.MainButton.show();
             tg.MainButton.onClick(sendDataSecure);
         }
 
-        // 🚀 Send Data (Force Close)
         // 🚀 Send Data Fixed
         function sendDataSecure() {
             if (isSubmitting) return;
             isSubmitting = true;
-
+            
             // دکمه لودینگ شود
             tg.MainButton.showProgress();
 
@@ -417,22 +412,26 @@
             try {
                 // 1. ارسال داده به ربات
                 tg.sendData(payload);
-
+                
                 // 2. پاک کردن حافظه
                 localStorage.removeItem('user_answers_v1');
                 localStorage.removeItem('current_index_v1');
-
-                // ⛔ نکته مهم: اینجا tg.close() را حذف کردیم یا تایم آن را زیاد می‌کنیم
-                // چون sendDataсин asynchronous نیست و ما نمی‌دانیم کی تمام می‌شود.
-                // تلگرام خودش بعد از دریافت دیتا، پایین صفحه پیام "Service Message" می‌اندازد.
-
-                // اگر خیلی اصرار داری بسته شود، تایم را ببر بالا (مثلا 4000) ولی پیشنهاد نمیشه.
-
+                
+                // دیگه صفحه رو نمیبندیم تا دیتا کامل بره
             } catch (e) {
                 alert("Error: " + e.message);
-                isSubmitting = false; // ریست کردن در صورت خطا
+                isSubmitting = false; 
                 tg.MainButton.hideProgress();
             }
+        }
+
+        // Check Auto Start Logic
+        if (isTelegram || debugMode) {
+            document.getElementById('access-denied').style.display = 'none';
+            document.getElementById('intro-screen').style.display = 'flex';
+            tg.ready();
+        } else {
+            document.getElementById('access-denied').style.display = 'flex';
         }
     </script>
 </body>
