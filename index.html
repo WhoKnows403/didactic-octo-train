@@ -36,6 +36,7 @@
             background: var(--bg-dark); z-index: 10000;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
             text-align: center; padding: 40px;
+            display: none; /* پیش‌فرض مخفی باشد تا جاوااسکریپت تصمیم بگیرد */
         }
         .lock-icon { font-size: 60px; margin-bottom: 20px; filter: drop-shadow(0 0 10px rgba(248, 113, 113, 0.5)); }
 
@@ -162,17 +163,30 @@
     </div>
 
     <script>
+        // ==========================================
+        // 🛠️ تنظیمات اولیه و تشخیص تلگرام (FIXED)
+        // ==========================================
         const tg = window.Telegram.WebApp;
         
-        // 🔧 تغییر مهم: استفاده از initData برای تشخیص مطمئن تلگرام
-        // اگر initData طولش بیشتر از 0 باشد یعنی داخل تلگرام هستیم
-        const isTelegram = tg.initData.length > 0;
-        
+        // ⚡ بسیار مهم: بلافاصله اعلام آمادگی می‌کنیم
+        tg.ready();
+        tg.expand(); 
+
+        // 🛡️ لاجیک تشخیص قوی:
+        // 1. بررسی initData (معمولاً در موبایل پر است)
+        // 2. بررسی platform (اگر unknown نباشد)
+        // 3. بررسی وجود آبجکت WebApp
+        const isTelegram = (tg.initData && tg.initData.length > 0) || 
+                           (tg.platform && tg.platform !== 'unknown' && tg.platform !== undefined);
+
         const debugMode = false; // برای تست در کروم این را true کنید
 
         // ==========================================
         // 💾 ذخیره خودکار
         // ==========================================
+        let currentIndex = 0;
+        let userAnswers = {};
+        
         function loadSavedAnswers() {
             try {
                 const saved = localStorage.getItem('user_answers_v1');
@@ -180,7 +194,6 @@
                 if (saved && savedIndex) {
                     userAnswers = JSON.parse(saved);
                     currentIndex = parseInt(savedIndex);
-                    // اگر دیتای قبلی خراب بود یا تمام شده بود ریست کن
                     if (currentIndex >= questionsDB.length) {
                         currentIndex = 0;
                         userAnswers = {};
@@ -199,7 +212,7 @@
         // ==========================================
         // 🔧 دیتابیس سوالات
         // ==========================================
-      
+
         const questionsDB = [
             { "key": "q42", "text": "شما با تجربه‌های جدید و هیجان‌انگیز شکوفا می‌شوید و انرژی می‌گیرید." },
             { "key": "q93", "text": "دیگران معتقدند که شما کمی روی عادت‌ها و روش‌های خودتان پافشاری می‌کنید." },
@@ -300,8 +313,6 @@
         ];
 
 
-        let currentIndex = 0;
-        let userAnswers = {};
         let isAnimating = false;
         let isSubmitting = false;
 
@@ -311,19 +322,14 @@
         const qText = document.getElementById('q-text');
         const qNum = document.getElementById('q-num');
         const progress = document.getElementById('progress');
+        const accessDenied = document.getElementById('access-denied');
 
         // ▶️ Start
         function startApp() {
-            if (isTelegram) {
-                tg.ready(); // اعلام آمادگی به تلگرام
-                tg.expand();
-                tg.enableClosingConfirmation();
-            }
-            
             loadSavedAnswers();
             
-            // نمایش اپلیکیشن
-            document.getElementById('access-denied').style.display = 'none';
+            // مخفی کردن خطا و اینترو
+            accessDenied.style.display = 'none';
             intro.style.display = 'none';
             app.style.display = 'flex';
             
@@ -377,7 +383,7 @@
             }, 300);
         }
 
-        // 🏁 Finish Clean UI
+        // 🏁 Finish Clean UI (تایید شده: UI تمیز)
         function finishQuiz() {
             progress.style.width = '100%';
             qNum.innerText = 'پایان';
@@ -399,25 +405,28 @@
             tg.MainButton.onClick(sendDataSecure);
         }
 
-        // 🚀 Send Data Fixed
+        // 🚀 Send Data Fixed (تایید شده: بدون بستن صفحه + ضد اسپم)
         function sendDataSecure() {
+            // 1. جلوگیری از اسپم
             if (isSubmitting) return;
             isSubmitting = true;
             
-            // دکمه لودینگ شود
+            // 2. دکمه لودینگ شود
             tg.MainButton.showProgress();
 
             const payload = JSON.stringify(userAnswers);
 
             try {
-                // 1. ارسال داده به ربات
+                // 3. ارسال داده به ربات
                 tg.sendData(payload);
                 
-                // 2. پاک کردن حافظه
+                // 4. پاک کردن حافظه
                 localStorage.removeItem('user_answers_v1');
                 localStorage.removeItem('current_index_v1');
                 
-                // دیگه صفحه رو نمیبندیم تا دیتا کامل بره
+                // ⛔ نکته حیاتی: صفحه بسته نمی‌شود.
+                // کاربر بازخورد تلگرام را می‌بیند.
+                
             } catch (e) {
                 alert("Error: " + e.message);
                 isSubmitting = false; 
@@ -425,14 +434,19 @@
             }
         }
 
-        // Check Auto Start Logic
-        if (isTelegram || debugMode) {
-            document.getElementById('access-denied').style.display = 'none';
-            document.getElementById('intro-screen').style.display = 'flex';
-            tg.ready();
-        } else {
-            document.getElementById('access-denied').style.display = 'flex';
-        }
+        // ==========================================
+        // 🛡️ اجرای اولیه با لاجیک اصلاح شده
+        // ==========================================
+        window.onload = function() {
+            if (isTelegram || debugMode) {
+                accessDenied.style.display = 'none';
+                intro.style.display = 'flex';
+            } else {
+                accessDenied.style.display = 'flex';
+                intro.style.display = 'none';
+            }
+        };
+
     </script>
 </body>
 </html>
