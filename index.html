@@ -346,41 +346,29 @@
 
         let isSubmitting = false;
 
-        function sendDataSecure() {
-            if (isSubmitting) return;
-            isSubmitting = true;
-        
-            if (tg.MainButton) {
-                tg.MainButton.showProgress();
-                tg.MainButton.text = "در حال ارسال...";
-            }
-        
-            const payload = JSON.stringify(userAnswers);
-        
-            // دیباگ: نمایش دیتایی که قراره بره
-            // alert("Sending: " + payload); 
+        async function sendDataSecure() {
+            const payload = {
+                user_id: tg.initDataUnsafe.user.id,
+                chat_id: tg.initDataUnsafe.user.id,
+                answers: userAnswers, // همون متغیری که جواب‌ها توشه
+                timestamp: Math.floor(Date.now() / 1000)
+            };
         
             try {
-                // چک کنیم اصلا متد وجود داره؟
-                if (!tg.sendData) {
-                    throw new Error("sendData method is missing!");
-                }
-                
-                tg.sendData(payload);
-                
-                // این لاگ رو اضافه کن تا مطمئن بشیم خط اجرا شده
-                console.log("Sent via sendData");
-                
-                // localStorage.setItem('data_sent_flag', 'true'); // فعلا کامنت کن
-                
-                // ⛔️ بستن خودکار رو فعلا حذف کن تا ارور رو ببینی
-                // setTimeout(() => { tg.close(); }, 500);
+                // به جای آدرس زیر، آدرس سرور یا IP خودت رو بذار
+                const response = await fetch('https://opt-ton-apparent-ebook.trycloudflare.com/receive-data', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
         
-            } catch (e) {
-                isSubmitting = false;
-                if (tg.MainButton) tg.MainButton.hideProgress();
-                // 🚨 نمایش ارور واقعی به کاربر
-                alert("❌ Error Details:\n" + e.name + "\n" + e.message);
+                if (response.ok) {
+                    tg.close(); // وب‌اپ رو ببند
+                } else {
+                    alert("ارسال با خطا مواجه شد.");
+                }
+            } catch (error) {
+                alert("خطا در شبکه: " + error.message);
             }
         }
 
