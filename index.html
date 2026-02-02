@@ -346,38 +346,36 @@
 
         let isSubmitting = false;
         async function sendDataSecure() {
-            // 🛠️ چک کردن حیاتی
-            if (!tg.initData) {
-                alert("⚠️ خطا: هویت تلگرام شما شناسایی نشد!\n\nلطفاً ربات را ببندید و دوباره باز کنید (نسخه وب خارج از تلگرام کار نمی‌کند).");
+            const initDataRaw = window.Telegram.WebApp.initData;
+        
+            if (!initDataRaw) {
+                alert("خطا: دیتای تلگرام لود نشده است.");
                 return;
             }
-            alert("دیتا ارسالی:\n" + tg.initData.substring(0, 50) + "...");
+        
+            // ۲. ساخت پکیج دیتا دقیقاً مطابق با مدل TelegramPayload در پایتون
             const payload = {
-                init_data: tg.initData, // مطمئن شدیم که این پر است
-                answers: userAnswers,
+                init_data: initDataRaw, // این همان فیلدی است که پایتون میخواهد
+                answers: userAnswers,   // دیکشنری جواب‌ها
                 timestamp: Math.floor(Date.now() / 1000)
             };
         
-            tg.MainButton.showProgress();
+            console.log("Sending Payload:", payload); // برای تست در کنسول ببینید
         
             try {
                 const response = await fetch('https://self-production-1573.up.railway.app/receive-data', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
+                    body: JSON.stringify(payload) // تبدیل به متن برای ارسال
                 });
-        
-                tg.MainButton.hideProgress();
         
                 if (response.ok) {
                     tg.close();
                 } else {
-                    const errorText = await response.text();
-                    // حالا ارورهای سرور دقیق‌تر شدن
-                    alert(`خطای سرور (${response.status}):\n${errorText}`);
+                    const err = await response.text();
+                    alert("خطای سرور: " + err);
                 }
             } catch (error) {
-                tg.MainButton.hideProgress();
                 alert("خطای شبکه: " + error.message);
             }
         }
