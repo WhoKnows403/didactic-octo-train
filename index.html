@@ -349,31 +349,38 @@
         function sendDataSecure() {
             if (isSubmitting) return;
             isSubmitting = true;
-
-            if (tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
-
-            tg.MainButton.showProgress();
-            tg.MainButton.text = "در حال ارسال...";
-
+        
+            if (tg.MainButton) {
+                tg.MainButton.showProgress();
+                tg.MainButton.text = "در حال ارسال...";
+            }
+        
             const payload = JSON.stringify(userAnswers);
-
-            // 🛠️ فیکس ۵: استراتژی Fail-Safe برای ارسال
+        
+            // دیباگ: نمایش دیتایی که قراره بره
+            // alert("Sending: " + payload); 
+        
             try {
+                // چک کنیم اصلا متد وجود داره؟
+                if (!tg.sendData) {
+                    throw new Error("sendData method is missing!");
+                }
+                
                 tg.sendData(payload);
                 
-                // ⚠️ نکته مهم: اینجا localStorage را پاک نمی‌کنیم!
-                // چون ممکنه نت قطع بشه و تلگرام نتونه بفرسته.
-                // فقط یه نشونه میذاریم که "تلاش برای ارسال انجام شده"
-                localStorage.setItem('data_sent_flag', 'true');
-
-                // اگر همه چی اوکی بود تلگرام خودش می‌بنده، ولی ما هم کمک می‌کنیم
-                setTimeout(() => { tg.close(); }, 500);
-
+                // این لاگ رو اضافه کن تا مطمئن بشیم خط اجرا شده
+                console.log("Sent via sendData");
+                
+                // localStorage.setItem('data_sent_flag', 'true'); // فعلا کامنت کن
+                
+                // ⛔️ بستن خودکار رو فعلا حذف کن تا ارور رو ببینی
+                // setTimeout(() => { tg.close(); }, 500);
+        
             } catch (e) {
                 isSubmitting = false;
-                tg.MainButton.hideProgress();
-                tg.MainButton.text = "تلاش مجدد ↻";
-                alert("❌ خطا در ارسال به تلگرام: " + e.message);
+                if (tg.MainButton) tg.MainButton.hideProgress();
+                // 🚨 نمایش ارور واقعی به کاربر
+                alert("❌ Error Details:\n" + e.name + "\n" + e.message);
             }
         }
 
