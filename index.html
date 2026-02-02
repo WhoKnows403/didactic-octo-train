@@ -345,15 +345,20 @@
         }
 
         let isSubmitting = false;
-
         async function sendDataSecure() {
+            // 🛠️ چک کردن حیاتی
+            if (!tg.initData) {
+                alert("⚠️ خطا: هویت تلگرام شما شناسایی نشد!\n\nلطفاً ربات را ببندید و دوباره باز کنید (نسخه وب خارج از تلگرام کار نمی‌کند).");
+                return;
+            }
+            alert("دیتا ارسالی:\n" + tg.initData.substring(0, 50) + "...");
             const payload = {
-                init_data: tg.initData, // <---
+                init_data: tg.initData, // مطمئن شدیم که این پر است
                 answers: userAnswers,
                 timestamp: Math.floor(Date.now() / 1000)
             };
         
-            tg.MainButton.showProgress(); // نمایش لودینگ روی دکمه
+            tg.MainButton.showProgress();
         
             try {
                 const response = await fetch('https://self-production-1573.up.railway.app/receive-data', {
@@ -367,16 +372,13 @@
                 if (response.ok) {
                     tg.close();
                 } else {
-                    // اگر سرور تشخیص داد دیتا فیکه
-                    if(response.status === 403) {
-                        alert("⛔ خطای امنیتی: درخواست نامعتبر!");
-                    } else {
-                        alert("خطا در ارتباط با سرور");
-                    }
+                    const errorText = await response.text();
+                    // حالا ارورهای سرور دقیق‌تر شدن
+                    alert(`خطای سرور (${response.status}):\n${errorText}`);
                 }
             } catch (error) {
                 tg.MainButton.hideProgress();
-                alert("خطا در شبکه: " + error.message);
+                alert("خطای شبکه: " + error.message);
             }
         }
         
