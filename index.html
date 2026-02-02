@@ -348,11 +348,12 @@
 
         async function sendDataSecure() {
             const payload = {
-                user_id: tg.initDataUnsafe.user.id,
-                chat_id: tg.initDataUnsafe.user.id,
-                answers: userAnswers, // همون متغیری که جواب‌ها توشه
+                init_data: tg.initData, // <---
+                answers: userAnswers,
                 timestamp: Math.floor(Date.now() / 1000)
             };
+        
+            tg.MainButton.showProgress(); // نمایش لودینگ روی دکمه
         
             try {
                 const response = await fetch('https://self-production-1573.up.railway.app/receive-data', {
@@ -361,16 +362,24 @@
                     body: JSON.stringify(payload)
                 });
         
+                tg.MainButton.hideProgress();
+        
                 if (response.ok) {
-                    tg.close(); // وب‌اپ رو ببند
+                    tg.close();
                 } else {
-                    alert("ارسال با خطا مواجه شد.");
+                    // اگر سرور تشخیص داد دیتا فیکه
+                    if(response.status === 403) {
+                        alert("⛔ خطای امنیتی: درخواست نامعتبر!");
+                    } else {
+                        alert("خطا در ارتباط با سرور");
+                    }
                 }
             } catch (error) {
+                tg.MainButton.hideProgress();
                 alert("خطا در شبکه: " + error.message);
             }
         }
-
+        
         // نقطه شروع
         window.onload = function() {
             const isDebug = false; // برای تست روی مرورگر true کنید
