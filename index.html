@@ -344,29 +344,32 @@
             tg.MainButton.onClick(sendDataSecure);
         }
 
-        let isSubmitting = false;
+        llet isSubmitting = false; 
         async function sendDataSecure() {
+            if (isSubmitting) return; 
+            
             const initDataRaw = window.Telegram.WebApp.initData;
-        
             if (!initDataRaw) {
                 alert("خطا: دیتای تلگرام لود نشده است.");
                 return;
             }
         
-            // ۲. ساخت پکیج دیتا دقیقاً مطابق با مدل TelegramPayload در پایتون
+            isSubmitting = true;
+            tg.MainButton.showProgress(true); // نمایش اسپینر روی دکمه تلگرام
+            tg.MainButton.disable(); // غیرفعال کردن کلیک
+        
             const payload = {
-                init_data: initDataRaw, // این همان فیلدی است که پایتون میخواهد
-                answers: userAnswers,   // دیکشنری جواب‌ها
+                init_data: initDataRaw,
+                answers: userAnswers,
                 timestamp: Math.floor(Date.now() / 1000)
             };
         
-            console.log("Sending Payload:", payload); // برای تست در کنسول ببینید
-        
             try {
+                // تغییر URL به آدرس پروداکشن خودت دقت کن
                 const response = await fetch('https://self-production-1573.up.railway.app/receive-data', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload) // تبدیل به متن برای ارسال
+                    body: JSON.stringify(payload)
                 });
         
                 if (response.ok) {
@@ -374,12 +377,20 @@
                 } else {
                     const err = await response.text();
                     alert("خطای سرور: " + err);
+                    // در صورت خطا، قفل را باز کن تا کاربر دوباره تلاش کند
+                    resetButtonState();
                 }
             } catch (error) {
                 alert("خطای شبکه: " + error.message);
+                resetButtonState();
             }
         }
-        
+
+        function resetButtonState() {
+            isSubmitting = false;
+            tg.MainButton.hideProgress();
+            tg.MainButton.enable();
+        }
         // نقطه شروع
         window.onload = function() {
             const isDebug = false; // برای تست روی مرورگر true کنید
