@@ -6,182 +6,274 @@
     <title>تحلیل شخصیت MBTI</title>
     <!-- تلگرام وب‌اپ -->
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <!-- فونت وزیرمتن  -->
-    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <!-- فونت وزیرمتن -->
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@200;400;500;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-dark: #0f172a;
-            --bg-gradient: linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #4c1d95 100%);
-            --card-glass: rgba(30, 41, 59, 0.7);
-            --text-main: #ffffff;
-            --text-muted: #94a3b8;
-            --accent: #818cf8;
-            --success: #34d399;
-            --danger: #f87171;
+            /* 🎨 پالت رنگی جدید: لوکس، سنگین، طوسی و طلایی مات */
+            --bg-main: #121212;         /* سیاه دودی */
+            --bg-card: #1e1e1e;         /* طوسی تیره مات */
+            --border-color: #333333;    /* رنگ حاشیه ظریف */
+            
+            --text-primary: #e0e0e0;    /* سفید مات */
+            --text-secondary: #a0a0a0;  /* طوسی روشن */
+            --text-gold: #d4af37;       /* طلایی کلاسیک (برای تاکید) */
+            
+            --btn-base: #2c2c2c;        /* رنگ دکمه خاموش */
+            --accent-glow: rgba(212, 175, 55, 0.15); /* هاله طلایی */
         }
+
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         
         body, html {
             font-family: 'Vazirmatn', sans-serif;
-            background: var(--bg-gradient);
-            background-attachment: fixed;
-            color: var(--text-main);
+            background-color: var(--bg-main);
+            /* یک گرادینت خیلی محو برای عمق دادن */
+            background-image: radial-gradient(circle at top, #1a1a1a 0%, #121212 100%);
+            color: var(--text-primary);
             margin: 0; padding: 0; 
             width: 100%; height: 100%;
-            overflow: hidden; /* جلوگیری از اسکرول اضافه */
-            overscroll-behavior: none; /* فیکس iOS Rubber Band */
-            position: fixed; /* قفل کامل صفحه */
+            overflow: hidden; 
+            overscroll-behavior: none; 
+            position: fixed; 
             user-select: none;
         }
 
-        /* ⛔  صفحه خطا */
+        /* ⛔ صفحه خطا */
         #access-denied {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: var(--bg-dark); z-index: 10000;
+            background: var(--bg-main); z-index: 10000;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
             text-align: center; padding: 40px;
             display: none; 
         }
-        .lock-icon { font-size: 60px; margin-bottom: 20px; filter: drop-shadow(0 0 10px rgba(248, 113, 113, 0.5)); }
 
-        /* 🚀 صفحه شروع */
+        /* 🚀 صفحه شروع (Intro) - مینیمال */
         #intro-screen {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: var(--bg-gradient); z-index: 500;
+            background: var(--bg-main); z-index: 500;
             display: none; flex-direction: column; align-items: center; justify-content: center;
             padding: 30px; text-align: center;
-            transition: opacity 0.6s ease-out;
+            transition: opacity 0.8s ease-out;
         }
-        .intro-visual { font-size: 80px; margin-bottom: 10px; animation: float 3s ease-in-out infinite; }
-        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
         
-        .intro-h1 { font-size: 32px; font-weight: 800; margin-bottom: 10px; letter-spacing: -1px; }
-        .intro-p { color: var(--text-muted); font-size: 16px; line-height: 1.8; margin-bottom: 40px; max-width: 320px; }
+        .intro-visual { 
+            font-size: 60px; margin-bottom: 20px; 
+            filter: grayscale(100%) opacity(0.7); /* ایموجی سیاه و سفید */
+            animation: pulse-slow 4s infinite;
+        }
         
+        .intro-h1 { 
+            font-size: 28px; font-weight: 200; margin-bottom: 15px; 
+            color: var(--text-gold); letter-spacing: 1px;
+        }
+        
+        .intro-p { 
+            color: var(--text-secondary); font-size: 14px; line-height: 1.9; 
+            margin-bottom: 50px; max-width: 300px; font-weight: 300;
+        }
+
+        /* دکمه شروع: ساده، با حاشیه طلایی */
         .btn-start {
-            background: linear-gradient(90deg, #6366f1, #8b5cf6);
-            color: white; border: none; padding: 18px 60px;
-            font-size: 18px; font-weight: 700; border-radius: 20px;
+            background: transparent;
+            color: var(--text-gold);
+            border: 1px solid var(--text-gold);
+            padding: 14px 50px;
+            font-size: 16px; font-weight: 400; 
+            border-radius: 50px;
             font-family: 'Vazirmatn'; cursor: pointer;
-            box-shadow: 0 10px 25px rgba(99, 102, 241, 0.4);
-            transition: transform 0.2s, box-shadow 0.2s;
+            transition: all 0.3s ease;
+            letter-spacing: 1px;
         }
-        .btn-start:active { transform: scale(0.95); }
-        .btn-start:disabled { opacity: 0.7; cursor: wait; filter: grayscale(1); }
+        .btn-start:active { background: var(--accent-glow); transform: scale(0.98); }
+        .btn-start:disabled { opacity: 0.3; border-color: #555; color: #555; }
 
         /* 📱 کانتینر اصلی */
         .app-layout {
             width: 100%; max-width: 500px; margin: 0 auto; height: 100%;
-            display: none; flex-direction: column; padding: 24px;
-            opacity: 0; transform: translateY(20px); transition: opacity 0.6s, transform 0.6s;
+            display: none; flex-direction: column; padding: 20px 30px;
+            opacity: 0; transform: translateY(10px); 
+            transition: opacity 0.8s, transform 0.8s;
         }
+
+        /* پروگرس بار: خطی باریک و طلایی در بالا */
+        .progress-container {
+            width: 100%; display: flex; align-items: center; justify-content: space-between;
+            margin-bottom: 30px; margin-top: 10px;
+        }
+        .q-counter { color: var(--text-secondary); font-size: 12px; font-weight: 300; letter-spacing: 1px; }
+        
         .progress-track {
-            width: 100%; height: 6px; background: rgba(255,255,255,0.1);
-            border-radius: 10px; margin-top: 10px; margin-bottom: 40px; overflow: hidden;
+            flex-grow: 1; height: 2px; background: #333;
+            margin-right: 15px; border-radius: 2px; position: relative;
         }
         .progress-glow {
-            height: 100%; background: linear-gradient(90deg, #34d399, #6366f1);
-            width: 0%; border-radius: 10px; transition: width 0.4s ease;
-            box-shadow: 0 0 10px rgba(99, 102, 241, 0.5);
+            height: 100%; background: var(--text-gold);
+            width: 0%; border-radius: 2px; transition: width 0.5s ease;
+            box-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
         }
-        .card-stage { flex-grow: 1; position: relative; perspective: 1000px; display: flex; align-items: center; justify-content: center; }
+
+        /* کارت سوال: استایل سنگ مات */
+        .card-stage { 
+            flex-grow: 1; position: relative; perspective: 1000px; 
+            display: flex; align-items: center; justify-content: center; 
+        }
         
-        .glass-card {
-            background: var(--card-glass);
-            backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 35px 25px; border-radius: 30px;
-            width: 100%; min-height: 260px;
+        .stone-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            padding: 40px 30px; border-radius: 4px; /* گوشه‌های کمتر گرد برای حس جدی‌تر */
+            width: 100%; min-height: 240px;
             display: flex; flex-direction: column; align-items: center; text-align: center; justify-content: center;
-            box-shadow: 0 25px 50px rgba(0,0,0,0.25);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
             position: absolute; opacity: 1; transform: translateX(0);
-            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            transition: all 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+
+        .q-text-content { 
+            font-size: 20px; font-weight: 400; line-height: 1.8; color: var(--text-primary);
+        }
+
+        /* دکمه‌های پاسخ: دایره‌های تک‌رنگ با تغییر سایز */
+        .interaction-area { margin-bottom: 40px; width: 100%; }
+        .labels-row { 
+            display: flex; justify-content: space-between; 
+            color: var(--text-secondary); font-size: 12px; margin-bottom: 20px; padding: 0 10px; 
         }
         
-        .q-badge { background: rgba(129, 140, 248, 0.15); color: var(--accent); font-size: 13px; font-weight: 700; padding: 6px 16px; border-radius: 12px; margin-bottom: 25px; }
-        .q-text-content { font-size: 20px; font-weight: 600; line-height: 1.6; }
-        
-        .interaction-area { margin-bottom: 20px; }
-        .labels-row { display: flex; justify-content: space-between; color: var(--text-muted); font-size: 13px; margin-bottom: 15px; padding: 0 15px; font-weight: 500; }
         .options-grid {
             display: flex; justify-content: space-between; align-items: center;
-            background: rgba(15, 23, 42, 0.5); padding: 15px 20px; border-radius: 24px;
-            border: 1px solid rgba(255,255,255,0.05);
+            position: relative;
         }
+        /* خط اتصال پشت دکمه‌ها */
+        .options-grid::before {
+            content: ''; position: absolute; left: 10px; right: 10px; top: 50%; height: 1px;
+            background: #333; z-index: 0;
+        }
+
         .circle-btn {
-            width: 48px; height: 48px; border-radius: 50%; border: none;
-            cursor: pointer; font-family: 'Vazirmatn'; font-weight: 700; font-size: 16px;
-            display: flex; justify-content: center; align-items: center;
-            transition: all 0.25s; color: white; position: relative; overflow: hidden;
+            background: var(--bg-main);
+            border: 2px solid #444;
+            border-radius: 50%; 
+            cursor: pointer; z-index: 1;
+            transition: all 0.2s ease-out;
+            /* حذف عدد داخل دکمه برای مینیمال شدن */
+            color: transparent; 
         }
-        .circle-btn[data-val="1"] { background: #ef4444; width: 40px; height: 40px; opacity: 0.9; }
-        .circle-btn[data-val="2"] { background: #f87171; width: 44px; height: 44px; opacity: 0.7; }
-        .circle-btn[data-val="3"] { background: #475569; width: 46px; height: 46px; opacity: 0.5; }
-        .circle-btn[data-val="4"] { background: #34d399; width: 44px; height: 44px; opacity: 0.7; }
-        .circle-btn[data-val="5"] { background: #10b981; width: 40px; height: 40px; opacity: 0.9; }
-        .circle-btn:active { transform: scale(1.2); opacity: 1; filter: brightness(1.2); }
         
-        .finish-anim { font-size: 80px; margin-bottom: 20px; animation: popUp 0.6s cubic-bezier(0.68, -0.55, 0.27, 1.55); }
-        @keyframes popUp { 0% { transform: scale(0); } 100% { transform: scale(1); } }
+        /* سایز دکمه‌ها بر اساس شدت موافقت */
+        .circle-btn[data-val="1"] { width: 25px; height: 25px; } /* کوچک */
+        .circle-btn[data-val="2"] { width: 35px; height: 35px; }
+        .circle-btn[data-val="3"] { width: 45px; height: 45px; border-color: #666; } /* متوسط */
+        .circle-btn[data-val="4"] { width: 55px; height: 55px; }
+        .circle-btn[data-val="5"] { width: 65px; height: 65px; border-color: var(--text-gold); } /* بزرگ */
+
+        .circle-btn:active { 
+            background: var(--text-gold); 
+            border-color: var(--text-gold);
+            transform: scale(0.9);
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.4);
+        }
+
+        /* انیمیشن‌ها */
+        .slide-out { opacity: 0; transform: translateX(-30px) scale(0.95); pointer-events: none; }
+        .slide-in { animation: fadeMove 0.5s forwards; }
+        @keyframes fadeMove {
+            from { opacity: 0; transform: translateX(30px) scale(0.95); }
+            to { opacity: 1; transform: translateX(0) scale(1); }
+        }
+        @keyframes pulse-slow { 
+            0% { transform: scale(1); opacity: 0.7; } 
+            50% { transform: scale(1.05); opacity: 1; } 
+            100% { transform: scale(1); opacity: 0.7; } 
+        }
+
+        /* لایه لودینگ جدید */
+        #loading-overlay {
+            backdrop-filter: blur(15px); /* بلور زیاد برای محو کردن پشت */
+            background: rgba(18, 18, 18, 0.85);
+        }
+        .brain-loader {
+            font-size: 50px; 
+            filter: grayscale(100%) drop-shadow(0 0 10px var(--text-gold)); /* مغز طلایی */
+            animation: pulse-slow 2s infinite;
+        }
+
     </style>
 </head>
 <body>
+    <!-- 1. صفحه دسترسی غیرمجاز -->
     <div id="access-denied">
-        <div class="lock-icon">🔒</div>
-        <h2>دسترسی غیرمجاز</h2>
-        <p>لطفاً فقط از طریق تلگرام وارد شوید.</p>
+        <div style="font-size: 40px; margin-bottom: 20px; filter: grayscale(1);">🔒</div>
+        <h2 style="font-weight: 300; color: var(--text-gold);">منطقه حفاظت شده</h2>
+        <p style="color: var(--text-secondary);">دسترسی فقط از طریق تلگرام</p>
     </div>
 
+    <!-- 2. صفحه شروع (Intro) -->
     <div id="intro-screen">
-        <div class="intro-visual">🔮</div>
-        <h1 class="intro-h1">کاوشگر درون</h1>
-        <p class="intro-p" id="intro-desc">آزمون پیشرفته تحلیل شخصیت.<br>در حال آماده‌سازی...</p>
-        <button class="btn-start" id="btn-start" onclick="startApp()" disabled>درحال بارگذاری...</button>
+        <div class="intro-visual">🗝️</div> <!-- تغییر ایموجی به کلید/معما -->
+        <h1 class="intro-h1">کاوشگرِ درون</h1>
+        <p class="intro-p" id="intro-desc">در حال آماده‌سازی...</p>
+        <button class="btn-start" id="btn-start" onclick="startApp()" disabled>L O A D I N G</button>
     </div>
 
+    <!-- 3. محیط اصلی برنامه -->
     <div class="app-layout" id="app">
-        <div class="progress-track">
-            <div class="progress-glow" id="progress"></div>
+        <!-- پروگرس بار جدید -->
+        <div class="progress-container">
+            <div class="progress-track">
+                <div class="progress-glow" id="progress"></div>
+            </div>
+            <div class="q-counter" id="q-num">1 / 60</div>
         </div>
         
         <div class="card-stage">
-            <div class="glass-card" id="card">
-                <div class="q-badge" id="q-num">سوال ۱</div>
+            <div class="stone-card" id="card">
                 <div class="q-text-content" id="q-text">...</div>
             </div>
         </div>
 
         <div class="interaction-area" id="interaction-area">
             <div class="labels-row">
-                <span>اصلاً موافق نیستم</span>
-                <span>کاملاً موافقم</span>
+                <span>مخالف</span>
+                <span>موافق</span>
             </div>
+            <!-- دکمه‌ها بدون عدد (مینیمال) -->
             <div class="options-grid">
-                <button class="circle-btn" data-val="1" onclick="handleAnswer(1)">1</button>
-                <button class="circle-btn" data-val="2" onclick="handleAnswer(2)">2</button>
-                <button class="circle-btn" data-val="3" onclick="handleAnswer(3)">3</button>
-                <button class="circle-btn" data-val="4" onclick="handleAnswer(4)">4</button>
-                <button class="circle-btn" data-val="5" onclick="handleAnswer(5)">5</button>
+                <button class="circle-btn" data-val="1" onclick="handleAnswer(1)"></button>
+                <button class="circle-btn" data-val="2" onclick="handleAnswer(2)"></button>
+                <button class="circle-btn" data-val="3" onclick="handleAnswer(3)"></button>
+                <button class="circle-btn" data-val="4" onclick="handleAnswer(4)"></button>
+                <button class="circle-btn" data-val="5" onclick="handleAnswer(5)"></button>
             </div>
         </div>
     </div>
 
+    <!-- 4. لایه لودینگ (کامل شده) -->
+    <div id="loading-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 2000; flex-direction: column; align-items: center; justify-content: center; text-align: center;">
+        <div class="brain-loader">🧠</div>
+        <h3 style="margin-top: 30px; color: var(--text-gold); font-weight: 300; letter-spacing: 1px;">تـحـلـیـل داده‌هـا</h3>
+        <p style="color: var(--text-secondary); font-size: 13px; margin-top: 10px;">در حال ترسیم نقشه‌ی ذهن...</p>
+    </div>
+
+    <!-- 5. لاجیک (دست نخورده و فیکس شده) -->
     <script>
         const tg = window.Telegram.WebApp;
         tg.ready();
-        
-        // 🛠️ فیکس ۱: جلوگیری از بستن برنامه هنگام کشیدن صفحه به پایین
         tg.expand();
-        tg.disableVerticalSwipes(); // اگر متدش در نسخه جدید باشه عمل میکنه
+        tg.disableVerticalSwipes();
+        
+        // تنظیم رنگ هدر تلگرام برای هماهنگی با تم تیره
+        if(tg.setHeaderColor) tg.setHeaderColor('#121212');
+        if(tg.setBackgroundColor) tg.setBackgroundColor('#121212');
         
         const isTelegram = (tg.initData && tg.initData.length > 0) || (tg.platform && tg.platform !== 'unknown');
         
-        // 🛠️ فیکس ۲: دیتابیس خالی برای لود داینامیک
         let questionsDB = []; 
         let currentIndex = 0;
         let userAnswers = {};
 
-        // المان‌های DOM
+        // DOM Elements
         const app = document.getElementById('app');
         const intro = document.getElementById('intro-screen');
         const card = document.getElementById('card');
@@ -191,26 +283,22 @@
         const btnStart = document.getElementById('btn-start');
         const introDesc = document.getElementById('intro-desc');
 
-        // 🛠️ فیکس ۳: لود کردن سوالات از فایل JSON
+        // Fetch Questions
         async function fetchQuestions() {
             try {
-                // پارامتر v برای جلوگیری از کش شدن سوالات قدیمی
                 const res = await fetch('questions.json?v=' + new Date().getTime());
                 if (!res.ok) throw new Error("Network error");
                 questionsDB = await res.json();
                 
-                // فعال کردن دکمه شروع
                 btnStart.removeAttribute('disabled');
-                btnStart.innerText = "شروع سفر";
-                introDesc.innerHTML = `آزمون پیشرفته تحلیل شخصیت.<br>${questionsDB.length} سوال برای شناخت عمیق.`;
+                btnStart.innerText = "ورود به ناخودآگاه"; // متن دکمه جدید
+                introDesc.innerHTML = `${questionsDB.length} ایستگاه برای شناخت عمیق`;
                 
-                // اگر قبلا دیتایی بوده، لود کن
                 loadSavedAnswers();
-
             } catch (e) {
                 console.error(e);
-                btnStart.innerText = "خطا در بارگذاری";
-                introDesc.innerText = "⚠️ امکان دریافت سوالات وجود ندارد.\nلطفاً اینترنت خود را چک کنید.";
+                btnStart.innerText = "خطا در ارتباط";
+                introDesc.innerText = "امکان بارگذاری وجود ندارد.";
             }
         }
 
@@ -218,25 +306,19 @@
             try {
                 const saved = localStorage.getItem('user_answers_v1');
                 const savedIndex = localStorage.getItem('current_index_v1');
-                
-                // اگر کاربر قبلا تموم کرده و ارسال کرده، از اول شروع کن (ریست)
                 const isSent = localStorage.getItem('data_sent_flag');
-
+                
                 if (saved && savedIndex && !isSent) {
                     userAnswers = JSON.parse(saved);
                     currentIndex = parseInt(savedIndex);
                     
-                    // اگر ایندکس خراب بود ریست کن
                     if (currentIndex >= questionsDB.length) {
-                        currentIndex = 0;
-                        userAnswers = {};
+                        currentIndex = 0; userAnswers = {};
                     } else if (currentIndex > 0) {
-                        btnStart.innerText = "ادامه آزمون قبلی";
+                        btnStart.innerText = "ادامه مسیر قبلی";
                     }
                 }
-            } catch (e) {
-                console.error("Save Load Error", e);
-            }
+            } catch (e) { console.error(e); }
         }
 
         function saveProgress() {
@@ -248,26 +330,24 @@
             document.getElementById('access-denied').style.display = 'none';
             intro.style.display = 'none';
             app.style.display = 'flex';
-
-            // 🛠️ فیکس ۴: مدیریت دکمه بازگشت (جلوگیری از خروج تصادفی)
+            
+            // Back Button Logic
             if (tg.BackButton) {
                 tg.BackButton.show();
                 tg.BackButton.onClick(() => {
                     tg.showPopup({
-                        title: 'خروج؟',
-                        message: 'آیا می‌خواهید آزمون را موقتاً رها کنید؟ پیشرفت شما ذخیره می‌ماند.',
+                        title: 'توقف مسیر؟',
+                        message: 'پیشرفت شما محفوظ می‌ماند.',
                         buttons: [
-                            {id: 'yes', type: 'destructive', text: 'بله، خروج'},
-                            {id: 'no', type: 'cancel', text: 'ادامه میدم'}
+                            {id: 'yes', type: 'destructive', text: 'خروج'},
+                            {id: 'no', type: 'cancel', text: 'ادامه'}
                         ]
                     }, (btnId) => {
-                        if (btnId === 'yes') {
-                            tg.close();
-                        }
+                        if (btnId === 'yes') tg.close();
                     });
                 });
             }
-
+            
             setTimeout(() => {
                 app.style.opacity = '1';
                 app.style.transform = 'translateY(0)';
@@ -276,41 +356,36 @@
         }
 
         let isAnimating = false;
-
         function renderQuestion(animate = true) {
             if (currentIndex >= questionsDB.length) {
                 finishQuiz();
                 return;
             }
-
             const q = questionsDB[currentIndex];
             const percent = ((currentIndex) / questionsDB.length) * 100;
-
+            
             qNum.innerText = `${currentIndex + 1} / ${questionsDB.length}`;
             qText.innerText = q.text;
             progress.style.width = percent + '%';
-
+            
             if (animate) {
                 card.classList.remove('slide-out');
                 card.classList.add('slide-in');
-                setTimeout(() => card.classList.remove('slide-in'), 300);
+                setTimeout(() => card.classList.remove('slide-in'), 500);
             }
         }
 
         window.handleAnswer = function(score) {
             if (isAnimating) return;
             isAnimating = true;
-
-            if (tg.HapticFeedback) tg.HapticFeedback.selectionChanged();
-
+            if (tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light'); // ویبره ملایم‌تر
+            
             const currentQ = questionsDB[currentIndex];
             userAnswers[currentQ.key] = score;
-
             currentIndex++;
             saveProgress();
-
+            
             card.classList.add('slide-out');
-
             setTimeout(() => {
                 if (currentIndex >= questionsDB.length) {
                     finishQuiz();
@@ -323,81 +398,96 @@
 
         function finishQuiz() {
             progress.style.width = '100%';
-            qNum.innerText = 'پایان';
+            qNum.innerText = '';
             document.getElementById('interaction-area').style.display = 'none';
-            
-            // غیرفعال کردن دکمه بک در صفحه پایان
             if(tg.BackButton) tg.BackButton.hide();
-
+            
+            // پایان شیک و ساده
             card.classList.remove('slide-out');
             card.innerHTML = `
-                <div class="finish-anim">🎉</div>
-                <h3 style="margin:10px 0 5px 0">تبریک!</h3>
-                <p style="font-size:16px; margin-bottom:20px;">پاسخ‌های شما با موفقیت ثبت شد.</p>
-                <p style="font-size:14px; color:var(--text-muted);">برای دریافت تحلیل، دکمه زیر را بزنید.</p>
+                <div style="font-size:60px; margin-bottom:20px; filter: grayscale(1);">✨</div>
+                <h3 style="margin:10px 0 10px 0; color:var(--text-gold); font-weight:300;">پایان سفر</h3>
+                <p style="font-size:14px; color:var(--text-secondary); margin-bottom:30px;">الگوهای شما ثبت شد.</p>
             `;
-
-            tg.MainButton.text = "دریافت تحلیل شخصیت 🧠";
-            tg.MainButton.color = "#34d399";
-            tg.MainButton.textColor = "#ffffff";
+            
+            // تنظیم دکمه اصلی تلگرام
+            tg.MainButton.text = "دریافت تحلیل نهایی";
+            tg.MainButton.color = "#d4af37"; // رنگ طلایی
+            tg.MainButton.textColor = "#000000"; // متن مشکی
             tg.MainButton.show();
             tg.MainButton.onClick(sendDataSecure);
         }
 
         let isSubmitting = false; 
+
         async function sendDataSecure() {
             if (isSubmitting) return; 
             
             const initDataRaw = window.Telegram.WebApp.initData;
             if (!initDataRaw) {
-                alert("خطا: دیتای تلگرام لود نشده است.");
+                alert("خطا: احراز هویت انجام نشد.");
                 return;
             }
-        
+
             isSubmitting = true;
-            tg.MainButton.showProgress(true); // نمایش اسپینر روی دکمه تلگرام
-            tg.MainButton.disable(); // غیرفعال کردن کلیک
-        
+            document.getElementById('loading-overlay').style.display = 'flex';
+            tg.MainButton.showProgress(true); 
+            tg.MainButton.disable();
+
             const payload = {
                 init_data: initDataRaw,
                 answers: userAnswers,
                 timestamp: Math.floor(Date.now() / 1000)
             };
-        
+
             try {
-                // تغییر URL به آدرس پروداکشن خودت دقت کن
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 15000);
+
                 const response = await fetch('https://self-production-1573.up.railway.app/receive-data', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
+                    body: JSON.stringify(payload),
+                    signal: controller.signal
                 });
-        
+                
+                clearTimeout(timeoutId);
+
                 if (response.ok) {
                     tg.close();
                 } else {
-                    const err = await response.text();
-                    alert("خطای سرور: " + err);
-                    // در صورت خطا، قفل را باز کن تا کاربر دوباره تلاش کند
+                    if (response.status === 429) {
+                        alert("⏳ لطفاً کمی صبر کنید، ترافیک بالاست.");
+                    } else {
+                        const err = await response.text();
+                        alert("خطا: " + err);
+                    }
                     resetButtonState();
                 }
             } catch (error) {
-                alert("خطای شبکه: " + error.message);
+                if (error.name === 'AbortError') {
+                     alert("زمان پاسخگویی طولانی شد. نت بررسی شود.");
+                } else {
+                     alert("خطای شبکه: " + error.message);
+                }
                 resetButtonState();
             }
         }
 
         function resetButtonState() {
             isSubmitting = false;
+            document.getElementById('loading-overlay').style.display = 'none';
             tg.MainButton.hideProgress();
             tg.MainButton.enable();
         }
-        // نقطه شروع
+
         window.onload = function() {
-            const isDebug = false; // برای تست روی مرورگر true کنید
+            // برای تست: true کنید تا روی مرورگر ببینید
+            const isDebug = false; 
+            
             if (isTelegram || isDebug) {
                 document.getElementById('access-denied').style.display = 'none';
                 intro.style.display = 'flex';
-                // لود کردن سوالات
                 fetchQuestions();
             } else {
                 document.getElementById('access-denied').style.display = 'flex';
