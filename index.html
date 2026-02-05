@@ -14,7 +14,7 @@
             --border-color: #333;    
             --text-primary: #e0e0e0;    
             --text-secondary: #888;  
-            --text-gold: #ffb700;       
+            --text-gold: #ffcc00;       
             
             /* رنگ دکمه‌ها */
             --btn-disagree: #000000;    /* سیاه */
@@ -70,6 +70,26 @@
             z-index: 2; pointer-events: none;
         }
 
+        /* ✨ انعکاس نور روی آسفالت خیس (اضافه شده) */
+        .fog-floor::before {
+            content: '';
+            position: absolute;
+            bottom: -50px; left: -100px; /* زیر چراغ */
+            width: 600px; height: 200px;
+            /* یک بیضی کشیده زرد رنگ و محو */
+            background: radial-gradient(ellipse at center, rgba(255, 183, 0, 0.08) 0%, transparent 70%);
+            transform: rotate(-10deg); /* زاویه تابش */
+            filter: blur(20px);
+            opacity: 0.8;
+            /* اینم با نور اصلی پر پر میزنه */
+            animation: reflection-flicker 4s infinite ease-in-out;
+        }
+
+        @keyframes reflection-flicker {
+            0%, 100% { opacity: 0.6; transform: rotate(-10deg) scale(1); }
+            50% { opacity: 0.9; transform: rotate(-10deg) scale(1.05); }
+        }
+
         /* 🕯️ چراغ گازی سیلوئت (ضد نور) - سمت چپ */
         .wall-lamp-container {
             position: fixed;
@@ -80,16 +100,20 @@
             display: flex; justify-content: flex-start;
         }
 
-        /* هاله نور پشت چراغ (که سیاهی چراغ رو منطقی میکنه) */
         .lamp-light-bloom {
             position: absolute;
-            left: 55px; top: 130px; /* تنظیم دقیق پشت حباب */
+            left: 55px; top: 130px; 
             width: 500px; height: 500px;
-            background: radial-gradient(circle, rgba(255, 170, 0, 0.3) 0%, rgba(255, 100, 0, 0.05) 50%, transparent 70%);
+            /* 👇 گرادینت جدید: هسته داغ و روشن + پخش نور زنده 👇 */
+            background: radial-gradient(circle, 
+                rgba(255, 240, 200, 0.6) 0%,   /* مرکز: تقریباً سفید و داغ */
+                rgba(255, 180, 50, 0.3) 30%,   /* لایه دوم: طلایی */
+                rgba(255, 100, 0, 0.05) 60%,   /* لایه سوم: نارنجی محو */
+                transparent 70%);
             transform: translate(-50%, -50%);
             pointer-events: none;
-            mix-blend-mode: screen;
-            animation: flicker 5s infinite ease-in-out;
+            mix-blend-mode: screen; /* حیاتی برای درخشش روی زمینه سیاه */
+            animation: flicker 4s infinite ease-in-out; /* سرعتش رو هم کمی طبیعی‌تر کردم */
         }
 
         /* استایل SVG چراغ (سیاه یکدست) */
@@ -143,7 +167,11 @@
         .progress-container {
             width: 100%; display: flex; align-items: center; justify-content: space-between;
             margin-bottom: 25px; margin-top: 60px; 
+            padding-left: 60px; /* فاصله برای جلوگیری از تداخل با لامپ */
+            position: relative; 
+            z-index: 30; 
         }
+
         .q-counter { color: #666; font-size: 12px; font-family: monospace; }
         .progress-track {
             flex-grow: 1; height: 1px; background: #333;
@@ -163,15 +191,20 @@
             background: var(--bg-card);
             backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
             border: 1px solid rgba(255, 255, 255, 0.08);
-            /* نوری که از چراغ سمت چپ میخوره به لبه کارت */
-            border-left: 1px solid rgba(255, 183, 0, 0.3); 
+            
+            /* 👇 برقراری ارتباط نوری با چراغ */
+            border-left: 2px solid rgba(255, 183, 0, 0.1); 
+            box-shadow: 0 25px 60px rgba(0,0,0,0.9);
             
             padding: 30px 25px; border-radius: 4px; width: 100%; min-height: 220px;
             display: flex; flex-direction: column; align-items: center; 
             text-align: center; justify-content: center;
-            box-shadow: 0 25px 60px rgba(0,0,0,0.9);
             position: absolute; opacity: 1; 
+            
+            /* انیمیشن واکنشی به نور چراغ */
+            animation: card-light-response 4s infinite ease-in-out;
         }
+
         .q-text-content { 
             font-size: 18px; font-weight: 300; line-height: 1.8; color: #f0f0f0;
             text-shadow: 0 2px 4px rgba(0,0,0,1);
@@ -218,6 +251,20 @@
         @keyframes dissolveOut { to { opacity: 0; transform: scale(0.98); } }
         @keyframes dissolveIn { from { opacity: 0; transform: scale(1.02); } to { opacity: 1; transform: scale(1); } }
         @keyframes breathe { 0% { opacity: 0.6; } 50% { opacity: 1; } 100% { opacity: 0.6; } }
+
+        /* انیمیشن واکنش کارت به نور */
+        @keyframes card-light-response {
+            0%, 100% { 
+                border-left-color: rgba(255, 183, 0, 0.1); 
+                box-shadow: 0 25px 60px rgba(0,0,0,0.9);
+            }
+            50% { 
+                /* وقتی نور زیاد میشه، لبه کارت روشن‌تر میشه */
+                border-left-color: rgba(255, 200, 50, 0.5); 
+                /* و سایه پشتش شارپ‌تر میشه */
+                box-shadow: 10px 25px 70px rgba(0,0,0,1); 
+            }
+        }
 
         /* 🧠 لایه لودینگ */
         #loading-overlay {
@@ -275,8 +322,7 @@
                 <rect x="25" y="-15" width="10" height="15" fill="black"/>
                 <circle cx="30" cy="-18" r="5" fill="black"/>
                 
-                <!-- فریم دور شیشه (چون ضد نور است، شیشه هم سیاه دیده میشود یا فقط فریم) -->
-                <!-- اینجا یک حقه میزنیم: کل بدنه سیاهه، نور فقط از پشتش میزنه بیرون -->
+                <!-- فریم دور شیشه -->
                 <path d="M5 35 L 15 120 L 45 120 L 55 35 Z" fill="black"/> 
                 
                 <!-- کف فانوس -->
