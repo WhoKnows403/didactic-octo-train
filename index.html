@@ -8,26 +8,28 @@
     <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@200;300;400;500&display=swap" rel="stylesheet">
     <style>
         :root {
-            /* 🎨 پالت رنگی: شب برفی، چدن تیره، طلای گرم */
-            --bg-main: #020203;         /* رنگ شب تیره */
-            --bg-card: rgba(20, 22, 25, 0.75); /* شیشه‌ای بسیار شفاف‌تر برای دیدن برف */
-            --border-color: #3a3a3a;    
+            /* 🎨 پالت رنگی: نوآر، تاریکی مطلق، طلای سوخته */
+            --bg-main: #020202;         
+            --bg-card: rgba(15, 15, 15, 0.65); /* شیشه‌ای خیلی شفاف برای دیدن محیط */
+            --border-color: #333;    
             --text-primary: #e0e0e0;    
-            --text-secondary: #8a9aaa;  /* توناژ آبی خاکستری (سرد) */
-            --text-gold: #ffb700;       /* نور گرم چراغ گازی */
+            --text-secondary: #888;  
+            --text-gold: #ffb700;       
             
             /* رنگ دکمه‌ها */
-            --btn-disagree: #151515;    /* تاریک */
-            --btn-neutral: #252a30;     
-            --btn-agree: #d4a017;       /* طلایی متالیک */
+            --btn-disagree: #000000;    /* سیاه */
+            --btn-neutral: #1a1a1a;     /* خاکستری خیلی تیره */
+            --btn-agree: #d49017;       /* طلایی کلاسیک */
         }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
         
         body, html {
             font-family: 'Vazirmatn', sans-serif;
             background-color: var(--bg-main);
-            /* گرادینت برای شبیه‌سازی خیابان تاریک و آسمان شب */
-            background: linear-gradient(to bottom, #020203 0%, #08080a 60%, #050505 100%);
+            /* ساخت اتمسفر خیابان خیس و مه آلود بدون عکس */
+            background: 
+                radial-gradient(ellipse at 50% 90%, #1a1a20 0%, #000000 60%), /* بازتاب نور روی زمین */
+                linear-gradient(to bottom, #050505 0%, #08080a 100%); /* آسمان شب */
             color: var(--text-primary);
             margin: 0; padding: 0; 
             width: 100%; height: 100%;
@@ -37,66 +39,67 @@
             user-select: none;
         }
 
-        /* ❄️ کانتینر برف (لایه زیرین) */
+        /* ❄️ کانتینر برف */
         .snow-scene {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             pointer-events: none; z-index: 1;
             overflow: hidden;
         }
         
-        /* دانه‌های برف */
         .snowflake {
-            position: absolute; 
-            background: white; 
-            border-radius: 50%; 
-            opacity: 0;
+            position: absolute; background: white; border-radius: 50%; opacity: 0;
             animation: fall linear infinite;
         }
 
-        /* لایه‌بندی برف‌ها (Parallax) */
-        .snow-layer-1 .snowflake { width: 2px; height: 2px; opacity: 0.8; animation-duration: 10s; } /* نزدیک */
-        .snow-layer-2 .snowflake { width: 1.5px; height: 1.5px; opacity: 0.5; animation-duration: 15s; filter: blur(1px); } /* وسط */
-        .snow-layer-3 .snowflake { width: 1px; height: 1px; opacity: 0.3; animation-duration: 20s; filter: blur(2px); } /* دور */
+        /* تنظیم کیفیت برف‌ها برای عمق میدان */
+        .snow-layer-1 .snowflake { width: 3px; height: 3px; opacity: 0.9; animation-duration: 8s; box-shadow: 0 0 2px white; } /* نزدیک و شفاف */
+        .snow-layer-2 .snowflake { width: 2px; height: 2px; opacity: 0.5; animation-duration: 12s; filter: blur(0.5px); } /* وسط */
+        .snow-layer-3 .snowflake { width: 1px; height: 1px; opacity: 0.3; animation-duration: 18s; filter: blur(1.5px); } /* دور و تار */
 
         @keyframes fall {
-            0% { transform: translateY(-10vh) translateX(-10px); opacity: 0; }
+            0% { transform: translateY(-10vh) translateX(-5px); opacity: 0; }
             10% { opacity: 1; }
             90% { opacity: 1; }
-            100% { transform: translateY(110vh) translateX(20px); opacity: 0; }
+            100% { transform: translateY(110vh) translateX(10px); opacity: 0; }
         }
 
-        /* 🌫️ مه کف خیابان (Atmosphere) */
+        /* 🌫️ مه اتمسفریک */
         .fog-floor {
-            position: absolute; bottom: 0; left: 0; width: 100%; height: 40%;
-            background: linear-gradient(to top, rgba(10,15,20, 0.8) 0%, transparent 100%);
+            position: absolute; bottom: 0; left: 0; width: 100%; height: 50%;
+            background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, transparent 100%);
             z-index: 2; pointer-events: none;
         }
 
-        /* 🕯️ چراغ گازی دیواری (سمت چپ) */
+        /* 🕯️ چراغ گازی سیلوئت (ضد نور) - سمت چپ */
         .wall-lamp-container {
             position: fixed;
-            top: 40px; left: 0; /* چسبیده به چپ */
-            z-index: 5; /* زیر کارت سوال اما روی بک‌گراند */
-            width: 150px; height: 300px;
+            top: 0; left: -10px; /* متصل به چپ */
+            z-index: 20; /* روی همه چیز */
+            width: 180px; height: 400px;
             pointer-events: none;
+            display: flex; justify-content: flex-start;
         }
 
-        /* نور پخش شده (Glow) */
+        /* هاله نور پشت چراغ (که سیاهی چراغ رو منطقی میکنه) */
         .lamp-light-bloom {
             position: absolute;
-            left: 60px; top: 110px;
-            width: 400px; height: 400px;
-            background: radial-gradient(circle, rgba(255, 183, 0, 0.15) 0%, rgba(255, 140, 0, 0.05) 40%, transparent 70%);
+            left: 55px; top: 130px; /* تنظیم دقیق پشت حباب */
+            width: 500px; height: 500px;
+            background: radial-gradient(circle, rgba(255, 170, 0, 0.3) 0%, rgba(255, 100, 0, 0.05) 50%, transparent 70%);
             transform: translate(-50%, -50%);
             pointer-events: none;
             mix-blend-mode: screen;
-            animation: flicker 6s infinite alternate;
+            animation: flicker 5s infinite ease-in-out;
+        }
+
+        /* استایل SVG چراغ (سیاه یکدست) */
+        .silhouette-svg {
+            filter: drop-shadow(2px 4px 10px rgba(0,0,0,0.8));
         }
 
         @keyframes flicker {
             0%, 100% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
-            50% { opacity: 0.85; transform: translate(-50%, -50%) scale(0.98); }
-            70% { opacity: 0.95; transform: translate(-50%, -50%) scale(1.02); }
+            50% { opacity: 0.9; transform: translate(-50%, -50%) scale(0.98); }
         }
 
         /* 🚀 صفحات */
@@ -105,32 +108,29 @@
             z-index: 500;
             display: none; flex-direction: column; align-items: center; justify-content: center;
             padding: 30px; text-align: center;
-            background: rgba(2, 2, 3, 0.9); /* کمی شفافیت برای دیدن برف */
-            backdrop-filter: blur(8px);
+            background: #000;
         }
         
         .intro-visual { 
-            font-size: 60px; margin-bottom: 20px; 
-            filter: grayscale(100%) drop-shadow(0 0 20px rgba(255, 183, 0, 0.2));
+            font-size: 50px; margin-bottom: 20px; 
+            filter: grayscale(100%); opacity: 0.7;
             animation: breathe 4s infinite;
         }
         .intro-h1 { 
-            font-size: 26px; font-weight: 300; margin-bottom: 10px; 
-            color: var(--text-gold); letter-spacing: 0.5px;
-            text-shadow: 0 0 10px rgba(255, 183, 0, 0.3);
+            font-size: 24px; font-weight: 300; margin-bottom: 10px; 
+            color: var(--text-gold); letter-spacing: 1px;
         }
         .intro-p { 
             color: var(--text-secondary); font-size: 14px; margin-bottom: 50px; 
             max-width: 280px; font-weight: 300; line-height: 1.8;
         }
         .btn-start {
-            background: rgba(255, 183, 0, 0.05); color: var(--text-gold);
-            border: 1px solid rgba(255, 183, 0, 0.3);
-            padding: 14px 50px; font-size: 15px; border-radius: 4px;
+            background: transparent; color: var(--text-gold);
+            border: 1px solid rgba(255, 183, 0, 0.4);
+            padding: 12px 45px; font-size: 14px; border-radius: 4px;
             font-family: 'Vazirmatn'; cursor: pointer; transition: all 0.3s;
-            box-shadow: 0 0 15px rgba(0,0,0,0.5);
         }
-        .btn-start:active { background: rgba(255, 183, 0, 0.2); transform: scale(0.98); }
+        .btn-start:active { background: rgba(255, 183, 0, 0.15); border-color: var(--text-gold); }
 
         /* 📱 کانتینر اصلی */
         .app-layout {
@@ -144,103 +144,99 @@
             width: 100%; display: flex; align-items: center; justify-content: space-between;
             margin-bottom: 25px; margin-top: 60px; 
         }
-        .q-counter { color: #667788; font-size: 12px; font-family: monospace; }
+        .q-counter { color: #666; font-size: 12px; font-family: monospace; }
         .progress-track {
-            flex-grow: 1; height: 2px; background: rgba(255,255,255,0.1);
-            margin-right: 15px; position: relative; border-radius: 2px; overflow: hidden;
+            flex-grow: 1; height: 1px; background: #333;
+            margin-right: 15px; position: relative;
         }
         .progress-glow {
             height: 100%; background: var(--text-gold); width: 0%; 
-            transition: width 0.5s ease; box-shadow: 0 0 8px var(--text-gold);
+            transition: width 0.5s ease; box-shadow: 0 0 10px var(--text-gold);
         }
 
-        /* 🎴 کارت سوال */
+        /* 🎴 کارت سوال - گلس مورفیسم */
         .card-stage { 
             flex-grow: 1; position: relative; display: flex; 
             align-items: center; justify-content: center; 
         }
         .stone-card {
             background: var(--bg-card);
-            /* افکت شیشه‌ی یخ‌زده (Frosted Glass) */
-            backdrop-filter: blur(12px) saturate(100%); 
-            -webkit-backdrop-filter: blur(12px) saturate(100%);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            /* بازتاب نور طلایی روی لبه چپ کارت (چون چراغ چپه) */
-            border-left: 1px solid rgba(255, 183, 0, 0.2); 
+            backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            /* نوری که از چراغ سمت چپ میخوره به لبه کارت */
+            border-left: 1px solid rgba(255, 183, 0, 0.3); 
             
-            padding: 30px 25px; border-radius: 8px; width: 100%; min-height: 220px;
+            padding: 30px 25px; border-radius: 4px; width: 100%; min-height: 220px;
             display: flex; flex-direction: column; align-items: center; 
             text-align: center; justify-content: center;
-            box-shadow: 0 25px 50px rgba(0,0,0,0.8);
+            box-shadow: 0 25px 60px rgba(0,0,0,0.9);
             position: absolute; opacity: 1; 
         }
         .q-text-content { 
-            font-size: 19px; font-weight: 300; line-height: 1.9; color: #f0f0f0;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.9);
+            font-size: 18px; font-weight: 300; line-height: 1.8; color: #f0f0f0;
+            text-shadow: 0 2px 4px rgba(0,0,0,1);
         }
 
         /* 🔘 دکمه‌ها */
         .interaction-area { margin-bottom: 40px; width: 100%; }
         .labels-row { 
             display: flex; justify-content: space-between; 
-            color: #556677; font-size: 11px; margin-bottom: 20px; padding: 0 10px; 
+            color: #555; font-size: 11px; margin-bottom: 20px; padding: 0 10px; 
             text-transform: uppercase; letter-spacing: 1px;
         }
-        
         .options-grid {
             display: flex; justify-content: space-between; align-items: center;
             position: relative; padding: 0 10px;
         }
+        /* خط راهنمای وسط دکمه ها */
         .options-grid::before {
             content: ''; position: absolute; left: 20px; right: 20px; top: 50%; height: 1px;
-            background: linear-gradient(to left, transparent, #223344, transparent); z-index: 0; opacity: 0.4;
+            background: #222; z-index: 0;
         }
-
         .circle-btn {
             border: none; border-radius: 50%; 
             cursor: pointer; z-index: 2; position: relative;
-            transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+            transition: all 0.2s;
             color: transparent; display: flex; justify-content: center; align-items: center;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
         }
         
         /* استایل دکمه‌ها */
-        .circle-btn[data-val="1"] { width: 38px; height: 38px; background: #0f0f10; border: 1px solid #2a2a2a; }
-        .circle-btn[data-val="2"] { width: 46px; height: 46px; background: #1a1a1c; opacity: 0.8; border: 1px solid #2a2a2a; }
-        .circle-btn[data-val="3"] { width: 50px; height: 50px; background: #252a30; border: 1px solid #3a3a3a; }
-        .circle-btn[data-val="4"] { width: 58px; height: 58px; background: #b8860b; opacity: 0.8; }
+        .circle-btn[data-val="1"] { width: 36px; height: 36px; background: #080808; border: 1px solid #333; }
+        .circle-btn[data-val="2"] { width: 44px; height: 44px; background: #121212; border: 1px solid #333; }
+        .circle-btn[data-val="3"] { width: 50px; height: 50px; background: #1a1a1a; border: 1px solid #444; }
+        .circle-btn[data-val="4"] { width: 56px; height: 56px; background: #b8860b; opacity: 0.9; }
         .circle-btn[data-val="5"] { 
-            width: 70px; height: 70px; 
-            background: radial-gradient(circle at 30% 30%, #ffd700, #daa520); 
-            box-shadow: 0 0 20px rgba(255, 183, 0, 0.3), inset 0 2px 5px rgba(255,255,255,0.4);
+            width: 68px; height: 68px; 
+            background: radial-gradient(circle at 30% 30%, #ffd700, #ff8c00); 
+            box-shadow: 0 0 20px rgba(255, 140, 0, 0.4);
         }
+        .circle-btn:active { transform: scale(0.95); }
 
-        .circle-btn:active { transform: scale(0.9); filter: brightness(1.2); }
         .fade-out { animation: dissolveOut 0.4s forwards; }
         .fade-in { animation: dissolveIn 0.4s forwards; }
-        @keyframes dissolveOut { to { opacity: 0; transform: scale(0.95) translateY(-10px); } }
-        @keyframes dissolveIn { from { opacity: 0; transform: scale(1.05) translateY(10px); } to { opacity: 1; transform: scale(1); } }
+        @keyframes dissolveOut { to { opacity: 0; transform: scale(0.98); } }
+        @keyframes dissolveIn { from { opacity: 0; transform: scale(1.02); } to { opacity: 1; transform: scale(1); } }
         @keyframes breathe { 0% { opacity: 0.6; } 50% { opacity: 1; } 100% { opacity: 0.6; } }
 
         /* 🧠 لایه لودینگ */
         #loading-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 2000;
-            background: rgba(2, 2, 3, 0.98); 
+            background: rgba(0, 0, 0, 0.95); 
             display: flex; flex-direction: column; align-items: center; justify-content: center;
             text-align: center;
         }
         .brain-loader {
-            font-size: 50px; filter: grayscale(100%) drop-shadow(0 0 15px var(--text-gold)); 
+            font-size: 50px; filter: grayscale(100%); opacity: 0.8;
             animation: breathe 1.5s infinite;
         }
         .loading-bar-container {
-            width: 140px; height: 2px; background: #222; 
+            width: 140px; height: 1px; background: #333; 
             margin-top: 30px; overflow: hidden; position: relative;
         }
         .loading-bar-fill {
             position: absolute; top: 0; left: 0; bottom: 0; background: var(--text-gold);
             width: 50%; animation: indeterminate 1.5s infinite ease-in-out;
-            box-shadow: 0 0 10px var(--text-gold);
         }
         @keyframes indeterminate {
             0% { left: -50%; width: 30%; } 50% { left: 20%; width: 80%; } 100% { left: 100%; width: 30%; }
@@ -249,7 +245,7 @@
 </head>
 <body>
 
-    <!-- ❄️ سیستم برف و مه -->
+    <!-- ❄️ سیستم برف و محیط -->
     <div class="snow-scene" id="snow-container">
         <!-- دانه‌ها توسط JS ساخته میشن -->
         <div class="snow-layer-1" id="snow-l1"></div>
@@ -258,45 +254,34 @@
     </div>
     <div class="fog-floor"></div>
 
-    <!-- 🕯️ چراغ گازی دیواری (از سمت چپ) -->
+    <!-- 🕯️ چراغ گازی دیواری (طرح Silhouette - سیاه یکدست) -->
     <div class="wall-lamp-container">
-        <!-- هاله نور -->
+        <!-- هاله نور پشت چراغ -->
         <div class="lamp-light-bloom"></div>
         
-        <!-- وکتور چراغ -->
-        <svg width="150" height="250" viewBox="0 0 150 250" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-                <linearGradient id="metalGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" style="stop-color:#2a2a2a;stop-opacity:1" />
-                    <stop offset="50%" style="stop-color:#0a0a0a;stop-opacity:1" />
-                    <stop offset="100%" style="stop-color:#111;stop-opacity:1" />
-                </linearGradient>
-            </defs>
-
-            <!-- پایه متصل به دیوار چپ -->
-            <path d="M0 60 L 40 60 C 55 60, 65 75, 65 90" stroke="url(#metalGrad)" stroke-width="8" fill="none"/>
-            <path d="M0 90 L 20 90 C 30 90, 40 95, 45 105 L 65 140" stroke="url(#metalGrad)" stroke-width="4" fill="none"/>
-            <circle cx="45" cy="75" r="6" stroke="url(#metalGrad)" stroke-width="2" fill="none"/>
-
-            <!-- فانوس -->
-            <g transform="translate(40, 90)">
-                <!-- کلاهک -->
-                <path d="M10 20 L 25 0 L 40 20 Z" fill="#151515"/>
-                <path d="M5 20 L 45 20" stroke="#111" stroke-width="3"/>
+        <!-- وکتور چراغ به صورت سایه سیاه -->
+        <svg class="silhouette-svg" width="180" height="350" viewBox="0 0 180 350" xmlns="http://www.w3.org/2000/svg">
+            <!-- پایه آهنی سیاه -->
+            <path d="M0 80 L 50 80 C 70 80, 80 90, 85 110" stroke="black" stroke-width="14" fill="none"/>
+            <path d="M0 140 L 40 140 C 60 140, 70 150, 85 190" stroke="black" stroke-width="8" fill="none"/>
+            
+            <!-- تزیینات -->
+            <circle cx="85" cy="110" r="10" fill="black"/>
+            
+            <!-- بدنه فانوس (توپر سیاه) -->
+            <g transform="translate(55, 110)">
+                <!-- کلاهک بالا -->
+                <path d="M30 0 L 0 35 L 60 35 Z" fill="black"/>
+                <rect x="25" y="-15" width="10" height="15" fill="black"/>
+                <circle cx="30" cy="-18" r="5" fill="black"/>
                 
-                <!-- بدنه شیشه‌ای -->
-                <path d="M10 20 L 15 70 L 35 70 L 40 20 Z" 
-                      fill="rgba(255, 200, 50, 0.15)" stroke="#1a1a1a" stroke-width="2"/>
-                
-                <!-- شعله آتش -->
-                <path d="M25 65 Q 22 55, 25 45 Q 28 55, 25 65" fill="#ff9900" filter="blur(1px)">
-                    <animate attributeName="d" 
-                             values="M25 65 Q 22 55, 25 45 Q 28 55, 25 65; M25 65 Q 20 53, 25 42 Q 30 53, 25 65; M25 65 Q 22 55, 25 45 Q 28 55, 25 65" 
-                             dur="0.3s" repeatCount="indefinite"/>
-                </path>
+                <!-- فریم دور شیشه (چون ضد نور است، شیشه هم سیاه دیده میشود یا فقط فریم) -->
+                <!-- اینجا یک حقه میزنیم: کل بدنه سیاهه، نور فقط از پشتش میزنه بیرون -->
+                <path d="M5 35 L 15 120 L 45 120 L 55 35 Z" fill="black"/> 
                 
                 <!-- کف فانوس -->
-                <path d="M15 70 L 20 80 L 30 80 L 35 70" fill="#111"/>
+                <path d="M15 120 L 20 135 L 40 135 L 45 120 Z" fill="black"/>
+                <circle cx="30" cy="138" r="6" fill="black"/>
             </g>
         </svg>
     </div>
@@ -354,8 +339,8 @@
         // ✅ لاجیک اصلی (بدون تغییر)
         const tg = window.Telegram.WebApp;
         tg.ready(); tg.expand(); tg.disableVerticalSwipes();
-        if(tg.setHeaderColor) tg.setHeaderColor('#020203');
-        if(tg.setBackgroundColor) tg.setBackgroundColor('#020203');
+        if(tg.setHeaderColor) tg.setHeaderColor('#020202');
+        if(tg.setBackgroundColor) tg.setBackgroundColor('#020202');
         
         // ❄️ اسکریپت تولید برف (فوق‌العاده سبک)
         function createSnow() {
