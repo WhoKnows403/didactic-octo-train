@@ -349,7 +349,7 @@
         }
 
         let cloudSaveTimeout;
-        
+
         function saveProgress() {
             localStorage.setItem('user_answers_v1', JSON.stringify(userAnswers));
             localStorage.setItem('current_index_v1', currentIndex);
@@ -463,16 +463,25 @@
                         tg.close();
                     }
                 }
-                else {
-                    if (response.status === 429) { alert("⏳ درخواست شما قبلا ثبت شده است. لطفاً ربات را چک کنید."); }
-                    else { const err = await response.text(); alert("خطا: " + err); }
+                if (!response.ok) {
+                    if (response.status === 429) {
+                        alert("⏳ درخواست شما قبلا ثبت شده است. لطفاً ربات را چک کنید.");
+                    }
+                    if (response.status === 400) {
+                        alert("⏳ درخواست شما قبلا ثبت شده است. لطفاً ربات را چک کنید.");
+                    }
+                    else {
+                        try {
+                            const errJson = await response.json();
+                            alert("خطا: " + (errJson.detail || "مشکلی پیش آمده است"));
+                        } catch {
+                            const errText = await response.text();
+                            alert("خطا: " + errText);
+                        }
+                    }
                     resetButtonState();
+                    return;
                 }
-            } catch (error) {
-                if (error.name === 'AbortError') { alert("ارتباط با سرور زمان‌بر شد. لطفاً ربات را چک کنید."); }
-                else { alert("خطای شبکه: " + error.message); }
-                resetButtonState();
-            }
         }
 
         function resetButtonState() {
