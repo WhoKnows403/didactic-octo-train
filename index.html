@@ -298,8 +298,6 @@
                 const res = await fetch('questions.json?v=' + new Date().getTime());
                 if (!res.ok) throw new Error("Network error");
                 questionsDB = await res.json();
-                btnStart.removeAttribute('disabled');
-                btnStart.innerText = "ورود به ناخودآگاه";
                 introDesc.innerHTML = `${questionsDB.length} ایستگاه برای شناخت عمیق`;
                 loadSavedAnswers();
             } catch (e) {
@@ -323,8 +321,6 @@
                             if (currentIndex >= questionsDB.length) {
                                 currentIndex = 0;
                                 userAnswers = {};
-                            } else if (currentIndex > 0) {
-                                btnStart.innerText = "ادامه مسیر قبلی";
                             }
                         }
                     }
@@ -336,15 +332,36 @@
             }
         }
 
+
+        function loadFromLocalStorage() {
+            const savedAnswers = localStorage.getItem('user_answers_v1');
+            const savedIndex = localStorage.getItem('current_index_v1');
+            if (savedAnswers && savedIndex) {
+                userAnswers = JSON.parse(savedAnswers);
+                currentIndex = parseInt(savedIndex);
+                if (currentIndex >= questionsDB.length) {
+                    currentIndex = 0;
+                    userAnswers = {};
+                }
+            }
+            btnStart.removeAttribute('disabled');
+            btnStart.innerText = currentIndex > 0 ? "ادامه مسیر قبلی" : "ورود به ناخودآگاه";
+        }
+
+        let cloudSaveTimeout;
+        
         function saveProgress() {
             localStorage.setItem('user_answers_v1', JSON.stringify(userAnswers));
             localStorage.setItem('current_index_v1', currentIndex);
 
             if (tg.CloudStorage) {
-                tg.CloudStorage.setItem('user_answers_v1', JSON.stringify(userAnswers), (err, success) => {
-                    if (err) console.error("CloudStorage Error:", err);
-                });
-                tg.CloudStorage.setItem('current_index_v1', currentIndex.toString());
+                clearTimeout(cloudSaveTimeout);
+                cloudSaveTimeout = setTimeout(() => {
+                    tg.CloudStorage.setItem('user_answers_v1', JSON.stringify(userAnswers), (err) => {
+                        if (err) console.error("CloudStorage Error:", err);
+                    });
+                    tg.CloudStorage.setItem('current_index_v1', currentIndex.toString());
+                }, 1500);
             }
         }
 
