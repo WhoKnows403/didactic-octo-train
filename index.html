@@ -364,7 +364,7 @@
             position: relative;
             width: 92%;
             margin: 0 auto;
-            padding: 35px 25px;
+            padding: 40px 25px 35px 25px;
             border-radius: 24px;
             overflow: hidden;
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
@@ -376,12 +376,13 @@
             position: absolute;
             top: -50%; left: -50%;
             width: 200%; height: 200%;
-            background: conic-gradient(transparent, var(--accent-sage), transparent 30%);
-            animation: rotate-glow 4s linear infinite;
-            opacity: 0.35;
+            background: conic-gradient(transparent, var(--accent-sage), transparent 40%);
+            animation: rotate-glow 5s linear infinite;
+            opacity: 0.15;
             z-index: 0;
             transition: background 1.5s ease;
         }
+
 
         .glass-card::after {
             content: '';
@@ -397,22 +398,52 @@
         .glass-card-content {
             position: relative;
             z-index: 2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
-        @keyframes rotate-glow {
-            100% { transform: rotate(360deg); }
-        }
+        @keyframes rotate-glow { 100% { transform: rotate(360deg); } }
 
-        .blur-reveal {
-            animation: blurFocus 1.2s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+        .paragraph-target {
             opacity: 0;
             filter: blur(12px);
             transform: translateY(15px);
         }
 
+        .blur-reveal {
+            animation: blurFocus 1.2s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+        }
+
         @keyframes blurFocus {
             to { opacity: 1; filter: blur(0); transform: translateY(0); }
         }
+
+        .sacred-geometry {
+            position: relative;
+            width: 50px;
+            height: 50px;
+            margin-bottom: 25px;
+            transform-style: preserve-3d;
+            perspective: 800px;
+        }
+
+        .geom-ring {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            border: 1px solid var(--accent-sage);
+            border-radius: 50%;
+            opacity: 0.6;
+            transition: border-color 1.5s ease;
+        }
+
+        .geom-ring:nth-child(1) { animation: spin3D_1 6s linear infinite; }
+        .geom-ring:nth-child(2) { animation: spin3D_2 8s linear infinite; }
+        .geom-ring:nth-child(3) { animation: spin3D_3 10s linear infinite; }
+
+        @keyframes spin3D_1 { 100% { transform: rotateX(75deg) rotateZ(360deg); } }
+        @keyframes spin3D_2 { 100% { transform: rotateY(75deg) rotateZ(360deg); } }
+        @keyframes spin3D_3 { 100% { transform: rotateX(45deg) rotateY(45deg) rotateZ(360deg); } }
 
     </style>
 </head>
@@ -854,7 +885,7 @@
             });
         }
 
-        function typeWriterEffect(element, text, speed = 35) {
+        function typeWriterEffect(element, text, speed = 35, onComplete) {
             if (element.twTimeout) clearTimeout(element.twTimeout);
             element.innerHTML = "";
             let i = 0;
@@ -864,6 +895,8 @@
                     element.innerHTML += text.charAt(i);
                     i++;
                     element.twTimeout = setTimeout(type, speed);
+                } else if (onComplete) {
+                    onComplete();
                 }
             }
             type();
@@ -893,14 +926,21 @@
                 const slideDiv = document.createElement('div');
                 slideDiv.className = 'slide';
                 slideDiv.id = `slide-${index}`;
-                const cleanTitle = slide.title.replace(/^\d+\.\s*/, '');
+                const cleanTitle = slide.title.replace(/^\d+\.\s*/, '').replace(/<\/?[^>]+(>|$)/g, "").replace(/\*/g, '');
+
                 slideDiv.innerHTML = `
                     <div class="glass-card">
                         <div class="glass-card-content">
-                            <h2 class="typewriter-target" data-text="${cleanTitle}"></h2>
+                            <div class="sacred-geometry">
+                                <div class="geom-ring"></div>
+                                <div class="geom-ring"></div>
+                                <div class="geom-ring"></div>
+                            </div>
+                            <h2 class="typewriter-target" style="text-align: center; margin-top: 0;" data-text="${cleanTitle}"></h2>
                             <p class="paragraph-target">${slide.content}</p>
                         </div>
-                    </div>`;
+                    </div>
+                `;
                 slidesWrapper.appendChild(slideDiv);
             });
 
@@ -955,14 +995,15 @@
                     const titleEl = slide.querySelector('.typewriter-target');
                     const pEl = slide.querySelector('.paragraph-target');
 
-                    titleEl.innerHTML = "";
                     pEl.classList.remove('blur-reveal');
-                    void pEl.offsetWidth;
+                    pEl.style.opacity = '0';
+                    titleEl.innerHTML = "";
 
                     setTimeout(() => {
-                        typeWriterEffect(titleEl, titleEl.getAttribute('data-text'), 40);
-                        pEl.classList.add('blur-reveal');
-                    }, 300);
+                        typeWriterEffect(titleEl, titleEl.getAttribute('data-text'), 40, () => {
+                            pEl.classList.add('blur-reveal');
+                        });
+                    }, 350);
 
                     setTimeout(() => tick.classList.add('active'), 50);
                 } else {
