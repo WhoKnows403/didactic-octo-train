@@ -240,6 +240,114 @@
             border-top-color: var(--accent-sage); border-radius: 50%;
             animation: spin 1s ease-in-out infinite;
         }
+
+        /* 📖 Story Mode UI - Premium Experience */
+        #result-container {
+            display: none;
+            flex-direction: column;
+            width: 100%;
+            height: 100%;
+            position: fixed;
+            top: 0; left: 0;
+            background: var(--bg-dark);
+            z-index: 1000;
+            padding: 30px 20px;
+            overflow: hidden;
+        }
+
+        .story-progress-bar {
+            display: flex; gap: 4px; width: 100%;
+            margin-bottom: 30px; position: relative; z-index: 10;
+        }
+
+        .story-tick {
+            flex: 1; height: 3px; background: rgba(255,255,255,0.1);
+            border-radius: 4px; overflow: hidden;
+        }
+
+        .story-tick-fill {
+            height: 100%; width: 0%; background: var(--accent-sage);
+            transition: width 0.4s ease;
+        }
+        .story-tick.active .story-tick-fill { width: 100%; }
+
+        .slide-container {
+            flex-grow: 1; position: relative; width: 100%;
+            display: flex; align-items: center; justify-content: center;
+        }
+
+        .slide {
+            position: absolute; width: 100%; max-height: 80vh;
+            overflow-y: auto; padding-bottom: 40px;
+            opacity: 0; transform: translateY(20px) scale(0.95);
+            transition: all 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+            pointer-events: none;
+            scrollbar-width: none; /* Firefox */
+        }
+        .slide::-webkit-scrollbar { display: none; /* Chrome */ }
+
+        .slide.active {
+            opacity: 1; transform: translateY(0) scale(1);
+            pointer-events: auto;
+        }
+
+        .slide.passed {
+            opacity: 0; transform: translateY(-20px) scale(0.95);
+        }
+
+        .slide h2 {
+            color: var(--accent-sage); font-size: 22px; font-weight: 500;
+            margin-bottom: 20px; line-height: 1.4;
+            text-shadow: 0 4px 15px rgba(157, 179, 155, 0.1);
+        }
+
+        .slide p {
+            color: var(--text-ivory); font-size: 16px; font-weight: 300;
+            line-height: 1.9; text-align: justify;
+            text-shadow: 0 2px 5px rgba(0,0,0,0.5);
+        }
+
+        /* 🔘 Floating Continue Button */
+        .continue-btn-wrapper {
+            position: absolute; bottom: 30px; left: 0; width: 100%;
+            display: flex; justify-content: center; z-index: 20;
+        }
+
+        .continue-btn {
+            background: var(--accent-sage); color: var(--bg-dark);
+            border: none; padding: 15px 40px; font-size: 15px; font-weight: 600;
+            border-radius: 50px; font-family: 'Vazirmatn'; cursor: pointer;
+            box-shadow: 0 4px 20px rgba(157, 179, 155, 0.3);
+            display: flex; align-items: center; gap: 10px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .continue-btn:active { transform: scale(0.95); }
+        .continue-btn svg { width: 18px; height: 18px; fill: currentColor; }
+
+        /* Network Error UI */
+        .network-error-ui {
+            display: none; flex-direction: column; align-items: center; justify-content: center;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--bg-dark); z-index: 2000; text-align: center; padding: 30px;
+        }
+        .network-error-ui svg { width: 60px; height: 60px; fill: var(--text-muted); margin-bottom: 20px; animation: pulse 2s infinite; }
+
+
+        .back-story-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            z-index: 101;
+            padding: 5px;
+            display: none;
+            transition: color 0.2s;
+        }
+        .back-story-btn:active { color: var(--text-ivory); transform: scale(0.9); }
+        .back-story-btn svg { width: 24px; height: 24px; fill: currentColor; }
         @keyframes spin { to { transform: rotate(360deg); } }
     </style>
 </head>
@@ -301,6 +409,29 @@
         <div class="minimal-spinner"></div>
         <h3 style="margin-top: 25px; color: var(--text-ivory); font-weight: 400; letter-spacing: 1px; font-size: 16px;">تـحـلـیـل داده‌هـا</h3>
         <p style="color: var(--text-muted); font-size: 13px; margin-top: 5px;">در حال ترسیم نقشه‌ی ذهن...</p>
+    </div>
+
+    <!-- Story Mode Result Container -->
+    <div id="result-container">
+        <button class="back-story-btn" id="back-story-btn" onclick="prevSlide()">
+            <svg viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+        </button>
+        <div class="story-progress-bar" id="story-progress"></div>
+        <div class="slide-container" id="slides-wrapper"></div>
+        <div class="continue-btn-wrapper">
+            <button class="continue-btn" id="next-slide-btn" onclick="nextSlide()">
+                <span>ادامه</span>
+                <svg viewBox="0 0 24 24"><path d="M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z" transform="rotate(-90 12 12)"/></svg>
+            </button>
+        </div>
+    </div>
+
+    <!-- Beautiful Network Error -->
+    <div class="network-error-ui" id="network-error">
+        <svg viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.36 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM17 13l-5 5-5-5h3V9h4v4h3z"/></svg>
+        <h3 style="color: var(--text-ivory); font-weight: 400; margin-bottom: 10px;">ارتباط با سرور کُند است</h3>
+        <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 30px; max-width: 250px;">سیگنال‌های ذهن شما در مسیر ارتباطی گیر کرده‌اند. لطفاً اینترنت خود را بررسی کنید.</p>
+        <button class="btn-start" onclick="loadAnalysis()">تلاش مجدد</button>
     </div>
 
     <script>
@@ -591,32 +722,160 @@
             }
         };
 
+        let parsedSlides = [];
+        let currentSlideIndex = 0;
+
         async function loadAnalysis() {
+            document.getElementById('network-error').style.display = 'none';
             document.getElementById('loading-overlay').style.display = 'flex';
             document.querySelector('#loading-overlay h3').innerText = "فراخوانی پرونده ذهنی";
-            document.querySelector('#loading-overlay p').innerText = "در حال دریافت اطلاعات از سرور...";
+            document.querySelector('#loading-overlay p').innerText = "در حال ایجاد ارتباط امن...";
 
             const initDataRaw = window.Telegram.WebApp.initData;
+
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 12000);
 
             try {
                 const response = await fetch('https://6f04-2a01-4ff-f0-fec7-00-1.ngrok-free.app/assessment/receive-result', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ init_data: initDataRaw })
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'ngrok-skip-browser-warning': 'true'
+                    },
+                    body: JSON.stringify({ init_data: initDataRaw }),
+                    signal: controller.signal
                 });
+
+                clearTimeout(timeoutId);
 
                 if (response.ok) {
                     const data = await response.json();
                     document.getElementById('loading-overlay').style.display = 'none';
 
+                    // شروع عملیات استوری‌سازی
                     renderResultUI(data.report_text);
                 } else {
                     tg.showAlert("هنوز تحلیلی برای شما ثبت نشده یا خطایی رخ داده است.");
                     tg.close();
                 }
             } catch (error) {
-                tg.showAlert("خطا در برقراری ارتباط با سرور");
+                clearTimeout(timeoutId);
+                document.getElementById('loading-overlay').style.display = 'none';
+
+                // اگر ارور بخاطر تایم‌اوت یا قطعی نت بود:
+                if (error.name === 'AbortError' || error.message.includes('Failed to fetch')) {
+                    document.getElementById('network-error').style.display = 'flex';
+                    if (tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('error');
+                } else {
+                    tg.showAlert("خطای فنی: " + error.message);
+                }
+            }
+        }
+
+        function parseMarkdownToSlides(rawText) {
+            const cleanText = rawText.replace(/---/g, '');
+
+            const rawParts = cleanText.split('##').map(p => p.trim()).filter(p => p.length > 0);
+
+            return rawParts.map(part => {
+                const lines = part.split('\n');
+                const title = lines[0].trim();
+                const content = lines.slice(1).join('<br><br>').trim();
+                return { title, content };
+            });
+        }
+
+
+        function renderResultUI(reportText) {
+            document.getElementById('app').style.display = 'none';
+            document.getElementById('intro-screen').style.display = 'none';
+
+            parsedSlides = parseMarkdownToSlides(reportText);
+            currentSlideIndex = 0;
+
+            const container = document.getElementById('result-container');
+            const slidesWrapper = document.getElementById('slides-wrapper');
+            const progressWrapper = document.getElementById('story-progress');
+
+            slidesWrapper.innerHTML = '';
+            progressWrapper.innerHTML = '';
+
+            parsedSlides.forEach((slide, index) => {
+                const tick = document.createElement('div');
+                tick.className = 'story-tick';
+                tick.id = `tick-${index}`;
+                tick.innerHTML = `<div class="story-tick-fill"></div>`;
+                progressWrapper.appendChild(tick);
+
+                const slideDiv = document.createElement('div');
+                slideDiv.className = 'slide';
+                slideDiv.id = `slide-${index}`;
+                const cleanTitle = slide.title.replace(/^\d+\.\s*/, '');
+                slideDiv.innerHTML = `<h2>${cleanTitle}</h2><p>${slide.content}</p>`;
+                slidesWrapper.appendChild(slideDiv);
+            });
+
+            container.style.display = 'flex';
+            updateStoryUI();
+        }
+
+
+        function updateStoryUI() {
+            parsedSlides.forEach((_, index) => {
+                const slide = document.getElementById(`slide-${index}`);
+                const tick = document.getElementById(`tick-${index}`);
+
+                if (index < currentSlideIndex) {
+                    slide.className = 'slide passed';
+                    tick.classList.add('active');
+                } else if (index === currentSlideIndex) {
+                    slide.className = 'slide active';
+                    tick.classList.remove('active');
+                    setTimeout(() => tick.classList.add('active'), 50);
+                } else {
+                    slide.className = 'slide';
+                    tick.classList.remove('active');
+                }
+            });
+
+            const backBtn = document.getElementById('back-story-btn');
+            if (currentSlideIndex > 0) {
+                backBtn.style.display = 'block';
+            } else {
+                backBtn.style.display = 'none';
+            }
+
+            const btnSpan = document.querySelector('#next-slide-btn span');
+            const btnIcon = document.querySelector('#next-slide-btn svg');
+
+            if (currentSlideIndex === parsedSlides.length - 1) {
+                btnSpan.innerText = "بستن تحلیل";
+                btnIcon.style.display = "none";
+            } else {
+                btnSpan.innerText = "ادامه";
+                btnIcon.style.display = "block";
+            }
+        }
+
+        window.nextSlide = function() {
+            if (tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
+
+            if (currentSlideIndex < parsedSlides.length - 1) {
+                currentSlideIndex++;
+                updateStoryUI();
+            } else {
                 tg.close();
+            }
+        }
+
+
+        window.prevSlide = function() {
+            if (tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
+
+            if (currentSlideIndex > 0) {
+                currentSlideIndex--;
+                updateStoryUI();
             }
         }
 
