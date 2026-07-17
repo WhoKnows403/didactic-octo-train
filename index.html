@@ -753,7 +753,6 @@
                     const data = await response.json();
                     document.getElementById('loading-overlay').style.display = 'none';
 
-                    // شروع عملیات استوری‌سازی
                     renderResultUI(data.report_text);
                 } else {
                     tg.showAlert("هنوز تحلیلی برای شما ثبت نشده یا خطایی رخ داده است.");
@@ -879,39 +878,7 @@
             }
         }
 
-        function renderResultUI(text) {
-            const resultContainer = document.createElement('div');
 
-            resultContainer.style.position = 'absolute';
-            resultContainer.style.top = '0';
-            resultContainer.style.left = '0';
-            resultContainer.style.width = '100%';
-            resultContainer.style.height = '100%';
-            resultContainer.style.padding = '30px 20px 80px 20px';
-            resultContainer.style.overflowY = 'auto';
-            resultContainer.style.background = 'var(--bg-dark)';
-            resultContainer.style.color = 'var(--text-ivory)';
-            resultContainer.style.lineHeight = '1.8';
-            resultContainer.style.zIndex = '1000';
-
-            const formattedText = text.replace(/\n/g, '<br>');
-
-            resultContainer.innerHTML = `
-                <div style="width: 50px; height: 5px; background: var(--accent-sage); margin: 0 auto 30px auto; border-radius: 10px;"></div>
-                <div style="font-size: 15px; text-align: right;" dir="rtl">
-                    ${formattedText}
-                </div>
-            `;
-
-            document.body.appendChild(resultContainer);
-
-            if(tg.BackButton) {
-                tg.BackButton.show();
-                tg.BackButton.onClick(() => {
-                    tg.close();
-                });
-            }
-        }
     </script>
 </body>
 </html>
