@@ -33,20 +33,30 @@
         }
 
         /* 🌟 Ethereal Breathing Background */
-        .ambient-glow {
-            position: absolute;
-            top: 50%; left: 50%;
-            width: 300px; height: 300px;
-            background: radial-gradient(circle, rgba(157, 179, 155, 0.12) 0%, transparent 70%);
-            transform: translate(-50%, -50%);
-            border-radius: 50%;
-            z-index: 1;
-            animation: breathe 6s infinite alternate ease-in-out;
-            pointer-events: none;
+
+        .mesh-bg {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            overflow: hidden; z-index: 1; pointer-events: none;
+            background: var(--bg-dark);
+            filter: blur(80px);
+            -webkit-filter: blur(80px);
         }
-        @keyframes breathe {
-            0% { transform: translate(-50%, -50%) scale(1); opacity: 0.6; }
-            100% { transform: translate(-50%, -50%) scale(1.6); opacity: 1; }
+
+        .blob {
+            position: absolute; border-radius: 50%;
+            animation: drift 15s infinite alternate cubic-bezier(0.4, 0, 0.2, 1);
+            transition: background 1.5s ease;
+        }
+
+        .blob-1 { width: 350px; height: 350px; background: var(--blob-1); top: -10%; left: -10%; animation-delay: 0s; }
+        .blob-2 { width: 400px; height: 400px; background: var(--blob-2); bottom: -20%; right: -10%; animation-delay: -5s; }
+        .blob-3 { width: 300px; height: 300px; background: var(--blob-3); top: 40%; left: 40%; animation-delay: -10s; }
+
+        @keyframes drift {
+            0% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(15vw, 10vh) scale(1.1); }
+            66% { transform: translate(-10vw, 20vh) scale(0.9); }
+            100% { transform: translate(5vw, -10vh) scale(1.05); }
         }
 
         /* 🚀 Screens */
@@ -354,7 +364,11 @@
 <body>
 
     <!-- Ambient glowing breathing background -->
-    <div class="ambient-glow"></div>
+    <div class="mesh-bg">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+    </div>
 
     <div id="access-denied">
         <h2 style="color: var(--text-ivory); font-weight: 300;">دسترسی غیرمجاز</h2>
@@ -819,6 +833,36 @@
             updateStoryUI();
         }
 
+        function applyMoodTheme(title, content) {
+            const textToAnalyze = (title + " " + content);
+            const root = document.documentElement;
+
+            if (textToAnalyze.includes('اصطکاک') || textToAnalyze.includes('سایه') || textToAnalyze.includes('ضعف')) {
+                root.style.setProperty('--accent-sage', '#E57373'); // قرمز ملایم
+                root.style.setProperty('--blob-1', 'rgba(229, 115, 115, 0.3)');
+                root.style.setProperty('--blob-2', 'rgba(198, 40, 40, 0.2)');
+                root.style.setProperty('--blob-3', 'rgba(255, 138, 101, 0.2)');
+            }
+            else if (textToAnalyze.includes('معماری') || textToAnalyze.includes('ساختار') || textToAnalyze.includes('منطق')) {
+                root.style.setProperty('--accent-sage', '#64B5F6'); // آبی یخی
+                root.style.setProperty('--blob-1', 'rgba(100, 181, 246, 0.3)');
+                root.style.setProperty('--blob-2', 'rgba(21, 101, 192, 0.2)');
+                root.style.setProperty('--blob-3', 'rgba(77, 208, 225, 0.2)');
+            }
+            else if (textToAnalyze.includes('هماهنگی') || textToAnalyze.includes('رشد') || textToAnalyze.includes('فلو')) {
+                root.style.setProperty('--accent-sage', '#D4E157'); // سبز طلایی
+                root.style.setProperty('--blob-1', 'rgba(212, 225, 87, 0.3)');
+                root.style.setProperty('--blob-2', 'rgba(156, 204, 101, 0.2)');
+                root.style.setProperty('--blob-3', 'rgba(255, 238, 88, 0.2)');
+            }
+            else {
+                root.style.setProperty('--accent-sage', '#9DB39B');
+                root.style.setProperty('--blob-1', 'rgba(157, 179, 155, 0.4)');
+                root.style.setProperty('--blob-2', 'rgba(85, 107, 112, 0.4)');
+                root.style.setProperty('--blob-3', 'rgba(45, 60, 65, 0.4)');
+            }
+        }
+
 
         function updateStoryUI() {
             parsedSlides.forEach((_, index) => {
@@ -829,6 +873,7 @@
                     slide.className = 'slide passed';
                     tick.classList.add('active');
                 } else if (index === currentSlideIndex) {
+                    applyMoodTheme(parsedSlides[currentSlideIndex].title, parsedSlides[currentSlideIndex].content);
                     slide.className = 'slide active';
                     tick.classList.remove('active');
                     setTimeout(() => tick.classList.add('active'), 50);
