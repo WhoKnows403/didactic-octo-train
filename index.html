@@ -142,6 +142,47 @@
         }
 
 
+        #story-progress {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 80%;
+            margin: 20px auto 30px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .neural-node {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.15);
+            transition: all 0.5s ease;
+            position: relative;
+            z-index: 2;
+        }
+
+        .neural-node.active {
+            background: var(--accent-sage);
+            box-shadow: 0 0 15px var(--accent-sage), 0 0 5px white;
+            transform: scale(1.2);
+        }
+
+        .neural-link {
+            flex-grow: 1;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.1);
+            transition: all 0.5s ease;
+            position: relative;
+            z-index: 1;
+            margin: 0 -2px; /* اتصال چسبیده به نقطه‌ها */
+        }
+
+        .neural-link.active {
+            background: var(--accent-sage);
+            box-shadow: 0 0 8px var(--accent-sage);
+        }
+
         .music-toggle {
             position: absolute;
             top: 20px;
@@ -952,11 +993,28 @@
 
         async function loadAnalysis() {
             document.getElementById('network-error').style.display = 'none';
-            document.getElementById('loading-overlay').style.display = 'flex';
-            document.querySelector('#loading-overlay h3').innerText = "فراخوانی پرونده ذهنی";
-            document.querySelector('#loading-overlay p').innerText = "در حال ایجاد ارتباط امن...";
 
             const initDataRaw = window.Telegram.WebApp.initData;
+            const CACHE_KEY = 'user_mental_analysis_v1';
+
+            let hasCachedData = false;
+
+            const cachedDataString = localStorage.getItem(CACHE_KEY);
+            if (cachedDataString) {
+                try {
+                    const cachedData = JSON.parse(cachedDataString);
+                    renderResultUI(cachedData);
+                    hasCachedData = true;
+                } catch (e) {
+                    console.warn("خطا در خواندن کش قدیمی، دوباره دریافت می‌شود...", e);
+                }
+            }
+
+            if (!hasCachedData) {
+                document.getElementById('loading-overlay').style.display = 'flex';
+                document.querySelector('#loading-overlay h3').innerText = "فراخوانی پرونده ذهنی";
+                document.querySelector('#loading-overlay p').innerText = "در حال ایجاد ارتباط امن...";
+            }
 
             const controller = new AbortController();
             const timeoutId = setTimeout(() => controller.abort(), 12000);
@@ -974,31 +1032,46 @@
                 clearTimeout(timeoutId);
 
                 if (response.ok) {
-                    const data = await response.json();
-                    document.getElementById('loading-overlay').style.display = 'none';
-                    renderResultUI(data);
+                    const freshData = await response.json();
+
+                    localStorage.setItem(CACHE_KEY, JSON.stringify(freshData));
+
+                    if (!hasCachedData) {
+                        document.getElementById('loading-overlay').style.display = 'none';
+                        renderResultUI(freshData);
+                    }
                 } else {
-                    tg.showAlert("هنوز تحلیلی برای شما ثبت نشده یا خطایی رخ داده است.");
-                    tg.close();
+                    if (!hasCachedData) {
+                        document.getElementById('loading-overlay').style.display = 'none';
+                        tg.showAlert("هنوز تحلیلی برای شما ثبت نشده یا مشکلی پیش آمده است.");
+                        tg.close();
+                    }
                 }
             } catch (error) {
                 clearTimeout(timeoutId);
-                document.getElementById('loading-overlay').style.display = 'none';
 
-                const isNetworkError = error.name === 'AbortError' ||
-                                    error.name === 'TypeError' ||
-                                    error.message.includes('Failed to fetch') ||
-                                    error.message.includes('Load failed') ||
-                                    error.message.includes('Network');
+                if (!hasCachedData) {
+                    document.getElementById('loading-overlay').style.display = 'none';
 
-                if (isNetworkError) {
-                    document.getElementById('network-error').style.display = 'flex';
-                    if (tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('error');
+                    const isNetworkError = error.name === 'AbortError' ||
+                                        error.name === 'TypeError' ||
+                                        error.message.includes('Failed to fetch') ||
+                                        error.message.includes('Load failed') ||
+                                        error.message.includes('Network');
+
+                    if (isNetworkError) {
+                        document.getElementById('network-error').style.display = 'flex';
+                        if (tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('error');
+                    } else {
+                        tg.showAlert("خطای غیرمنتظره: " + error.message);
+                    }
                 } else {
-                    tg.showAlert("خطای غیرمنتظره: " + error.message);
+                    console.log("Background update failed (offline mode). Showing cached version.");
                 }
             }
         }
+
+
         function parseMarkdownToSlides(rawText) {
             const cleanText = rawText.replace(/---/g, '');
 
@@ -1053,11 +1126,17 @@
             progressWrapper.innerHTML = '';
 
             parsedSlides.forEach((slide, index) => {
-                const tick = document.createElement('div');
-                tick.className = 'story-tick';
-                tick.id = `tick-${index}`;
-                tick.innerHTML = `<div class="story-tick-fill"></div>`;
-                progressWrapper.appendChild(tick);
+                const node = document.createElement('div');
+                node.className = 'neural-node';
+                node.id = `node-${index}`;
+                progressWrapper.appendChild(node);
+
+                if (index < parsedSlides.length - 1) {
+                    const link = document.createElement('div');
+                    link.className = 'neural-link';
+                    link.id = `link-${index}`;
+                    progressWrapper.appendChild(link);
+                }
 
                 const slideDiv = document.createElement('div');
                 slideDiv.className = 'slide';
@@ -1133,17 +1212,33 @@
         function updateStoryUI() {
             parsedSlides.forEach((_, index) => {
                 const slide = document.getElementById(`slide-${index}`);
-                const tick = document.getElementById(`tick-${index}`);
+                const node = document.getElementById(`node-${index}`);
+                const link = document.getElementById(`link-${index}`);
+
+                if (index <= currentSlideIndex) {
+                    node.classList.add('active');
+                } else {
+                    node.classList.remove('active');
+                }
+
+                if (link) {
+                    if (index < currentSlideIndex) {
+                        link.classList.add('active');
+                    } else {
+                        link.classList.remove('active');
+                    }
+                }
 
                 if (index < currentSlideIndex) {
                     slide.className = 'slide passed';
-                    tick.classList.add('active');
                 } else if (index === currentSlideIndex) {
-                    applyMoodTheme(parsedSlides[currentSlideIndex].title, parsedSlides[currentSlideIndex].content);
                     slide.className = 'slide active';
-                    tick.classList.remove('active');
+
+                    applyMoodTheme(parsedSlides[currentSlideIndex].title, parsedSlides[currentSlideIndex].content);
+
                     const slideData = parsedSlides[currentSlideIndex];
-                    if(slideData.isChart) {
+
+                    if (slideData.isChart) {
                         setTimeout(() => {
                             drawSakinorvaChart('sakinorva-canvas', slideData.chartData);
                         }, 200);
@@ -1160,35 +1255,31 @@
                                 pEl.classList.add('blur-reveal');
                             });
                         }, 350);
-
-                        setTimeout(() => tick.classList.add('active'), 50);
                     }
                 } else {
                     slide.className = 'slide';
-                    tick.classList.remove('active');
                 }
             });
 
             const btnPrev = document.getElementById('btn-prev');
             const nextText = document.getElementById('next-btn-text');
             const nextIcon = document.querySelector('.next-btn svg');
+            const navDivider = document.querySelector('.nav-divider');
+
             if (currentSlideIndex > 0) {
                 btnPrev.style.display = 'flex';
-                document.querySelector('.nav-divider').style.display = 'block';
+                if(navDivider) navDivider.style.display = 'block';
             } else {
                 btnPrev.style.display = 'none';
-                document.querySelector('.nav-divider').style.display = 'none';
+                if(navDivider) navDivider.style.display = 'none';
             }
-
-            const btnSpan = document.querySelector('#btn-next span');
-            const btnIcon = document.querySelector('#btn-next svg');
 
             if (currentSlideIndex === parsedSlides.length - 1) {
                 nextText.innerText = "پایان تحلیل";
-                nextIcon.style.display = "none";
+                if (nextIcon) nextIcon.style.display = "none";
             } else {
                 nextText.innerText = "ادامه";
-                nextIcon.style.display = "block";
+                if (nextIcon) nextIcon.style.display = "block";
             }
         }
 
