@@ -1212,26 +1212,28 @@
             const textToAnalyze = (title + " " + content);
             const root = document.documentElement;
 
-            if (textToAnalyze.includes('اصطکاک') || textToAnalyze.includes('سایه') || textToAnalyze.includes('ضعف')) {
-                root.style.setProperty('--accent-sage', '#AAB2AD');
-                root.style.setProperty('--blob-1', 'rgba(170, 178, 173, 0.2)');
-                root.style.setProperty('--blob-2', 'rgba(100, 105, 102, 0.1)');
-                root.style.setProperty('--blob-3', 'rgba(50, 55, 52, 0.1)');
+
+            if (textToAnalyze.includes('گره می‌خورد') || textToAnalyze.includes('نشتی') || textToAnalyze.includes('فشار')) {
+                root.style.setProperty('--accent-sage', '#C08D75');
+                root.style.setProperty('--blob-1', 'rgba(192, 141, 117, 0.2)');
+                root.style.setProperty('--blob-2', 'rgba(138, 86, 68, 0.15)');
+                root.style.setProperty('--blob-3', 'rgba(80, 45, 35, 0.1)');
             }
-            else if (textToAnalyze.includes('معماری') || textToAnalyze.includes('ساختار') || textToAnalyze.includes('منطق')) {
-                root.style.setProperty('--accent-sage', '#C2C5C3');
-                root.style.setProperty('--blob-1', 'rgba(194, 197, 195, 0.2)');
-                root.style.setProperty('--blob-2', 'rgba(140, 143, 141, 0.1)');
-                root.style.setProperty('--blob-3', 'rgba(80, 85, 82, 0.1)');
+
+            else if (textToAnalyze.includes('چطور کار می‌کند') || textToAnalyze.includes('لایه‌های عمیق‌تر') || textToAnalyze.includes('تفاوتِ درون تو')) {
+                root.style.setProperty('--accent-sage', '#8096A3'); 
+                root.style.setProperty('--blob-1', 'rgba(128, 150, 163, 0.2)');
+                root.style.setProperty('--blob-2', 'rgba(75, 95, 110, 0.15)');
+                root.style.setProperty('--blob-3', 'rgba(40, 55, 65, 0.1)');
             }
+
             else {
                 root.style.setProperty('--accent-sage', '#9DB39B');
-                root.style.setProperty('--blob-1', 'rgba(157, 179, 155, 0.3)');
-                root.style.setProperty('--blob-2', 'rgba(85, 107, 112, 0.3)');
-                root.style.setProperty('--blob-3', 'rgba(45, 60, 65, 0.3)');
+                root.style.setProperty('--blob-1', 'rgba(157, 179, 155, 0.25)');
+                root.style.setProperty('--blob-2', 'rgba(85, 107, 112, 0.2)');
+                root.style.setProperty('--blob-3', 'rgba(45, 60, 65, 0.15)');
             }
         }
-
 
         function updateStoryUI() {
             parsedSlides.forEach((_, index) => {
@@ -1341,7 +1343,7 @@
             const accentColor = getComputedStyle(document.documentElement).getPropertyValue('--accent-sage').trim() || '#9DB39B';
 
             const levels = 4;
-            ctx.strokeStyle = 'rgba(255, 255, 255, 0.05)'; 
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
             ctx.lineWidth = 1.5;
             for (let i = 1; i <= levels; i++) {
                 const radius = maxRadius * (i / levels);
