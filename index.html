@@ -1031,6 +1031,14 @@
             document.getElementById('intro-screen').style.display = 'none';
 
             parsedSlides = parseMarkdownToSlides(reportText);
+            if(data.sakinorva_result) {
+                parsedSlides.push({
+                    title: "توازن کارکردهای شناختی",
+                    content: "",
+                    isChart: true,
+                    chartData: data.sakinorva_result
+                });
+            }
             currentSlideIndex = 0;
 
             const container = document.getElementById('result-container');
@@ -1051,25 +1059,38 @@
                 slideDiv.className = 'slide';
                 slideDiv.id = `slide-${index}`;
                 const cleanTitle = slide.title.replace(/^\d+\.\s*/, '').replace(/<\/?[^>]+(>|$)/g, "").replace(/\*/g, '');
-                const formattedContent = slide.content.replace(/\*\*(.*?)\*\*/g, '<span class="text-highlight">$1</span>');
-                slideDiv.innerHTML = `
-                    <div class="glass-card">
-                        <div class="glass-card-content">
-                            <div class="sacred-wrapper">
-                                <div class="liquid-orb"></div>
-                                    <div class="sacred-geometry">
-                                        <div class="geom-ring"></div>
-                                        <div class="geom-ring"></div>
-                                        <div class="geom-ring"></div>
-                                    </div>
+                if(slide.isChart) {
+                    slideDiv.innerHTML = `
+                        <div class="glass-card chart-slide" style="display:flex; flex-direction:column; justify-content:center; align-items:center;">
+                            <div class="glass-card-content" style="width:100%; text-align:center;">
+                                <h2 style="text-align: center; margin-top: 0; color: var(--accent-sage); font-weight:400; font-size:20px;">${cleanTitle}</h2>
+                                <p style="color: var(--text-muted); font-size:12px; margin-bottom:15px;">نگاشت هندسی سیستم تصمیم‌گیری و درک شهودی</p>
+                                <div style="position:relative; width:280px; height:280px; margin:0 auto;">
+                                    <canvas id="sakinorva-canvas" width="280" height="280"></canvas>
+                                </div>
                             </div>
-                            <h2 class="typewriter-target" style="text-align: center; margin-top: 0;" data-text="${cleanTitle}"></h2>
-                            <p class="paragraph-target">${formattedContent}</p>
                         </div>
-                    </div>
-                `;
-                                slidesWrapper.appendChild(slideDiv);
-            });
+                    `;
+                } else {
+                    const formattedContent = slide.content.replace(/\*\*(.*?)\*\*/g, '<span class="text-highlight">$1</span>');
+                    slideDiv.innerHTML = `
+                        <div class="glass-card">
+                            <div class="glass-card-content">
+                                <div class="sacred-wrapper">
+                                    <div class="liquid-orb"></div>
+                                        <div class="sacred-geometry">
+                                            <div class="geom-ring"></div>
+                                            <div class="geom-ring"></div>
+                                            <div class="geom-ring"></div>
+                                        </div>
+                                </div>
+                                <h2 class="typewriter-target" style="text-align: center; margin-top: 0;" data-text="${cleanTitle}"></h2>
+                                <p class="paragraph-target">${formattedContent}</p>
+                            </div>
+                        </div>
+                    `;
+                                    slidesWrapper.appendChild(slideDiv);
+                });
 
             container.style.display = 'flex';
             updateStoryUI();
@@ -1112,21 +1133,26 @@
                     applyMoodTheme(parsedSlides[currentSlideIndex].title, parsedSlides[currentSlideIndex].content);
                     slide.className = 'slide active';
                     tick.classList.remove('active');
+                    if(slideData.isChart) {
+                        setTimeout(() => {
+                            drawSakinorvaChart('sakinorva-canvas', slideData.chartData);
+                        }, 200);
+                    } else {
+                        const titleEl = slide.querySelector('.typewriter-target');
+                        const pEl = slide.querySelector('.paragraph-target');
 
-                    const titleEl = slide.querySelector('.typewriter-target');
-                    const pEl = slide.querySelector('.paragraph-target');
+                        pEl.classList.remove('blur-reveal');
+                        pEl.style.opacity = '0';
+                        titleEl.innerHTML = "";
 
-                    pEl.classList.remove('blur-reveal');
-                    pEl.style.opacity = '0';
-                    titleEl.innerHTML = "";
+                        setTimeout(() => {
+                            typeWriterEffect(titleEl, titleEl.getAttribute('data-text'), 40, () => {
+                                pEl.classList.add('blur-reveal');
+                            });
+                        }, 350);
 
-                    setTimeout(() => {
-                        typeWriterEffect(titleEl, titleEl.getAttribute('data-text'), 40, () => {
-                            pEl.classList.add('blur-reveal');
-                        });
-                    }, 350);
-
-                    setTimeout(() => tick.classList.add('active'), 50);
+                        setTimeout(() => tick.classList.add('active'), 50);
+                    }
                 } else {
                     slide.className = 'slide';
                     tick.classList.remove('active');
@@ -1153,6 +1179,89 @@
             } else {
                 nextText.innerText = "ادامه";
                 nextIcon.style.display = "block";
+            }
+        }
+
+        function drawSakinorvaChart(canvasId, rawData) {
+            const canvas = document.getElementById(canvasId);
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+
+            const defaultFunctions = { 'Ni': 30, 'Ne': 30, 'Fi': 30, 'Fe': 30, 'Ti': 30, 'Te': 30, 'Si': 30, 'Se': 30 };
+            const data = Object.assign({}, defaultFunctions, rawData);
+
+            const labels = Object.keys(data);
+            const values = Object.values(data);
+            const numElements = labels.length;
+            const width = canvas.width;
+            const height = canvas.height;
+            const centerX = width / 2;
+            const centerY = height / 2;
+            const maxRadius = Math.min(width, height) / 2 - 30;
+
+            ctx.clearRect(0, 0, width, height);
+            const maxValue = Math.max(...values, 40);
+
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.04)';
+            ctx.lineWidth = 1;
+            const levels = 4;
+            for (let i = 1; i <= levels; i++) {
+                const radius = maxRadius * (i / levels);
+                ctx.beginPath();
+                for (let j = 0; j < numElements; j++) {
+                    const angle = (j * 2 * Math.PI) / numElements - Math.PI / 2;
+                    const x = centerX + radius * Math.cos(angle);
+                    const y = centerY + radius * Math.sin(angle);
+                    if (j === 0) ctx.moveTo(x, y);
+                    else ctx.lineTo(x, y);
+                }
+                ctx.closePath();
+                ctx.stroke();
+            }
+
+            for (let i = 0; i < numElements; i++) {
+                const angle = (i * 2 * Math.PI) / numElements - Math.PI / 2;
+                const x = centerX + maxRadius * Math.cos(angle);
+                const y = centerY + maxRadius * Math.sin(angle);
+                ctx.beginPath();
+                ctx.moveTo(centerX, centerY);
+                ctx.lineTo(x, y);
+                ctx.strokeStyle = 'rgba(255, 255, 255, 0.06)';
+                ctx.stroke();
+            }
+
+            ctx.beginPath();
+            for (let i = 0; i < numElements; i++) {
+                const angle = (i * 2 * Math.PI) / numElements - Math.PI / 2;
+                const valueFactor = Math.min(values[i] / maxValue, 1);
+                const radius = maxRadius * valueFactor;
+                const x = centerX + radius * Math.cos(angle);
+                const y = centerY + radius * Math.sin(angle);
+                if (i === 0) ctx.moveTo(x, y);
+                else ctx.lineTo(x, y);
+            }
+            ctx.closePath();
+
+            const accentColor = getComputedStyle(document.documentElement).getPropertyValue('--accent-sage').trim() || '#9DB39B';
+            ctx.fillStyle = accentColor + '33';
+            ctx.fill();
+            ctx.strokeStyle = accentColor;
+            ctx.lineWidth = 2;
+            ctx.shadowBlur = 12;
+            ctx.shadowColor = accentColor;
+            ctx.stroke();
+            ctx.shadowBlur = 0;
+
+            ctx.font = '12px system-ui, -apple-system, sans-serif';
+            for (let i = 0; i < numElements; i++) {
+                const angle = (i * 2 * Math.PI) / numElements - Math.PI / 2;
+                const labelRadius = maxRadius + 18;
+                const x = centerX + labelRadius * Math.cos(angle);
+                const y = centerY + labelRadius * Math.sin(angle);
+                ctx.fillStyle = 'rgba(244, 241, 234, 0.9)';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(`${labels[i]}:${Math.round(values[i])}`, x, y);
             }
         }
 
