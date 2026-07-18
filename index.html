@@ -856,7 +856,7 @@
         async function sendDataSecure() {
             if (isSubmitting) return;
             const initDataRaw = window.Telegram.WebApp.initData;
-            if (!initDataRaw) { tg.showtg.showAlert("خطا: احراز هویت انجام نشد."); return; }
+            if (!initDataRaw) { tg.showAlert("خطا: احراز هویت انجام نشد."); return; }
 
             isSubmitting = true;
             bgAudio.pause();
@@ -870,7 +870,7 @@
                 const controller = new AbortController();
                 const timeoutId = setTimeout(() => controller.abort(), 30000);
 
-                const response = await fetch('https://83bb-2a01-4f8-c010-4f15-00-1.ngrok-free.app/assessment/receive-data', {
+                const response = await fetch('https://6f04-2a01-4ff-f0-fec7-00-1.ngrok-free.app/assessment/receive-data', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(payload),
@@ -962,7 +962,7 @@
             const timeoutId = setTimeout(() => controller.abort(), 12000);
 
             try {
-                const response = await fetch('https://83bb-2a01-4f8-c010-4f15-00-1.ngrok-free.app/assessment/receive-result', {
+                const response = await fetch('https://6f04-2a01-4ff-f0-fec7-00-1.ngrok-free.app/assessment/receive-result', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -978,7 +978,7 @@
                     const data = await response.json();
                     document.getElementById('loading-overlay').style.display = 'none';
 
-                    renderResultUI(data.report_text);
+                    renderResultUI(data);
                 } else {
                     tg.showAlert("هنوز تحلیلی برای شما ثبت نشده یا خطایی رخ داده است.");
                     tg.close();
@@ -1026,11 +1026,12 @@
             type();
         }
 
-        function renderResultUI(reportText) {
+        function renderResultUI(data) {
             document.getElementById('app').style.display = 'none';
             document.getElementById('intro-screen').style.display = 'none';
 
-            parsedSlides = parseMarkdownToSlides(reportText);
+            parsedSlides = parseMarkdownToSlides(data.report_text);
+
             if(data.sakinorva_result) {
                 parsedSlides.push({
                     title: "توازن کارکردهای شناختی",
@@ -1059,6 +1060,7 @@
                 slideDiv.className = 'slide';
                 slideDiv.id = `slide-${index}`;
                 const cleanTitle = slide.title.replace(/^\d+\.\s*/, '').replace(/<\/?[^>]+(>|$)/g, "").replace(/\*/g, '');
+
                 if(slide.isChart) {
                     slideDiv.innerHTML = `
                         <div class="glass-card chart-slide" style="display:flex; flex-direction:column; justify-content:center; align-items:center;">
@@ -1089,8 +1091,10 @@
                             </div>
                         </div>
                     `;
-                                    slidesWrapper.appendChild(slideDiv);
-                });
+                }
+
+                slidesWrapper.appendChild(slideDiv);
+            });
 
             container.style.display = 'flex';
             updateStoryUI();
@@ -1133,6 +1137,7 @@
                     applyMoodTheme(parsedSlides[currentSlideIndex].title, parsedSlides[currentSlideIndex].content);
                     slide.className = 'slide active';
                     tick.classList.remove('active');
+                    const slideData = parsedSlides[currentSlideIndex];
                     if(slideData.isChart) {
                         setTimeout(() => {
                             drawSakinorvaChart('sakinorva-canvas', slideData.chartData);
@@ -1170,8 +1175,8 @@
                 document.querySelector('.nav-divider').style.display = 'none';
             }
 
-            const btnSpan = document.querySelector('#next-slide-btn span');
-            const btnIcon = document.querySelector('#next-slide-btn svg');
+            const btnSpan = document.querySelector('#btn-next span');
+            const btnIcon = document.querySelector('#btn-next svg');
 
             if (currentSlideIndex === parsedSlides.length - 1) {
                 nextText.innerText = "پایان تحلیل";
