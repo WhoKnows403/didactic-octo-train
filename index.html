@@ -553,9 +553,19 @@
 
         .glass-card p.paragraph-target {
             font-size: 15.5px;
-            line-height: 2.1;
-            color: rgba(253, 251, 247, 0.9);
-            letter-spacing: 0.2px;
+            line-height: 2.2;
+            color: #F8F6F0;
+            letter-spacing: 0.3px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.4);
+        }
+        .glass-card p.paragraph-target b,
+        .glass-card p.paragraph-target strong {
+            background: linear-gradient(120deg, #FFFFFF 0%, var(--accent-sage) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 700;
+            padding: 0 2px;
+            filter: drop-shadow(0 2px 8px var(--accent-glow));
         }
 
         .chart-pulse-bg {
@@ -958,7 +968,9 @@
                 }
 
                 if (!response.ok) {
-                    if (response.status === 429 || response.status === 400) {
+                    if (response.status === 404) {
+                        tg.showAlert(" متأسفانه نتیجه‌ای برای این درخواست یافت نشد.");
+                    } else if (response.status === 429 || response.status === 400) {
                         tg.showAlert("⏳ درخواست شما قبلا ثبت شده است. لطفاً ربات را چک کنید.");
                     } else {
                         try {
@@ -966,7 +978,7 @@
                             tg.showAlert("خطا: " + (errJson.detail || "مشکلی پیش آمده است"));
                         } catch (parseError) {
                             const errText = await response.text();
-                            tg.showAlert("خطا: " + errText);
+                            tg.showAlert("خطا: " + (errText || "خطای ناشناخته"));
                         }
                     }
                     resetButtonState();
@@ -1177,6 +1189,16 @@
                                     <div class="chart-pulse-bg"></div>
                                     <canvas id="sakinorva-canvas" style="width: 100%; height: 100%; position:relative; z-index:1;"></canvas>
                                 </div>
+
+                                <!-- 🌟 راهنمای شیشه‌ای و نرم زیر نمودار -->
+                                <div style="margin-top: 25px; padding: 12px 18px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); border-radius: 16px; display: inline-flex; align-items: center; gap: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent-sage)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="opacity: 0.8;"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+                                    <span style="color: var(--text-muted); font-size: 11px; font-weight: 300; letter-spacing: 0.3px; text-align: right; line-height: 1.6;">
+                                        برای درک معنای این نمادها، بخش <br>
+                                        <b style="color: var(--accent-sage); font-weight: 600;">«این تحلیل چطور کار می‌کند؟»</b> را در ربات ببینید.
+                                    </span>
+                                </div>
+
                             </div>
                         </div>
                     `;
@@ -1214,24 +1236,27 @@
 
 
             if (textToAnalyze.includes('گره می‌خورد') || textToAnalyze.includes('نشتی') || textToAnalyze.includes('فشار')) {
-                root.style.setProperty('--accent-sage', '#C08D75');
-                root.style.setProperty('--blob-1', 'rgba(192, 141, 117, 0.2)');
-                root.style.setProperty('--blob-2', 'rgba(138, 86, 68, 0.15)');
-                root.style.setProperty('--blob-3', 'rgba(80, 45, 35, 0.1)');
+                root.style.setProperty('--accent-sage', '#B794F6');
+                root.style.setProperty('--accent-glow', 'rgba(183, 148, 246, 0.3)');
+                root.style.setProperty('--blob-1', 'rgba(183, 148, 246, 0.15)');
+                root.style.setProperty('--blob-2', 'rgba(139, 92, 246, 0.1)');
+                root.style.setProperty('--blob-3', 'rgba(76, 29, 149, 0.08)');
             }
 
             else if (textToAnalyze.includes('چطور کار می‌کند') || textToAnalyze.includes('لایه‌های عمیق‌تر') || textToAnalyze.includes('تفاوتِ درون تو')) {
-                root.style.setProperty('--accent-sage', '#8096A3'); 
-                root.style.setProperty('--blob-1', 'rgba(128, 150, 163, 0.2)');
-                root.style.setProperty('--blob-2', 'rgba(75, 95, 110, 0.15)');
-                root.style.setProperty('--blob-3', 'rgba(40, 55, 65, 0.1)');
+                root.style.setProperty('--accent-sage', '#5EEAD4');
+                root.style.setProperty('--accent-glow', 'rgba(94, 234, 212, 0.3)');
+                root.style.setProperty('--blob-1', 'rgba(94, 234, 212, 0.15)');
+                root.style.setProperty('--blob-2', 'rgba(20, 184, 166, 0.1)');
+                root.style.setProperty('--blob-3', 'rgba(15, 118, 110, 0.08)');
             }
 
             else {
-                root.style.setProperty('--accent-sage', '#9DB39B');
-                root.style.setProperty('--blob-1', 'rgba(157, 179, 155, 0.25)');
-                root.style.setProperty('--blob-2', 'rgba(85, 107, 112, 0.2)');
-                root.style.setProperty('--blob-3', 'rgba(45, 60, 65, 0.15)');
+                root.style.setProperty('--accent-sage', '#6EE7B7');
+                root.style.setProperty('--accent-glow', 'rgba(110, 231, 183, 0.3)');
+                root.style.setProperty('--blob-1', 'rgba(110, 231, 183, 0.15)');
+                root.style.setProperty('--blob-2', 'rgba(16, 185, 129, 0.1)');
+                root.style.setProperty('--blob-3', 'rgba(6, 95, 70, 0.08)');
             }
         }
 
