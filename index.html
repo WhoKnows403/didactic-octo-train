@@ -1065,18 +1065,20 @@
                 const cleanTitle = slide.title.replace(/^\d+\.\s*/, '').replace(/<\/?[^>]+(>|$)/g, "").replace(/\*/g, '');
 
                 if(slide.isChart) {
+                    const userType = slide.chartData.myers_type || "";
                     slideDiv.innerHTML = `
                         <div class="glass-card chart-slide" style="display:flex; flex-direction:column; justify-content:center; align-items:center;">
                             <div class="glass-card-content" style="width:100%; text-align:center;">
                                 <h2 style="text-align: center; margin-top: 0; color: var(--accent-sage); font-weight:400; font-size:20px;">${cleanTitle}</h2>
-                                <p style="color: var(--text-muted); font-size:12px; margin-bottom:15px;">نگاشت هندسی سیستم تصمیم‌گیری و درک شهودی</p>
-                                <div style="position:relative; width:280px; height:280px; margin:0 auto;">
-                                    <canvas id="sakinorva-canvas" width="280" height="280"></canvas>
+                                <p style="color: var(--text-muted); font-size:12px; margin-bottom:15px;">فضای هندسی ادراک و تصمیم‌گیری ${userType ? `(${userType})` : ''}</p>
+                                <div style="position:relative; width:280px; height:280px; margin:0 auto; display:flex; justify-content:center; align-items:center;">
+                                    <canvas id="sakinorva-canvas" style="width: 100%; height: 100%;"></canvas>
                                 </div>
                             </div>
                         </div>
                     `;
-                } else {
+                }
+                else {
                     const formattedContent = slide.content.replace(/\*\*(.*?)\*\*/g, '<span class="text-highlight">$1</span>');
                     slideDiv.innerHTML = `
                         <div class="glass-card">
@@ -1195,81 +1197,128 @@
             if (!canvas) return;
             const ctx = canvas.getContext('2d');
 
-            const defaultFunctions = { 'Ni': 30, 'Ne': 30, 'Fi': 30, 'Fe': 30, 'Ti': 30, 'Te': 30, 'Si': 30, 'Se': 30 };
-            const data = Object.assign({}, defaultFunctions, rawData);
+            const scores = rawData.function_scores || {};
+            const data = {
+                'Ni': scores.ni || 0, 'Ne': scores.ne || 0,
+                'Fi': scores.fi || 0, 'Fe': scores.fe || 0,
+                'Ti': scores.ti || 0, 'Te': scores.te || 0,
+                'Si': scores.si || 0, 'Se': scores.se || 0
+            };
 
             const labels = Object.keys(data);
             const values = Object.values(data);
             const numElements = labels.length;
-            const width = canvas.width;
-            const height = canvas.height;
+
+            const dpr = window.devicePixelRatio || 1;
+            const rect = canvas.parentElement.getBoundingClientRect();
+            canvas.width = rect.width * dpr;
+            canvas.height = rect.height * dpr;
+            ctx.scale(dpr, dpr);
+
+            const width = rect.width;
+            const height = rect.height;
             const centerX = width / 2;
             const centerY = height / 2;
-            const maxRadius = Math.min(width, height) / 2 - 30;
+            const maxRadius = Math.min(width, height) / 2 - 35;
 
             ctx.clearRect(0, 0, width, height);
-            const maxValue = Math.max(...values, 40);
 
-            ctx.strokeStyle = 'rgba(255, 255, 255, 0.04)';
-            ctx.lineWidth = 1;
+            const accentColor = getComputedStyle(document.documentElement).getPropertyValue('--accent-sage').trim() || '#9DB39B';
+
             const levels = 4;
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.04)';
+            ctx.lineWidth = 1.5;
             for (let i = 1; i <= levels; i++) {
                 const radius = maxRadius * (i / levels);
                 ctx.beginPath();
-                for (let j = 0; j < numElements; j++) {
-                    const angle = (j * 2 * Math.PI) / numElements - Math.PI / 2;
-                    const x = centerX + radius * Math.cos(angle);
-                    const y = centerY + radius * Math.sin(angle);
-                    if (j === 0) ctx.moveTo(x, y);
-                    else ctx.lineTo(x, y);
-                }
-                ctx.closePath();
+                ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
                 ctx.stroke();
             }
 
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.03)';
             for (let i = 0; i < numElements; i++) {
                 const angle = (i * 2 * Math.PI) / numElements - Math.PI / 2;
-                const x = centerX + maxRadius * Math.cos(angle);
-                const y = centerY + maxRadius * Math.sin(angle);
                 ctx.beginPath();
                 ctx.moveTo(centerX, centerY);
-                ctx.lineTo(x, y);
-                ctx.strokeStyle = 'rgba(255, 255, 255, 0.06)';
+                ctx.lineTo(centerX + maxRadius * Math.cos(angle), centerY + maxRadius * Math.sin(angle));
                 ctx.stroke();
+            }
+
+            const maxValue = 50;
+            const points = [];
+            for (let i = 0; i < numElements; i++) {
+                const angle = (i * 2 * Math.PI) / numElements - Math.PI / 2;
+                const val = Math.min(Math.max(values[i], 0), maxValue);
+                const radius = maxRadius * (val / maxValue);
+                points.push({
+                    x: centerX + radius * Math.cos(angle),
+                    y: centerY + radius * Math.sin(angle),
+                    val: values[i],
+                    label: labels[i]
+                });
             }
 
             ctx.beginPath();
-            for (let i = 0; i < numElements; i++) {
-                const angle = (i * 2 * Math.PI) / numElements - Math.PI / 2;
-                const valueFactor = Math.min(values[i] / maxValue, 1);
-                const radius = maxRadius * valueFactor;
-                const x = centerX + radius * Math.cos(angle);
-                const y = centerY + radius * Math.sin(angle);
-                if (i === 0) ctx.moveTo(x, y);
-                else ctx.lineTo(x, y);
-            }
+            points.forEach((p, i) => {
+                if (i === 0) ctx.moveTo(p.x, p.y);
+                else ctx.lineTo(p.x, p.y);
+            });
             ctx.closePath();
 
-            const accentColor = getComputedStyle(document.documentElement).getPropertyValue('--accent-sage').trim() || '#9DB39B';
-            ctx.fillStyle = accentColor + '33';
+            const fillGradient = ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, maxRadius);
+            fillGradient.addColorStop(0, accentColor + '66');
+            fillGradient.addColorStop(1, accentColor + '1A');
+
+            ctx.fillStyle = fillGradient;
             ctx.fill();
+
             ctx.strokeStyle = accentColor;
-            ctx.lineWidth = 2;
-            ctx.shadowBlur = 12;
+            ctx.lineWidth = 2.5;
+            ctx.shadowBlur = 15;
             ctx.shadowColor = accentColor;
             ctx.stroke();
+
+            points.forEach(p => {
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, 4, 0, Math.PI * 2);
+                ctx.fillStyle = '#FFFFFF';
+                ctx.shadowBlur = 10;
+                ctx.shadowColor = accentColor;
+                ctx.fill();
+                ctx.strokeStyle = accentColor;
+                ctx.lineWidth = 1.5;
+                ctx.stroke();
+            });
+
             ctx.shadowBlur = 0;
 
-            ctx.font = '12px system-ui, -apple-system, sans-serif';
-            for (let i = 0; i < numElements; i++) {
+            points.forEach((p, i) => {
                 const angle = (i * 2 * Math.PI) / numElements - Math.PI / 2;
-                const labelRadius = maxRadius + 18;
-                const x = centerX + labelRadius * Math.cos(angle);
-                const y = centerY + labelRadius * Math.sin(angle);
-                ctx.fillStyle = 'rgba(244, 241, 234, 0.9)';
+                const labelRadius = maxRadius + 22;
+                const lx = centerX + labelRadius * Math.cos(angle);
+                const ly = centerY + labelRadius * Math.sin(angle);
+
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'middle';
-                ctx.fillText(`${labels[i]}:${Math.round(values[i])}`, x, y);
+
+                ctx.fillStyle = accentColor;
+                ctx.font = '700 14px system-ui, -apple-system, sans-serif';
+                ctx.fillText(p.label, lx, ly - 8);
+
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
+                ctx.font = '400 12px system-ui, -apple-system, sans-serif';
+                ctx.fillText(Math.round(p.val), lx, ly + 8);
+            });
+
+            if (rawData.myers_type) {
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+                ctx.font = '800 18px system-ui, -apple-system, sans-serif';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.shadowBlur = 20;
+                ctx.shadowColor = accentColor;
+                ctx.fillText(rawData.myers_type, centerX, centerY);
+                ctx.shadowBlur = 0;
             }
         }
 
