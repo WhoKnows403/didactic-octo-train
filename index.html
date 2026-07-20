@@ -615,7 +615,7 @@
         @keyframes spin-orb {
             100% { transform: rotate(360deg); }
         }
-        
+
         .story-chapter{
 
             text-align:center;
@@ -1250,7 +1250,7 @@
 
             if(data.sakinorva_result) {
                 parsedSlides.push({
-                    title: "توازن کارکردهای شناختی",
+                    title:" الگوی شناختی"
                     content: "",
                     isChart: true,
                     chartData: data.sakinorva_result
@@ -1556,7 +1556,7 @@
             const values = Object.values(data);
             const numElements = labels.length;
 
-            // --- تنظیمات رزولوشن (Retina Display) ---
+            // تنظیم رزولوشن صفحه (Retina/DPR)
             const dpr = window.devicePixelRatio || 1;
             const rect = canvas.parentElement.getBoundingClientRect();
             canvas.width = rect.width * dpr;
@@ -1567,45 +1567,30 @@
             const height = rect.height;
             const centerX = width / 2;
             const centerY = height / 2;
-            // کمی شعاع را کوچکتر می‌کنیم تا فضا برای HUD باز شود
-            const maxRadius = Math.min(width, height) / 2 - 45;
+            const maxRadius = Math.min(width, height) / 2 - 40;
 
             ctx.clearRect(0, 0, width, height);
 
-            // دریافت رنگ اصلی (یا استفاده از رنگ پیش‌فرض)
+            // رنگ اکسنت پروژه
             const accentColor = getComputedStyle(document.documentElement).getPropertyValue('--accent-sage').trim() || '#9DB39B';
 
             // ==========================================
-            // لایه ۱: پس‌زمینه‌ی هندسی (Ethereal Grid)
+            // ۱. دایره‌های راهنما (کاملاً محو و نازک)
             // ==========================================
             const levels = 4;
-            ctx.lineWidth = 1;
-
-            for (let j = 1; j <= levels; j++) {
-                const radius = maxRadius * (j / levels);
+            ctx.lineWidth = 0.8; // بسیار ظریف
+            for (let i = 1; i <= levels; i++) {
+                const radius = maxRadius * (i / levels);
                 ctx.beginPath();
-                // ایجاد نقطه‌چین برای خطوط راهنما (حس نقشه‌کشی)
-                ctx.setLineDash([2, 4]);
-
-                for (let i = 0; i < numElements; i++) {
-                    const angle = (i * 2 * Math.PI) / numElements - Math.PI / 2;
-                    const x = centerX + radius * Math.cos(angle);
-                    const y = centerY + radius * Math.sin(angle);
-                    if (i === 0) ctx.moveTo(x, y);
-                    else ctx.lineTo(x, y);
-                }
-                ctx.closePath();
-                // هرچه به مرکز نزدیک‌تر، محوتر
-                ctx.strokeStyle = `rgba(255, 255, 255, ${0.08 * (j / levels)})`;
+                ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
+                ctx.strokeStyle = 'rgba(255, 255, 255, 0.04)'; // تقریبا نامرئی
                 ctx.stroke();
             }
-            // ریست کردن نقطه‌چین برای رسم شکل اصلی
-            ctx.setLineDash([]);
 
             // ==========================================
-            // لایه ۲: محاسبه نقاط داده‌ها
+            // ۲. محاسبه مختصات نقاط
             // ==========================================
-            const maxValue = 50; // سقف امتیازات
+            const maxValue = 50;
             const points = [];
             for (let i = 0; i < numElements; i++) {
                 const angle = (i * 2 * Math.PI) / numElements - Math.PI / 2;
@@ -1620,133 +1605,130 @@
                 });
             }
 
+            // محاسبه نقاط میانی (Midpoints) برای رسم منحنی‌های نرم
+            const midpoints = [];
+            for (let i = 0; i < numElements; i++) {
+                const nextIdx = (i + 1) % numElements;
+                midpoints.push({
+                    x: (points[i].x + points[nextIdx].x) / 2,
+                    y: (points[i].y + points[nextIdx].y) / 2
+                });
+            }
+
             // ==========================================
-            // لایه ۳: رسم چندضلعی دیتای کاربر (The Liquid Polygon)
+            // ۳. رسم مساحت داخلی (Fill با آپاسیتی بسیار کم)
             // ==========================================
             ctx.beginPath();
-            ctx.lineJoin = 'round';
-            points.forEach((p, i) => {
-                if (i === 0) ctx.moveTo(p.x, p.y);
-                else ctx.lineTo(p.x, p.y);
-            });
+            ctx.moveTo(midpoints[0].x, midpoints[0].y);
+            for (let i = 0; i < numElements; i++) {
+                const nextIdx = (i + 1) % numElements;
+                ctx.quadraticCurveTo(points[nextIdx].x, points[nextIdx].y, midpoints[nextIdx].x, midpoints[nextIdx].y);
+            }
             ctx.closePath();
-
-            // فیلتر رنگی داخل (Radial Gradient)
-            const fillGradient = ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, maxRadius);
-            // استفاده از globalAlpha برای اطمینان از کارکرد کد حتی اگر accentColor هگز نباشد (مثل rgb)
-            ctx.globalAlpha = 0.25;
             ctx.fillStyle = accentColor;
-            ctx.fill();
-
-            ctx.globalAlpha = 0.05;
-            fillGradient.addColorStop(0, '#ffffff'); // مرکز کمی روشن‌تر
-            fillGradient.addColorStop(1, 'transparent');
-            ctx.fillStyle = fillGradient;
+            ctx.globalAlpha = 0.04; // بسیار لایت و ملایم
             ctx.fill();
             ctx.globalAlpha = 1.0;
 
-            // افکت لبه‌ی شیشه (Glass Edge Refraction): دو بار استروک کردن
-            // استروک اول: محو و ضخیم (هاله‌ی شیشه)
+            // ==========================================
+            // ۴. رسم خط منحنی ارگانیک با انتهای فید شده (Fade Layer)
+            // ==========================================
+            ctx.lineWidth = 1.8; // طبق استاندارد درخواستی شما
+
+            // الف) رسم بخش اصلی منحنی (از کارکرد اول تا کارکرد ماقبل آخر)
+            ctx.beginPath();
+            ctx.moveTo(midpoints[0].x, midpoints[0].y);
+            for (let i = 0; i < numElements - 1; i++) {
+                const nextIdx = (i + 1) % numElements;
+                ctx.quadraticCurveTo(points[nextIdx].x, points[nextIdx].y, midpoints[nextIdx].x, midpoints[nextIdx].y);
+            }
             ctx.strokeStyle = accentColor;
-            ctx.globalAlpha = 0.2;
-            ctx.lineWidth = 6;
             ctx.stroke();
 
-            // استروک دوم: نازک و شارپ (لبه‌ی اصلی)
-            ctx.globalAlpha = 0.9;
-            ctx.lineWidth = 1.5;
+            // ب) رسم آخرین سگمنت به صورت فید شده (حس عدم انسداد و زنده بودن نقشه)
+            ctx.beginPath();
+            ctx.moveTo(midpoints[numElements - 1].x, midpoints[numElements - 1].y);
+            ctx.quadraticCurveTo(points[0].x, points[0].y, midpoints[0].x, midpoints[0].y);
+            ctx.strokeStyle = accentColor;
+            ctx.globalAlpha = 0.25; // فید ملایم به سمت نقطه‌ی آغازین
             ctx.stroke();
             ctx.globalAlpha = 1.0;
 
             // ==========================================
-            // لایه ۴: گره‌ها (Neural Nodes) و خطوط رابط (Leader Lines)
+            // ۵. رسم نودها (حلقه اکسنت + نقطه داخلی سفید)
             // ==========================================
-            points.forEach((p) => {
-                // ۱. خط رابط از گره به لیبل (HUD Effect)
-                const labelRadius = maxRadius + 28;
-                const lx = centerX + labelRadius * Math.cos(p.angle);
-                const ly = centerY + labelRadius * Math.sin(p.angle);
-
+            points.forEach(p => {
+                // حلقه‌ی بیرونی
                 ctx.beginPath();
-                ctx.moveTo(p.x, p.y);
-                ctx.lineTo(lx, ly);
-                ctx.strokeStyle = `rgba(255, 255, 255, 0.06)`;
-                ctx.lineWidth = 1;
+                ctx.arc(p.x, p.y, 4.5, 0, Math.PI * 2);
+                ctx.strokeStyle = accentColor;
+                ctx.lineWidth = 1.2;
                 ctx.stroke();
 
-                // ۲. هاله‌ی دور گره
+                // نقطه‌ی مرکزی
                 ctx.beginPath();
-                ctx.arc(p.x, p.y, 6, 0, Math.PI * 2);
-                ctx.fillStyle = accentColor;
-                ctx.globalAlpha = 0.2;
-                ctx.fill();
-                ctx.globalAlpha = 1.0;
-
-                // ۳. هسته‌ی مرکزی گره (نورانی)
-                ctx.beginPath();
-                ctx.arc(p.x, p.y, 2.5, 0, Math.PI * 2);
+                ctx.arc(p.x, p.y, 1.5, 0, Math.PI * 2);
                 ctx.fillStyle = '#FFFFFF';
-                ctx.shadowBlur = 8;
-                ctx.shadowColor = accentColor;
                 ctx.fill();
-                ctx.shadowBlur = 0; // ریست سایه
             });
 
             // ==========================================
-            // لایه ۵: تایپوگرافی لیبل‌ها
+            // ۶. لِیبل‌ها و مقادیر عددی (مینیمال و مینیاتوری)
             // ==========================================
             points.forEach((p) => {
-                const labelRadius = maxRadius + 32;
+                const labelRadius = maxRadius + 26;
                 const lx = centerX + labelRadius * Math.cos(p.angle);
                 const ly = centerY + labelRadius * Math.sin(p.angle);
 
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'middle';
 
-                // نام کارکرد (Ni, Ne...)
-                ctx.fillStyle = accentColor;
-                ctx.font = '600 13px system-ui, -apple-system, sans-serif';
-                ctx.letterSpacing = "1px";
-                ctx.fillText(p.label, lx, ly - 8);
+                // عنوان کارکرد (مثل Ni)
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.65)';
+                ctx.font = '500 11px system-ui, -apple-system, sans-serif';
+                ctx.fillText(p.label, lx, ly - 7);
 
-                // امتیاز عددی کارکرد
-                ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
-                ctx.font = '300 11px system-ui, -apple-system, sans-serif';
-                ctx.fillText(Math.round(p.val), lx, ly + 8);
+                // امتیاز دقیق کارکرد (مثل 33.4)
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.35)';
+                ctx.font = '400 10px system-ui, -apple-system, sans-serif';
+                // نمایش امتیاز به صورت دسی‌مال تک‌رقمی جهت حس آرکایو و دقیق بودن
+                const displayVal = p.val.toFixed(1);
+                ctx.fillText(displayVal, lx, ly + 7);
             });
 
             // ==========================================
-            // لایه ۶: لنز مرکزی و نتیجه (The Core Badge)
+            // ۷. هسته مرکزی قطب‌نما (Serif Style)
             // ==========================================
             if (rawData.myers_type) {
-                const coreRadius = 35;
-
-                // رسم بک‌گراند لنز (برای جدا کردن متن از خطوط زیرین)
+                // دایره‌ی بسیار نازک مرکزی
                 ctx.beginPath();
-                ctx.arc(centerX, centerY, coreRadius, 0, Math.PI * 2);
-                ctx.fillStyle = 'rgba(10, 14, 18, 0.75)'; // شیشه‌ی دودی تیره
-                ctx.fill();
-
-                // یک خط بسیار ظریف دور لنز
-                ctx.lineWidth = 1;
-                ctx.strokeStyle = `rgba(255, 255, 255, 0.08)`;
+                ctx.arc(centerX, centerY, 34, 0, Math.PI * 2);
+                ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
+                ctx.lineWidth = 0.8;
                 ctx.stroke();
 
-                // متن درون لنز
-                ctx.fillStyle = '#FFFFFF';
-                ctx.font = '700 16px system-ui, -apple-system, sans-serif';
-                ctx.textAlign = 'center';
-                ctx.textBaseline = 'middle';
-                ctx.letterSpacing = "2px";
+                // نگاشت تیپ‌ها به آرکتایپ‌های کلاسیک و اصیل (کتابی)
+                const archetypes = {
+                    'INTJ': 'Architect', 'INFJ': 'Observer', 'INTP': 'Logician', 'INFP': 'Visionary',
+                    'ENTJ': 'Commander', 'ENFJ': 'Catalyst', 'ENTP': 'Innovator', 'ENFP': 'Idealist',
+                    'ISTJ': 'Inspector', 'ISFJ': 'Protector', 'ESTJ': 'Executive', 'ESFJ': 'Provider',
+                    'ISTP': 'Virtuoso', 'ISFP': 'Composer', 'ESTP': 'Dynamo', 'ESFP': 'Performer'
+                };
+                const subtitle = archetypes[rawData.myers_type.toUpperCase()] || 'Reflection';
 
-                // سایه ملایم فقط برای تکست وسط
-                ctx.shadowBlur = 12;
-                ctx.shadowColor = accentColor;
-                ctx.fillText(rawData.myers_type, centerX, centerY);
-                ctx.shadowBlur = 0; // ریست
+                // رسم متن تیپ شخصیتی اصلی
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.85)';
+                ctx.font = '400 16px Georgia, Garamond, "Times New Roman", serif';
+                ctx.letterSpacing = "1.5px";
+                ctx.fillText(rawData.myers_type.toUpperCase(), centerX, centerY - 5);
+
+                // رسم زیرعنوان مفهومی (مثل Observer)
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
+                ctx.font = 'italic 10px Georgia, Garamond, "Times New Roman", serif';
+                ctx.letterSpacing = "0.5px";
+                ctx.fillText(subtitle, centerX, centerY + 9);
             }
         }
-
 
         window.nextSlide = function() {
             if (tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
