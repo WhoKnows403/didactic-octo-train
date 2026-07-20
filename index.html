@@ -563,12 +563,14 @@
         }
 
         .text-highlight {
-            background: linear-gradient(120deg, var(--accent-sage) 0%, var(--accent-warm) 100%);
+            background: var(--text-highlight-grad, linear-gradient(120deg, #FFFFFF 0%, var(--accent-sage) 100%));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            font-weight: 700;
-            text-shadow: 0 4px 15px var(--accent-glow);
-            padding: 0 4px;
+            font-weight: 600;
+            padding: 0 2px;
+            position: relative;
+            display: inline-block;
+            transition: background 1.5s ease, -webkit-text-fill-color 1.5s ease;
         }
 
         /* ========================================= */
@@ -595,6 +597,13 @@
             border-radius: 40% 60% 60% 40% / 50% 50% 40% 60%;
             animation: morph-orb 8s ease-in-out infinite, spin-orb 12s linear infinite;
             z-index: 1;
+        }
+        .emoji-preserve {
+            -webkit-text-fill-color: initial !important;
+            color: initial !important;
+            background: none !important;
+            text-shadow: none !important;
+            font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif !important;
         }
 
         .sacred-geometry {
@@ -718,7 +727,7 @@
         .story-content-wrapper p:last-child {
             margin-bottom: 0;
         }
-        
+
         .soul-quote {
             position: relative;
             margin: 15px 0; /* از ۲۲ به ۱۵ کاهش یافت تا باکس نقل قول فاصله منطقی داشته باشد */
@@ -1320,6 +1329,10 @@
                 meta.chapter = "CHAPTER VII • توقف";
                 meta.whisper = "هر سفری،<br>چیزی را با خودش باقی می‌گذارد.";
             }
+            else if (titleText.includes('لایه‌های عمیق‌تر')) {
+                meta.chapter = "CHAPTER VII • هسته‌ی پنهان";
+                meta.whisper = "پشت هر انتخاب،<br>ساختاری وجود دارد که آرام شکل گرفته است.";
+            }
 
             return meta;
         }
@@ -1394,7 +1407,7 @@
                 slideDiv.className = 'slide';
                 slideDiv.id = `slide-${index}`;
                 const cleanTitle = slide.title.replace(/^\d+\.\s*/, '').replace(/<\/?[^>]+(>|$)/g, "").replace(/\*/g, '');
-
+                let safeTitle = cleanTitle.replace(/([\u2700-\u27BF]|[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDD10-\uDDFF])/g, '<span class="emoji-preserve">$1</span>');
                 const meta = getSlideMeta(cleanTitle);
 
                 if(slide.isChart) {
@@ -1530,40 +1543,36 @@
             updateStoryUI();
         }
 
-        function applyMoodTheme(title, content) {
-            const text = `${title} ${content}`;
+        function setAtmosphere(hex, rgb) {
             const root = document.documentElement;
+            root.style.setProperty('--accent-sage', hex);
+            root.style.setProperty('--accent-glow', `rgba(${rgb}, 0.15)`); // بدون نئون، فقط یک هاله محو
+            root.style.setProperty('--blob-1', `rgba(${rgb}, 0.12)`);
+            root.style.setProperty('--blob-2', `rgba(${rgb}, 0.08)`);
+            root.style.setProperty('--blob-3', `rgba(${rgb}, 0.04)`);
+            // ساخت یک گرادیانت زنده و داینامیک برای کلمات هایلایت شده بر اساس تم فعلی
+            root.style.setProperty('--text-highlight-grad', `linear-gradient(120deg, #FFFFFF 0%, ${hex} 100%)`);
+        }
 
-            if (text.includes('قبل از اینکه شروع کنیم') || text.includes('چیزی که در ذهن تو پررنگ‌تر است') || text.includes('جایی برای مکث')) {
-                root.style.setProperty('--accent-sage', '#9DB3A8'); /* سبزِ سنگیِ ملایم */
-                root.style.setProperty('--accent-glow', 'rgba(157, 179, 168, 0.25)');
-                root.style.setProperty('--blob-1', 'rgba(157, 179, 168, 0.12)');
-                root.style.setProperty('--blob-2', 'rgba(120, 145, 133, 0.08)');
-                root.style.setProperty('--blob-3', 'rgba(80, 105, 95, 0.05)');
+        function applyMoodTheme(titleText) {
+            if (titleText.includes('قبل از اینکه شروع کنیم') || titleText.includes('چیزی که در ذهن تو پررنگ‌تر است') || titleText.includes('جایی برای مکث')) {
+                setAtmosphere('#8E9D93', '142, 157, 147');
             }
-            else if (text.includes('ذهن تو چطور کار می‌کند') || text.includes('تفاوتِ درون تو') || text.includes('لایه‌های عمیق‌تر')) {
-                root.style.setProperty('--accent-sage', '#8A9BA8'); /* آبیِ خاکستریِ عمیق */
-                root.style.setProperty('--accent-glow', 'rgba(138, 155, 168, 0.25)');
-                root.style.setProperty('--blob-1', 'rgba(138, 155, 168, 0.12)');
-                root.style.setProperty('--blob-2', 'rgba(95, 115, 130, 0.08)');
-                root.style.setProperty('--blob-3', 'rgba(55, 75, 90, 0.05)');
+
+            else if (titleText.includes('ذهن تو چطور کار می‌کند') || titleText.includes('تفاوتِ درون تو') || titleText.includes('لایه‌های عمیق‌تر')) {
+                setAtmosphere('#7A8999', '122, 137, 153');
             }
-            else if (text.includes('زاویه‌ای که شاید کمتر دیده باشی') || text.includes('این الگو در یک آدم دیگر')) {
-                root.style.setProperty('--accent-sage', '#BCA38F'); /* برنز/خاکیِ مات */
-                root.style.setProperty('--accent-glow', 'rgba(188, 163, 143, 0.25)');
-                root.style.setProperty('--blob-1', 'rgba(188, 163, 143, 0.12)');
-                root.style.setProperty('--blob-2', 'rgba(145, 120, 100, 0.08)');
-                root.style.setProperty('--blob-3', 'rgba(105, 80, 60, 0.05)');
+
+            else if (titleText.includes('زاویه‌ای که شاید کمتر دیده باشی') || titleText.includes('این الگو در یک آدم دیگر')) {
+                setAtmosphere('#A89885', '168, 152, 133');
             }
-            else if (text.includes('گره می‌خورد') || text.includes('ذهنت در فشار و تعادل') || text.includes('نشتیِ انرژی')) {
-                root.style.setProperty('--accent-sage', '#A59A9C'); /* سربیِ ته‌رنگ بنفشِ بسیار محو */
-                root.style.setProperty('--accent-glow', 'rgba(165, 154, 156, 0.25)');
-                root.style.setProperty('--blob-1', 'rgba(165, 154, 156, 0.12)');
-                root.style.setProperty('--blob-2', 'rgba(125, 115, 117, 0.08)');
-                root.style.setProperty('--blob-3', 'rgba(85, 75, 77, 0.05)');
+
+            else if (titleText.includes('گره می‌خورد') || titleText.includes('فشار و تعادل') || titleText.includes('نشتیِ انرژی')) {
+                setAtmosphere('#9C888A', '156, 136, 138');
             }
+
             else {
-                root.style.setProperty('--accent-sage', '#9CA3AF');
+                setAtmosphere('#9CA3AF', '156, 163, 175');
             }
         }
 
