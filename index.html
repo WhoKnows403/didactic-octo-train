@@ -707,6 +707,80 @@
             }
 
         }
+
+        .story-content-wrapper {
+            width: 100%;
+            position: relative;
+            z-index: 2;
+            text-align: right; /* راست‌چین کردن طبیعی‌تر از Justify در موبایل است */
+        }
+
+        .story-content-wrapper p {
+            margin: 0 0 22px 0;
+            color: rgba(253, 251, 247, 0.9); /* عاجیِ ملایم */
+            line-height: 2.3;
+            font-size: 15.5px;
+            font-weight: 400; /* وزن 300 زیادی نازک و بی‌روح بود */
+            letter-spacing: 0.2px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.6); /* عمق دادن به کلمات روی پس زمینه تاریک */
+        }
+
+        .story-content-wrapper p:last-child {
+            margin-bottom: 0;
+        }
+
+        /* استایل کلمات کلیدی (Bold) - تبدیل به کلمات درخشان */
+        .text-highlight {
+            background: linear-gradient(120deg, #FFFFFF 0%, var(--accent-sage) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 600;
+            padding: 0 2px;
+            position: relative;
+            display: inline-block;
+        }
+
+        /* یک خط محو زیر کلمات مهم برای تاکید ظریف */
+        .text-highlight::after {
+            content: '';
+            position: absolute;
+            bottom: 2px;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            background: var(--accent-sage);
+            opacity: 0.3;
+            box-shadow: 0 0 8px var(--accent-sage);
+        }
+
+        .text-whisper {
+            font-style: italic;
+            color: var(--text-muted);
+            font-weight: 300;
+        }
+
+        /* ========================================= */
+        /* 🌌 Glass Card Enhancements (Ambient Glow) */
+        /* ========================================= */
+        .glass-card {
+            /* پس‌زمینه کارت را کمی عمیق‌تر کردیم */
+            background: linear-gradient(160deg, rgba(28, 31, 33, 0.8), rgba(20, 22, 24, 0.95));
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-top: 1px solid rgba(255, 255, 255, 0.1); /* نور از بالا */
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5), inset 0 0 40px var(--accent-glow);
+            overflow: hidden; /* برای نگه داشتن افکت نوری داخل کارت */
+        }
+
+        .card-ambient-glow {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at 50% -20%, var(--accent-glow) 0%, transparent 60%);
+            pointer-events: none;
+            z-index: 1;
+            opacity: 0.5;
+        }
+
+
     </style>
 </head>
 <body>
@@ -1313,13 +1387,12 @@
                     `;
                 }
                 else {
-
                     const safeContent = (slide.content || "");
 
-                    const formattedContent = safeContent.replace(
-                        /\*\*(.*?)\*\*/g,
-                        '<span class="text-highlight">$1</span>'
-                    );
+
+                    let formattedContent = safeContent.replace(/\*\*(.*?)\*\*/g, '<span class="text-highlight">$1</span>');
+                    formattedContent = formattedContent.replace(/\*(.*?)\*/g, '<span class="text-whisper">$1</span>');
+                    formattedContent = formattedContent.split(/\n\n+/).map(para => `<p>${para.replace(/\n/g, '<br>')}</p>`).join('');
 
                     const chapterBlock = meta.chapter ? `
                         <div class="story-chapter">
@@ -1329,94 +1402,48 @@
 
                     const whisperBlock = meta.whisper ? `
                         <div class="story-whisper-container">
-
                             <div class="story-divider">
-                                <span></span>
-                                ✦
-                                <span></span>
+                                <span></span>✦<span></span>
                             </div>
-
                             <div class="story-whisper">
                                 ${meta.whisper}
                             </div>
-
                         </div>
                     ` : "";
 
                     slideDiv.innerHTML = `
-
                         <div class="glass-card">
+                            <!-- یک لایه درخشش زیرین بر اساس تم رنگی -->
+                            <div class="card-ambient-glow"></div>
 
                             <div class="glass-card-content">
-
                                 <div class="sacred-wrapper">
-
                                     <div class="liquid-orb"></div>
-
                                     <div class="sacred-geometry">
                                         <div class="geom-ring"></div>
                                         <div class="geom-ring"></div>
                                         <div class="geom-ring"></div>
                                     </div>
-
                                 </div>
 
                                 ${chapterBlock}
 
-                                <h2
-                                    class="typewriter-target"
-                                    data-text="${cleanTitle}"
-                                    style="
-                                        text-align:center;
-                                        margin:0;
-                                        font-size:24px;
-                                        font-weight:600;
-                                        color:var(--text-ivory);
-                                        line-height:1.8;
-                                        position:relative;
-                                        z-index:2;
-                                    ">
+                                <h2 class="typewriter-target" data-text="${cleanTitle}"
+                                    style="text-align:center; margin:0 0 20px 0; font-size:24px; font-weight:600; color:var(--text-ivory); line-height:1.6; position:relative; z-index:2;">
                                 </h2>
 
-                                <div
-                                    style="
-                                        width:60px;
-                                        height:1px;
-                                        background:linear-gradient(
-                                            to right,
-                                            transparent,
-                                            var(--accent-sage),
-                                            transparent
-                                        );
-                                        margin:20px auto 28px;
-                                        opacity:.8;
-                                    ">
-                                </div>
+                                <div style="width:50px; height:2px; background:linear-gradient(to right, transparent, var(--accent-sage), transparent); margin:0 auto 30px; opacity:0.6;"></div>
 
                                 ${whisperBlock}
 
-                                <p
-                                    class="paragraph-target"
-                                    style="
-                                        margin:0;
-                                        color:var(--text-ivory);
-                                        line-height:2.15;
-                                        font-size:16px;
-                                        font-weight:300;
-                                        position:relative;
-                                        z-index:2;
-                                    "
-                                >
+                                <!-- تغییر از P به DIV کلاس دار -->
+                                <div class="story-content-wrapper paragraph-target">
                                     ${formattedContent}
-                                </p>
-
+                                </div>
                             </div>
-
                         </div>
-
                     `;
                 }
-
                 slidesWrapper.appendChild(slideDiv);
             });
 
