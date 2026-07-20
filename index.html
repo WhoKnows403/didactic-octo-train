@@ -709,27 +709,76 @@
         }
 
         .story-content-wrapper {
+            margin-top: 5px;
             width: 100%;
             position: relative;
             z-index: 2;
-            text-align: right; /* راست‌چین کردن طبیعی‌تر از Justify در موبایل است */
+            text-align: right;
         }
 
         .story-content-wrapper p {
-            margin: 0 0 22px 0;
-            color: rgba(253, 251, 247, 0.9); /* عاجیِ ملایم */
+            margin: 0 0 20px 0;
+            color: rgba(253, 251, 247, 0.92);
             line-height: 2.3;
             font-size: 15.5px;
-            font-weight: 400; /* وزن 300 زیادی نازک و بی‌روح بود */
+            font-weight: 400;
             letter-spacing: 0.2px;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.6); /* عمق دادن به کلمات روی پس زمینه تاریک */
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
         }
+
 
         .story-content-wrapper p:last-child {
             margin-bottom: 0;
         }
+        .soul-quote {
+            position: relative;
+            margin: 22px 0;
+            padding: 16px 20px 16px 20px;
+            background: rgba(255, 255, 255, 0.025);
+            border-right: 3px solid var(--accent-sage); /* خط نوری راست‌چین */
+            border-radius: 0 12px 12px 0;
+            color: var(--text-ivory);
+            font-style: italic;
+            font-size: 15px;
+            line-height: 2;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.2);
+        }
 
-        /* استایل کلمات کلیدی (Bold) - تبدیل به کلمات درخشان */
+        .soul-quote::before {
+            content: '“';
+            position: absolute;
+            top: -8px;
+            right: 15px;
+            font-size: 38px;
+            color: var(--accent-sage);
+            opacity: 0.25;
+            font-family: Georgia, serif;
+        }
+
+        .soul-list {
+            list-style: none;
+            padding: 0;
+            margin: 18px 0;
+        }
+
+        .soul-list li {
+            position: relative;
+            padding-right: 18px;
+            margin-bottom: 12px;
+            font-size: 15px;
+            line-height: 1.9;
+            color: rgba(253, 251, 247, 0.88);
+        }
+
+        .soul-list li::before {
+            content: '•';
+            position: absolute;
+            right: 0;
+            color: var(--accent-sage);
+            font-weight: bold;
+            font-size: 18px;
+        }
+
         .text-highlight {
             background: linear-gradient(120deg, #FFFFFF 0%, var(--accent-sage) 100%);
             -webkit-background-clip: text;
@@ -1389,10 +1438,45 @@
                 else {
                     const safeContent = (slide.content || "");
 
-
+                    // 1. تبدیل کلمات ستاره‌دار به تگ هایلایت درخشان
                     let formattedContent = safeContent.replace(/\*\*(.*?)\*\*/g, '<span class="text-highlight">$1</span>');
-                    formattedContent = formattedContent.replace(/\*(.*?)\*/g, '<span class="text-whisper">$1</span>');
-                    formattedContent = formattedContent.split(/\n\n+/).map(para => `<p>${para.replace(/\n/g, '<br>')}</p>`).join('');
+
+                    // 2. تبدیل خطوط شروع شده با علامت (>) به باکس نقل‌قول (Soul Quote)
+                    formattedContent = formattedContent.replace(/^>\s*(["'].*?["'])/gm, '<div class="soul-quote">$1</div>');
+                    formattedContent = formattedContent.replace(/^>\s*(.*)$/gm, '<div class="soul-quote">$1</div>');
+
+                    // 3. شکستن پاراگراف‌ها و مدیریت لیست‌ها
+                    let paragraphs = formattedContent.split(/\n\n+/);
+                    formattedContent = paragraphs.map(para => {
+                        para = para.trim();
+                        if (!para) return '';
+
+                        // اگر پاراگراف خودش باکس کوتیشن است، دست نزن
+                        if (para.startsWith('<div class="soul-quote">')) {
+                            return para;
+                        }
+
+                        // اگر شامل بولت‌پوینت بود، به لیست تبدیلش کن
+                        if (para.includes('\n- ') || para.startsWith('- ') || para.includes('\n* ') || para.startsWith('* ')) {
+                            let lines = para.split('\n');
+                            let listHtml = '<ul class="soul-list">';
+                            let textBeforeList = '';
+
+                            lines.forEach(line => {
+                                line = line.trim();
+                                if (line.startsWith('- ') || line.startsWith('* ')) {
+                                    listHtml += `<li>${line.substring(2)}</li>`;
+                                } else if (line) {
+                                    textBeforeList += `<p>${line.replace(/\n/g, '<br>')}</p>`;
+                                }
+                            });
+                            listHtml += '</ul>';
+                            return textBeforeList + listHtml;
+                        }
+
+                        // پاراگراف معمولی با مدیریت اینترهای داخلی
+                        return `<p>${para.replace(/\n/g, '<br>')}</p>`;
+                    }).join('');
 
                     const chapterBlock = meta.chapter ? `
                         <div class="story-chapter">
@@ -1413,7 +1497,6 @@
 
                     slideDiv.innerHTML = `
                         <div class="glass-card">
-                            <!-- یک لایه درخشش زیرین بر اساس تم رنگی -->
                             <div class="card-ambient-glow"></div>
 
                             <div class="glass-card-content">
@@ -1436,7 +1519,7 @@
 
                                 ${whisperBlock}
 
-                                <!-- تغییر از P به DIV کلاس دار -->
+                                <!-- محتوای متنیِ ساختاریافته و زنده -->
                                 <div class="story-content-wrapper paragraph-target">
                                     ${formattedContent}
                                 </div>
