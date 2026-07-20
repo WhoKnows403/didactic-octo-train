@@ -664,7 +664,7 @@
         }
 
         .story-whisper-container {
-            margin-bottom: 18px; /* از ۳۴ پیکسل به ۱۸ کاهش یافت تا به متن اصلی نزدیک‌تر شود */
+            margin-bottom: 16px; /* از ۳۴ پیکسل به ۱۸ کاهش یافت تا به متن اصلی نزدیک‌تر شود */
             text-align: center;
             animation: fadeWhisper .8s ease;
         }
@@ -675,7 +675,7 @@
 
             font-size:13px;
 
-            line-height:2;
+            line-height: 1.5;
 
             font-style:italic;
 
@@ -706,7 +706,8 @@
         }
 
         .story-content-wrapper {
-            margin-top: 0px; /* صفر شد چون خود المان‌های قبلی فاصله کافی دارند */
+            margin-top: 0 ;
+            padding-top: 0;/* صفر شد چون خود المان‌های قبلی فاصله کافی دارند */
             width: 100%;
             position: relative;
             z-index: 2;
@@ -716,7 +717,7 @@
         .story-content-wrapper p {
             margin: 0 0 20px 0;
             color: rgba(253, 251, 247, 0.92);
-            line-height: 2.3;
+            line-height: 1.85;
             font-size: 15.5px;
             font-weight: 400;
             letter-spacing: 0.2px;
@@ -727,10 +728,13 @@
         .story-content-wrapper p:last-child {
             margin-bottom: 0;
         }
+        .story-content-wrapper > *:first-child {
+            margin-top: 0 !important; /* جلوگری از تداخل مارجین‌های داخلی پیوندها */
+        }
 
         .soul-quote {
             position: relative;
-            margin: 15px 0; /* از ۲۲ به ۱۵ کاهش یافت تا باکس نقل قول فاصله منطقی داشته باشد */
+            margin: 0 0 16px 0; /* از ۲۲ به ۱۵ کاهش یافت تا باکس نقل قول فاصله منطقی داشته باشد */
             padding: 14px 18px;
             background: rgba(255, 255, 255, 0.025);
             border-right: 3px solid var(--accent-sage);
