@@ -615,6 +615,98 @@
         @keyframes spin-orb {
             100% { transform: rotate(360deg); }
         }
+        
+        .story-chapter{
+
+            text-align:center;
+
+            font-size:11px;
+
+            letter-spacing:4px;
+
+            color:var(--accent-sage);
+
+            opacity:.55;
+
+            margin-bottom:22px;
+
+            text-transform:uppercase;
+
+        }
+
+        .story-divider{
+
+            display:flex;
+
+            align-items:center;
+
+            justify-content:center;
+
+            gap:14px;
+
+            color:var(--accent-sage);
+
+            margin-bottom:18px;
+
+            opacity:.8;
+
+        }
+
+        .story-divider span{
+
+            width:55px;
+
+            height:1px;
+
+            background:rgba(157,179,155,.25);
+
+        }
+
+        .story-whisper-container{
+
+            margin-bottom:34px;
+
+            text-align:center;
+
+            animation:fadeWhisper .8s ease;
+
+        }
+
+        .story-whisper{
+
+            color:#AEB7BB;
+
+            font-size:13px;
+
+            line-height:2;
+
+            font-style:italic;
+
+            font-weight:300;
+
+            opacity:.82;
+
+        }
+
+        @keyframes fadeWhisper{
+
+            from{
+
+                opacity:0;
+
+                transform:translateY(12px);
+
+            }
+
+            to{
+
+                opacity:1;
+
+                transform:none;
+
+            }
+
+        }
     </style>
 </head>
 <body>
@@ -1221,39 +1313,107 @@
                     `;
                 }
                 else {
-                    const formattedContent = slide.content.replace(/\*\*(.*?)\*\*/g, '<span class="text-highlight">$1</span>');
 
-                    const atmosphericHeader = meta.whisper ? `
-                        <div class="story-whisper-container" style="text-align: center; margin-bottom: 35px; opacity: 0; animation: simpleFadeInUp 1.5s ease 0.4s forwards;">
-                            ${meta.chapter ? `<div style="font-size: 10px; letter-spacing: 4px; color: var(--accent-sage); opacity: 0.6; margin-bottom: 20px; text-transform: uppercase;">━━━━━━━━ &nbsp; ${meta.chapter} &nbsp; ━━━━━━━━</div>` : ''}
-                            <div style="color: var(--accent-sage); font-size: 14px; margin-bottom: 12px; opacity: 0.8;">✦</div>
-                            <div style="color: #A9B2B7; font-size: 13px; font-weight: 300; font-style: italic; line-height: 1.8; letter-spacing: 0.5px; opacity: 0.75;">
+                    const safeContent = (slide.content || "");
+
+                    const formattedContent = safeContent.replace(
+                        /\*\*(.*?)\*\*/g,
+                        '<span class="text-highlight">$1</span>'
+                    );
+
+                    const chapterBlock = meta.chapter ? `
+                        <div class="story-chapter">
+                            ${meta.chapter}
+                        </div>
+                    ` : "";
+
+                    const whisperBlock = meta.whisper ? `
+                        <div class="story-whisper-container">
+
+                            <div class="story-divider">
+                                <span></span>
+                                ✦
+                                <span></span>
+                            </div>
+
+                            <div class="story-whisper">
                                 ${meta.whisper}
                             </div>
+
                         </div>
-                    ` : '';
+                    ` : "";
 
                     slideDiv.innerHTML = `
+
                         <div class="glass-card">
+
                             <div class="glass-card-content">
 
-                                ${atmosphericHeader}
+                                <div class="sacred-wrapper">
 
-                                <!-- آبجکت‌های هندسی پس‌زمینه -->
-                                <div class="sacred-wrapper" style="top: -20px; opacity: 0.4;">
                                     <div class="liquid-orb"></div>
+
                                     <div class="sacred-geometry">
                                         <div class="geom-ring"></div>
                                         <div class="geom-ring"></div>
                                         <div class="geom-ring"></div>
                                     </div>
+
                                 </div>
 
-                                <h2 class="typewriter-target" style="text-align: center; margin-top: 0; font-size: 20px; color: var(--text-ivory); font-weight: 600;" data-text="${cleanTitle}"></h2>
-                                <div style="width: 30px; height: 1px; background: var(--accent-sage); margin: 15px auto 25px auto; opacity: 0.5;"></div>
-                                <p class="paragraph-target">${formattedContent}</p>
+                                ${chapterBlock}
+
+                                <h2
+                                    class="typewriter-target"
+                                    data-text="${cleanTitle}"
+                                    style="
+                                        text-align:center;
+                                        margin:0;
+                                        font-size:24px;
+                                        font-weight:600;
+                                        color:var(--text-ivory);
+                                        line-height:1.8;
+                                        position:relative;
+                                        z-index:2;
+                                    ">
+                                </h2>
+
+                                <div
+                                    style="
+                                        width:60px;
+                                        height:1px;
+                                        background:linear-gradient(
+                                            to right,
+                                            transparent,
+                                            var(--accent-sage),
+                                            transparent
+                                        );
+                                        margin:20px auto 28px;
+                                        opacity:.8;
+                                    ">
+                                </div>
+
+                                ${whisperBlock}
+
+                                <p
+                                    class="paragraph-target"
+                                    style="
+                                        margin:0;
+                                        color:var(--text-ivory);
+                                        line-height:2.15;
+                                        font-size:16px;
+                                        font-weight:300;
+                                        position:relative;
+                                        z-index:2;
+                                    "
+                                >
+                                    ${formattedContent}
+                                </p>
+
                             </div>
+
                         </div>
+
                     `;
                 }
 
