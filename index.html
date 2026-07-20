@@ -1081,39 +1081,44 @@
             }
         }
 
-        function getStoryBridge(titleText) {
+        function getSlideMeta(titleText) {
+            let meta = { chapter: "", whisper: "" };
 
-            if (titleText.includes('قبل از اینکه شروع کنیم'))
-                return "هر سفری، با شناخت نقطه‌ی آغاز خودش معنا پیدا می‌کند.";
+            if (titleText.includes('قبل از اینکه شروع کنیم')) {
+                meta.chapter = "CHAPTER I • آغاز";
+                meta.whisper = "هر سفری،<br>با شناخت نقطه‌ی آغاز خودش معنا پیدا می‌کند.";
+            }
+            else if (titleText.includes('چیزی که در ذهن تو پررنگ‌تر است')) {
+                meta.chapter = "CHAPTER I • ادراک";
+                meta.whisper = "هر ذهن،<br>از جایی آغاز می‌شود.";
+            }
+            else if (titleText.includes('ذهن تو چطور کار می‌کند')) {
+                meta.chapter = "CHAPTER II • پردازش";
+                meta.whisper = "آنچه می‌بینی،<br>فقط نیمی از داستان است.";
+            }
+            else if (titleText.includes('زاویه‌ای که شاید کمتر دیده باشی')) {
+                meta.chapter = "CHAPTER III • سایه‌ها";
+                meta.whisper = "بعضی پاسخ‌ها،<br>در سکوت زندگی می‌کنند.";
+            }
+            else if (titleText.includes('گره می‌خورد') || titleText.includes('نشتی') || titleText.includes('فشار')) {
+                meta.chapter = "CHAPTER IV • چالش";
+                meta.whisper = "هیچ نقطه‌ی قوتی،<br>بدون سایه نیست.";
+            }
+            else if (titleText.includes('درون تو و نگاهِ بیرون')) {
+                meta.chapter = "CHAPTER V • بازتاب";
+                meta.whisper = "دیگران،<br>همیشه از همان پنجره نگاه نمی‌کنند.";
+            }
+            else if (titleText.includes('این الگو در یک آدم دیگر')) {
+                meta.chapter = "CHAPTER VI • آینه";
+                meta.whisper = "گاهی،<br>دیدن یک آینه، همه چیز را روشن‌تر می‌کند.";
+            }
+            else if (titleText.includes('جایی برای مکث')) {
+                meta.chapter = "CHAPTER VII • توقف";
+                meta.whisper = "هر سفری،<br>چیزی را با خودش باقی می‌گذارد.";
+            }
 
-            if (titleText.includes('چیزی که در ذهن تو پررنگ‌تر است'))
-                return "بیایید از اولین لایه شروع کنیم؛ جایی که جهان برای تو شکل می‌گیرد.";
-
-            if (titleText.includes('ذهن تو چطور کار می‌کند'))
-                return "اکنون نوبت آن است که ببینیم این جهان، چگونه در ذهنت پردازش می‌شود.";
-
-            if (titleText.includes('زاویه‌ای که شاید کمتر دیده باشی'))
-                return "اما هر ذهن، لایه‌هایی دارد که همیشه در نگاه اول دیده نمی‌شوند.";
-
-            if (
-                titleText.includes('گره می‌خورد') ||
-                titleText.includes('نشتی') ||
-                titleText.includes('فشار')
-            )
-                return "نقاط قوت، اگر بیش از حد امتداد پیدا کنند، گاهی به نقطه‌ی اصطکاک تبدیل می‌شوند.";
-
-            if (titleText.includes('درون تو و نگاهِ بیرون'))
-                return "میان آنچه درونت جریان دارد و آنچه دیگران می‌بینند، همیشه فاصله‌ای وجود دارد.";
-
-            if (titleText.includes('این الگو در یک آدم دیگر'))
-                return "گاهی دیدن همین الگو در زندگی فردی دیگر، درکش را ساده‌تر می‌کند.";
-
-            if (titleText.includes('جایی برای مکث'))
-                return "پیش از آنکه این سفر به پایان برسد، فقط یک لحظه مکث کنیم.";
-
-            return "";
+            return meta;
         }
-
 
         function parseMarkdownToSlides(rawText) {
             const cleanText = rawText.replace(/---/g, '');
@@ -1186,22 +1191,15 @@
                 slideDiv.id = `slide-${index}`;
                 const cleanTitle = slide.title.replace(/^\d+\.\s*/, '').replace(/<\/?[^>]+(>|$)/g, "").replace(/\*/g, '');
 
+                const meta = getSlideMeta(cleanTitle);
+
                 if(slide.isChart) {
                     const userType = slide.chartData.myers_type || "";
-                    const bridgeText = getStoryBridge(cleanTitle);
-
-                    const bridgeHtml = bridgeText
-                        ? `<div style="display:flex; align-items:center; justify-content:center; gap:10px; margin-bottom: 12px; opacity: 0; animation: simpleFadeInUp 1s ease 0.3s forwards;">
-                            <span style="height: 1px; width: 25px; background: linear-gradient(90deg, transparent, var(--accent-sage)); opacity: 0.5;"></span>
-                            <span style="color: #A9B2B7; font-size: 12px; font-weight: 300; font-style: italic; letter-spacing: 0.5px;">${bridgeText}</span>
-                            <span style="height: 1px; width: 25px; background: linear-gradient(-90deg, transparent, var(--accent-sage)); opacity: 0.5;"></span>
-                        </div>`
-                        : '';
 
                     slideDiv.innerHTML = `
                         <div class="glass-card chart-slide" style="display:flex; flex-direction:column; justify-content:center; align-items:center;">
                             <div class="glass-card-content" style="width:100%; text-align:center; position:relative;">
-                                ${bridgeHtml}
+
                                 <h2 style="text-align: center; margin-top: 0; color: var(--accent-sage); font-weight:500; font-size:22px; text-shadow: 0 2px 10px rgba(0,0,0,0.4); letter-spacing: -0.5px;">${cleanTitle}</h2>
                                 <p style="color: var(--text-muted); font-size:12px; margin-bottom:20px;">فضای هندسی ادراک و تصمیم‌گیری ${userType ? `(${userType})` : ''}</p>
 
@@ -1210,7 +1208,6 @@
                                     <canvas id="sakinorva-canvas" style="width: 100%; height: 100%; position:relative; z-index:1;"></canvas>
                                 </div>
 
-                                <!-- 🌟 راهنمای شیشه‌ای و نرم زیر نمودار -->
                                 <div style="margin-top: 25px; padding: 12px 18px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); border-radius: 16px; display: inline-flex; align-items: center; gap: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
                                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent-sage)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="opacity: 0.8;"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
                                     <span style="color: var(--text-muted); font-size: 11px; font-weight: 300; letter-spacing: 0.3px; text-align: right; line-height: 1.6;">
@@ -1225,18 +1222,35 @@
                 }
                 else {
                     const formattedContent = slide.content.replace(/\*\*(.*?)\*\*/g, '<span class="text-highlight">$1</span>');
+
+                    const atmosphericHeader = meta.whisper ? `
+                        <div class="story-whisper-container" style="text-align: center; margin-bottom: 35px; opacity: 0; animation: simpleFadeInUp 1.5s ease 0.4s forwards;">
+                            ${meta.chapter ? `<div style="font-size: 10px; letter-spacing: 4px; color: var(--accent-sage); opacity: 0.6; margin-bottom: 20px; text-transform: uppercase;">━━━━━━━━ &nbsp; ${meta.chapter} &nbsp; ━━━━━━━━</div>` : ''}
+                            <div style="color: var(--accent-sage); font-size: 14px; margin-bottom: 12px; opacity: 0.8;">✦</div>
+                            <div style="color: #A9B2B7; font-size: 13px; font-weight: 300; font-style: italic; line-height: 1.8; letter-spacing: 0.5px; opacity: 0.75;">
+                                ${meta.whisper}
+                            </div>
+                        </div>
+                    ` : '';
+
                     slideDiv.innerHTML = `
                         <div class="glass-card">
                             <div class="glass-card-content">
-                                <div class="sacred-wrapper">
+
+                                ${atmosphericHeader}
+
+                                <!-- آبجکت‌های هندسی پس‌زمینه -->
+                                <div class="sacred-wrapper" style="top: -20px; opacity: 0.4;">
                                     <div class="liquid-orb"></div>
-                                        <div class="sacred-geometry">
-                                            <div class="geom-ring"></div>
-                                            <div class="geom-ring"></div>
-                                            <div class="geom-ring"></div>
-                                        </div>
+                                    <div class="sacred-geometry">
+                                        <div class="geom-ring"></div>
+                                        <div class="geom-ring"></div>
+                                        <div class="geom-ring"></div>
+                                    </div>
                                 </div>
-                                <h2 class="typewriter-target" style="text-align: center; margin-top: 0;" data-text="${cleanTitle}"></h2>
+
+                                <h2 class="typewriter-target" style="text-align: center; margin-top: 0; font-size: 20px; color: var(--text-ivory); font-weight: 600;" data-text="${cleanTitle}"></h2>
+                                <div style="width: 30px; height: 1px; background: var(--accent-sage); margin: 15px auto 25px auto; opacity: 0.5;"></div>
                                 <p class="paragraph-target">${formattedContent}</p>
                             </div>
                         </div>
@@ -1245,6 +1259,9 @@
 
                 slidesWrapper.appendChild(slideDiv);
             });
+
+
+
 
             container.style.display = 'flex';
             updateStoryUI();
@@ -1362,7 +1379,7 @@
             }
         }
 
-       function drawSakinorvaChart(canvasId, rawData) {
+        function drawSakinorvaChart(canvasId, rawData) {
             const canvas = document.getElementById(canvasId);
             if (!canvas) return;
             const ctx = canvas.getContext('2d');
@@ -1379,6 +1396,7 @@
             const values = Object.values(data);
             const numElements = labels.length;
 
+            // --- تنظیمات رزولوشن (Retina Display) ---
             const dpr = window.devicePixelRatio || 1;
             const rect = canvas.parentElement.getBoundingClientRect();
             canvas.width = rect.width * dpr;
@@ -1389,24 +1407,45 @@
             const height = rect.height;
             const centerX = width / 2;
             const centerY = height / 2;
-            const maxRadius = Math.min(width, height) / 2 - 35;
+            // کمی شعاع را کوچکتر می‌کنیم تا فضا برای HUD باز شود
+            const maxRadius = Math.min(width, height) / 2 - 45;
 
             ctx.clearRect(0, 0, width, height);
 
+            // دریافت رنگ اصلی (یا استفاده از رنگ پیش‌فرض)
             const accentColor = getComputedStyle(document.documentElement).getPropertyValue('--accent-sage').trim() || '#9DB39B';
 
+            // ==========================================
+            // لایه ۱: پس‌زمینه‌ی هندسی (Ethereal Grid)
+            // ==========================================
             const levels = 4;
-            ctx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
-            ctx.lineWidth = 1.5;
-            for (let i = 1; i <= levels; i++) {
-                const radius = maxRadius * (i / levels);
+            ctx.lineWidth = 1;
+
+            for (let j = 1; j <= levels; j++) {
+                const radius = maxRadius * (j / levels);
                 ctx.beginPath();
-                ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
+                // ایجاد نقطه‌چین برای خطوط راهنما (حس نقشه‌کشی)
+                ctx.setLineDash([2, 4]);
+
+                for (let i = 0; i < numElements; i++) {
+                    const angle = (i * 2 * Math.PI) / numElements - Math.PI / 2;
+                    const x = centerX + radius * Math.cos(angle);
+                    const y = centerY + radius * Math.sin(angle);
+                    if (i === 0) ctx.moveTo(x, y);
+                    else ctx.lineTo(x, y);
+                }
+                ctx.closePath();
+                // هرچه به مرکز نزدیک‌تر، محوتر
+                ctx.strokeStyle = `rgba(255, 255, 255, ${0.08 * (j / levels)})`;
                 ctx.stroke();
             }
+            // ریست کردن نقطه‌چین برای رسم شکل اصلی
+            ctx.setLineDash([]);
 
-
-            const maxValue = 50;
+            // ==========================================
+            // لایه ۲: محاسبه نقاط داده‌ها
+            // ==========================================
+            const maxValue = 50; // سقف امتیازات
             const points = [];
             for (let i = 0; i < numElements; i++) {
                 const angle = (i * 2 * Math.PI) / numElements - Math.PI / 2;
@@ -1416,73 +1455,135 @@
                     x: centerX + radius * Math.cos(angle),
                     y: centerY + radius * Math.sin(angle),
                     val: values[i],
-                    label: labels[i]
+                    label: labels[i],
+                    angle: angle
                 });
             }
 
+            // ==========================================
+            // لایه ۳: رسم چندضلعی دیتای کاربر (The Liquid Polygon)
+            // ==========================================
             ctx.beginPath();
             ctx.lineJoin = 'round';
-
             points.forEach((p, i) => {
                 if (i === 0) ctx.moveTo(p.x, p.y);
                 else ctx.lineTo(p.x, p.y);
             });
             ctx.closePath();
 
+            // فیلتر رنگی داخل (Radial Gradient)
             const fillGradient = ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, maxRadius);
-            fillGradient.addColorStop(0, accentColor + '77');
-            fillGradient.addColorStop(1, accentColor + '11');
-
-            ctx.fillStyle = fillGradient;
+            // استفاده از globalAlpha برای اطمینان از کارکرد کد حتی اگر accentColor هگز نباشد (مثل rgb)
+            ctx.globalAlpha = 0.25;
+            ctx.fillStyle = accentColor;
             ctx.fill();
 
+            ctx.globalAlpha = 0.05;
+            fillGradient.addColorStop(0, '#ffffff'); // مرکز کمی روشن‌تر
+            fillGradient.addColorStop(1, 'transparent');
+            ctx.fillStyle = fillGradient;
+            ctx.fill();
+            ctx.globalAlpha = 1.0;
+
+            // افکت لبه‌ی شیشه (Glass Edge Refraction): دو بار استروک کردن
+            // استروک اول: محو و ضخیم (هاله‌ی شیشه)
             ctx.strokeStyle = accentColor;
-            ctx.lineWidth = 2.5;
-            ctx.shadowBlur = 15;
-            ctx.shadowColor = accentColor;
+            ctx.globalAlpha = 0.2;
+            ctx.lineWidth = 6;
             ctx.stroke();
 
-            points.forEach(p => {
+            // استروک دوم: نازک و شارپ (لبه‌ی اصلی)
+            ctx.globalAlpha = 0.9;
+            ctx.lineWidth = 1.5;
+            ctx.stroke();
+            ctx.globalAlpha = 1.0;
+
+            // ==========================================
+            // لایه ۴: گره‌ها (Neural Nodes) و خطوط رابط (Leader Lines)
+            // ==========================================
+            points.forEach((p) => {
+                // ۱. خط رابط از گره به لیبل (HUD Effect)
+                const labelRadius = maxRadius + 28;
+                const lx = centerX + labelRadius * Math.cos(p.angle);
+                const ly = centerY + labelRadius * Math.sin(p.angle);
+
                 ctx.beginPath();
-                ctx.arc(p.x, p.y, 4, 0, Math.PI * 2);
+                ctx.moveTo(p.x, p.y);
+                ctx.lineTo(lx, ly);
+                ctx.strokeStyle = `rgba(255, 255, 255, 0.06)`;
+                ctx.lineWidth = 1;
+                ctx.stroke();
+
+                // ۲. هاله‌ی دور گره
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, 6, 0, Math.PI * 2);
+                ctx.fillStyle = accentColor;
+                ctx.globalAlpha = 0.2;
+                ctx.fill();
+                ctx.globalAlpha = 1.0;
+
+                // ۳. هسته‌ی مرکزی گره (نورانی)
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, 2.5, 0, Math.PI * 2);
                 ctx.fillStyle = '#FFFFFF';
-                ctx.shadowBlur = 10;
+                ctx.shadowBlur = 8;
                 ctx.shadowColor = accentColor;
                 ctx.fill();
-                ctx.strokeStyle = accentColor;
-                ctx.lineWidth = 1.5;
-                ctx.stroke();
+                ctx.shadowBlur = 0; // ریست سایه
             });
 
-            ctx.shadowBlur = 0;
-
-            points.forEach((p, i) => {
-                const angle = (i * 2 * Math.PI) / numElements - Math.PI / 2;
-                const labelRadius = maxRadius + 22;
-                const lx = centerX + labelRadius * Math.cos(angle);
-                const ly = centerY + labelRadius * Math.sin(angle);
+            // ==========================================
+            // لایه ۵: تایپوگرافی لیبل‌ها
+            // ==========================================
+            points.forEach((p) => {
+                const labelRadius = maxRadius + 32;
+                const lx = centerX + labelRadius * Math.cos(p.angle);
+                const ly = centerY + labelRadius * Math.sin(p.angle);
 
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'middle';
 
+                // نام کارکرد (Ni, Ne...)
                 ctx.fillStyle = accentColor;
-                ctx.font = '700 14px system-ui, -apple-system, sans-serif';
+                ctx.font = '600 13px system-ui, -apple-system, sans-serif';
+                ctx.letterSpacing = "1px";
                 ctx.fillText(p.label, lx, ly - 8);
 
-                ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
-                ctx.font = '400 12px system-ui, -apple-system, sans-serif';
+                // امتیاز عددی کارکرد
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
+                ctx.font = '300 11px system-ui, -apple-system, sans-serif';
                 ctx.fillText(Math.round(p.val), lx, ly + 8);
             });
 
+            // ==========================================
+            // لایه ۶: لنز مرکزی و نتیجه (The Core Badge)
+            // ==========================================
             if (rawData.myers_type) {
-                ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
-                ctx.font = '800 18px system-ui, -apple-system, sans-serif';
+                const coreRadius = 35;
+
+                // رسم بک‌گراند لنز (برای جدا کردن متن از خطوط زیرین)
+                ctx.beginPath();
+                ctx.arc(centerX, centerY, coreRadius, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(10, 14, 18, 0.75)'; // شیشه‌ی دودی تیره
+                ctx.fill();
+
+                // یک خط بسیار ظریف دور لنز
+                ctx.lineWidth = 1;
+                ctx.strokeStyle = `rgba(255, 255, 255, 0.08)`;
+                ctx.stroke();
+
+                // متن درون لنز
+                ctx.fillStyle = '#FFFFFF';
+                ctx.font = '700 16px system-ui, -apple-system, sans-serif';
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'middle';
-                ctx.shadowBlur = 20;
+                ctx.letterSpacing = "2px";
+
+                // سایه ملایم فقط برای تکست وسط
+                ctx.shadowBlur = 12;
                 ctx.shadowColor = accentColor;
                 ctx.fillText(rawData.myers_type, centerX, centerY);
-                ctx.shadowBlur = 0;
+                ctx.shadowBlur = 0; // ریست
             }
         }
 
