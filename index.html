@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>تحلیل شخصیت MBTI</title>
+    <title>تحلیل شخصیت </title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@200;300;400;500;600&display=swap" rel="stylesheet">
     <style>
@@ -634,22 +634,14 @@
 
         }
 
-        .story-divider{
-
-            display:flex;
-
-            align-items:center;
-
-            justify-content:center;
-
-            gap:14px;
-
-            color:var(--accent-sage);
-
-            margin-bottom:18px;
-
-            opacity:.8;
-
+        .story-divider {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 14px;
+            color: var(--accent-sage);
+            margin-bottom: 12px; /* از ۱۸ به ۱۲ کاهش یافت */
+            opacity: .8;
         }
 
         .story-divider span{
@@ -662,14 +654,10 @@
 
         }
 
-        .story-whisper-container{
-
-            margin-bottom:34px;
-
-            text-align:center;
-
-            animation:fadeWhisper .8s ease;
-
+        .story-whisper-container {
+            margin-bottom: 18px; /* از ۳۴ پیکسل به ۱۸ کاهش یافت تا به متن اصلی نزدیک‌تر شود */
+            text-align: center;
+            animation: fadeWhisper .8s ease;
         }
 
         .story-whisper{
@@ -709,7 +697,7 @@
         }
 
         .story-content-wrapper {
-            margin-top: 5px;
+            margin-top: 0px; /* صفر شد چون خود المان‌های قبلی فاصله کافی دارند */
             width: 100%;
             position: relative;
             z-index: 2;
@@ -730,12 +718,13 @@
         .story-content-wrapper p:last-child {
             margin-bottom: 0;
         }
+        
         .soul-quote {
             position: relative;
-            margin: 22px 0;
-            padding: 16px 20px 16px 20px;
+            margin: 15px 0; /* از ۲۲ به ۱۵ کاهش یافت تا باکس نقل قول فاصله منطقی داشته باشد */
+            padding: 14px 18px;
             background: rgba(255, 255, 255, 0.025);
-            border-right: 3px solid var(--accent-sage); /* خط نوری راست‌چین */
+            border-right: 3px solid var(--accent-sage);
             border-radius: 0 12px 12px 0;
             color: var(--text-ivory);
             font-style: italic;
@@ -1438,25 +1427,29 @@
                 else {
                     const safeContent = (slide.content || "");
 
-                    // 1. تبدیل کلمات ستاره‌دار به تگ هایلایت درخشان
-                    let formattedContent = safeContent.replace(/\*\*(.*?)\*\*/g, '<span class="text-highlight">$1</span>');
+                    // ۱. تبدیل کلمات ستاره‌دار به تگ هایلایت
+                    let processedText = safeContent.replace(/\*\*(.*?)\*\*/g, '<span class="text-highlight">$1</span>');
 
-                    // 2. تبدیل خطوط شروع شده با علامت (>) به باکس نقل‌قول (Soul Quote)
-                    formattedContent = formattedContent.replace(/^>\s*(["'].*?["'])/gm, '<div class="soul-quote">$1</div>');
-                    formattedContent = formattedContent.replace(/^>\s*(.*)$/gm, '<div class="soul-quote">$1</div>');
+                    // ۲. جداسازی هوشمند خطوط نقل‌قول پیش از تفکیک پاراگراف‌ها (برای جلوگیری از سقوط دیو داخل p)
+                    // این رگکس مطمئن می‌شود اطراف خطوط > حتماً فضای خالی بلاک وجود دارد
+                    let normalizedText = processedText
+                        .replace(/(?:^|\n)(>[^\n]*)/g, '\n\n$1\n\n')
+                        .replace(/\n\n\n+/g, '\n\n');
 
-                    // 3. شکستن پاراگراف‌ها و مدیریت لیست‌ها
-                    let paragraphs = formattedContent.split(/\n\n+/);
-                    formattedContent = paragraphs.map(para => {
+                    // ۳. شکستن متن به بلاک‌های مستقل
+                    let paragraphs = normalizedText.split(/\n\n+/);
+
+                    let formattedContent = paragraphs.map(para => {
                         para = para.trim();
                         if (!para) return '';
 
-                        // اگر پاراگراف خودش باکس کوتیشن است، دست نزن
-                        if (para.startsWith('<div class="soul-quote">')) {
-                            return para;
+                        // الف) اگر بلاک با > شروع شده، آن را به باکس نقل‌قول (Soul Quote) تبدیل کن
+                        if (para.startsWith('>')) {
+                            let cleanQuote = para.replace(/^>\s*/mg, '').trim();
+                            return `<div class="soul-quote">${cleanQuote.replace(/\n/g, '<br>')}</div>`;
                         }
 
-                        // اگر شامل بولت‌پوینت بود، به لیست تبدیلش کن
+                        // ب) اگر شامل بولت‌پوینت بود، به لیست تبدیلش کن
                         if (para.includes('\n- ') || para.startsWith('- ') || para.includes('\n* ') || para.startsWith('* ')) {
                             let lines = para.split('\n');
                             let listHtml = '<ul class="soul-list">';
@@ -1474,7 +1467,7 @@
                             return textBeforeList + listHtml;
                         }
 
-                        // پاراگراف معمولی با مدیریت اینترهای داخلی
+                        // ج) پاراگراف معمولی با مدیریت اینترهای داخلی
                         return `<p>${para.replace(/\n/g, '<br>')}</p>`;
                     }).join('');
 
@@ -1512,10 +1505,10 @@
                                 ${chapterBlock}
 
                                 <h2 class="typewriter-target" data-text="${cleanTitle}"
-                                    style="text-align:center; margin:0 0 20px 0; font-size:24px; font-weight:600; color:var(--text-ivory); line-height:1.6; position:relative; z-index:2;">
+                                    style="text-align:center; margin:0 0 15px 0; font-size:24px; font-weight:600; color:var(--text-ivory); line-height:1.6; position:relative; z-index:2;">
                                 </h2>
 
-                                <div style="width:50px; height:2px; background:linear-gradient(to right, transparent, var(--accent-sage), transparent); margin:0 auto 30px; opacity:0.6;"></div>
+                                <div style="width:50px; height:2px; background:linear-gradient(to right, transparent, var(--accent-sage), transparent); margin:0 auto 20px; opacity:0.6;"></div>
 
                                 ${whisperBlock}
 
