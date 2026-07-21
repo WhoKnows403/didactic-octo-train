@@ -1439,76 +1439,136 @@
 
 
         function renderComparisonResultUI(resultText) {
-            // 1. خاموش کردن محیط کوییز
             document.getElementById('app').style.display = 'none';
             document.getElementById('intro-screen').style.display = 'none';
 
-            // 2. هدف‌گیری کانتینرهای اصلی شما
             const container = document.getElementById('result-container');
             const slidesWrapper = document.getElementById('slides-wrapper');
             const progressWrapper = document.getElementById('story-progress');
             const navWrapper = document.querySelector('.smart-nav-wrapper');
 
-            // پاکسازی
             slidesWrapper.innerHTML = '';
-            if (progressWrapper) progressWrapper.innerHTML = '';
-            if (navWrapper) navWrapper.style.display = 'none'; // چون یک اسلاید است، دکمه بعدی/قبلی نمی‌خواهیم
+            progressWrapper.innerHTML = '';
+            if (navWrapper) navWrapper.style.display = 'flex'; // دکمه‌های کنترل اسلاید روشن میشن
 
-            // 3. پارسر مارک‌داون
-            let formattedContent = (resultText || "").replace(/<b>(.*?)<\/b>/g, '<span class="text-highlight">$1</span>')
-                                                .replace(/\*\*(.*?)\*\*/g, '<span class="text-highlight">$1</span>')
-                                                .replace(/^##\s+(.*)$/gm, '<h3 style="color:var(--accent-sage, #a8e6cf); margin:25px 0 10px; font-size:18px;">$1</h3>')
-                                                .replace(/^\*\*\*$/gm, '<hr style="border:none; border-top:1px solid rgba(168,230,207,0.3); margin: 25px 0;"/>')
-                                                .replace(/^>\s*(.*)$/gm, '<div class="soul-quote" style="border-right:3px solid var(--accent-sage, #a8e6cf); padding-right:15px; margin:15px 0; color:rgba(255,255,255,0.8); font-style:italic;">$1</div>');
+            // ۱. تفکیک هوشمند متن مقایسه بر اساس هدرهای ## (که در لاگ بک‌اندت بود)
+            // هر هدر ## به عنوان یک اسلاید مجزا در نظر گرفته می‌شود
+            let rawContent = resultText || "";
+            let sections = rawContent.split(/(?=##\s)/);
 
-            let paragraphs = formattedContent.split(/(?:\r?\n){2,}/);
-            formattedContent = paragraphs.map(para => {
-                para = para.trim();
-                if (!para) return '';
-                if (para.startsWith('<div class="soul-quote">') || para.startsWith('<h3') || para.startsWith('<hr')) return para;
-                if (para.match(/^[-*]\s/m)) {
-                    let lines = para.split(/\r?\n/);
-                    let listHtml = '<ul class="soul-list" style="padding-right: 20px; margin: 15px 0; list-style-type: none;">';
-                    let textBeforeList = '';
-                    lines.forEach(line => {
-                        line = line.trim();
-                        if (line.match(/^[-*]\s/)) {
-                            listHtml += `<li style="position:relative; margin-bottom:10px;"><span style="position:absolute; right:-15px; color:var(--accent-sage, #a8e6cf);">•</span>${line.substring(2)}</li>`;
-                        } else if (line) {
-                            textBeforeList += `<p style="margin-bottom:10px;">${line}</p>`;
-                        }
+            parsedSlides = [];
+
+            if (sections.length > 1) {
+                sections.forEach(section => {
+                    section = section.trim();
+                    if (!section) return;
+
+                    let lines = section.split('\n');
+                    let slideTitle = lines[0].replace('##', '').replace(/<b>|<\/b>/g, '').trim();
+                    let slideBody = lines.slice(1).join('\n').trim();
+
+                    parsedSlides.push({
+                        title: slideTitle,
+                        content: slideBody
                     });
-                    return textBeforeList + listHtml + '</ul>';
+                });
+            } else {
+                // اگر هدر نداشت، متن را به قطعات مناسب می‌شکنیم
+                parsedSlides.push({
+                    title: "تحلیل برخورد دو ذهن",
+                    content: rawContent
+                });
+            }
+
+            currentSlideIndex = 0;
+
+            // ۲. ساخت نوار پیشرفت (Neural Nodes) دقیقاً مثل تحلیل شخصی
+            parsedSlides.forEach((slide, index) => {
+                const node = document.createElement('div');
+                node.className = 'neural-node';
+                node.id = `node-${index}`;
+                progressWrapper.appendChild(node);
+
+                if (index < parsedSlides.length - 1) {
+                    const link = document.createElement('div');
+                    link.className = 'neural-link';
+                    link.id = `link-${index}`;
+                    progressWrapper.appendChild(link);
                 }
-                return `<p style="margin-bottom:15px;">${para.replace(/\r?\n/g, '<br>')}</p>`;
-            }).join('');
 
-            // 4. ساخت اسلاید دقیقا مثل استایل‌های خودت
-            const slideDiv = document.createElement('div');
-            slideDiv.className = 'slide active'; // کلاس‌های حیاتی شما
-            slideDiv.style.cssText = 'overflow-y: auto; max-height: 100vh; padding-bottom: 100px; display: flex; align-items: center;';
+                const slideDiv = document.createElement('div');
+                slideDiv.className = 'slide';
+                slideDiv.id = `slide-${index}`;
 
-            slideDiv.innerHTML = `
-                <div class="glass-card" style="margin: auto; width: 90%; max-width: 500px;">
-                    <div class="card-ambient-glow"></div>
-                    <div class="glass-card-content">
-                        <div class="story-chapter" style="color: var(--accent-sage, #a8e6cf); text-align:center; font-size:12px; letter-spacing:2px; margin-bottom:10px;">
-                            SYNERGY • هم‌افزایی
-                        </div>
-                        <h2 style="text-align:center; margin:0 0 20px 0; font-size:24px; font-weight:600; color:var(--text-ivory, #fff); position:relative; z-index:2;">
-                            تحلیل برخورد دو ذهن
-                        </h2>
-                        <div style="width:50px; height:2px; background:linear-gradient(to right, transparent, var(--accent-sage, #a8e6cf), transparent); margin:0 auto 30px; opacity:0.6;"></div>
+                const cleanTitle = slide.title.replace(/^\d+\.\s*/, '').replace(/<\/?[^>]+(>|$)/g, "").replace(/\*/g, '');
 
-                        <div class="story-content-wrapper paragraph-target blur-reveal" style="color:var(--text-ivory, #eee); font-size: 14px; line-height: 1.8; text-align: right; direction: rtl; opacity: 1 !important;">
-                            ${formattedContent}
+                // پارس کردن محتوای هر اسلاید (تبدیل بولت‌ها و بومی‌سازی)
+                let processedText = slide.content
+                    .replace(/<b>(.*?)<\/b>/g, '<span class="text-highlight">$1</span>')
+                    .replace(/\*\*(.*?)\*\*/g, '<span class="text-highlight">$1</span>')
+                    .replace(/^\*\*\*$/gm, '<hr style="border:none; border-top:1px solid rgba(168,230,207,0.3); margin: 20px 0;"/>');
+
+                let paragraphs = processedText.split(/(?:\r?\n){2,}/);
+                let formattedContent = paragraphs.map(para => {
+                    para = para.trim();
+                    if (!para) return '';
+                    if (para.startsWith('<hr')) return para;
+
+                    if (para.match(/^[-*]\s/m)) {
+                        let lines = para.split(/\r?\n/);
+                        let listHtml = '<ul class="soul-list" style="padding-right: 20px; margin: 15px 0; list-style-type: none;">';
+                        let textBeforeList = '';
+                        lines.forEach(line => {
+                            line = line.trim();
+                            if (line.match(/^[-*]\s/)) {
+                                listHtml += `<li style="position:relative; margin-bottom:8px;"><span style="position:absolute; right:-15px; color:var(--accent-sage);">•</span>${line.substring(2)}</li>`;
+                            } else if (line) {
+                                textBeforeList += `<p style="margin-bottom:8px;">${line}</p>`;
+                            }
+                        });
+                        return textBeforeList + listHtml + '</ul>';
+                    }
+
+                    return `<p style="margin-bottom:12px;">${para.replace(/\r?\n/g, '<br>')}</p>`;
+                }).join('');
+
+                // ۳. ساخت ساختار کاملاً مشابه با کارت‌های شیشه‌ای و گرافیک نئونی تحلیل شخصی
+                slideDiv.innerHTML = `
+                    <div class="glass-card">
+                        <div class="card-ambient-glow"></div>
+
+                        <div class="glass-card-content">
+                            <div class="sacred-wrapper">
+                                <div class="liquid-orb"></div>
+                                <div class="sacred-geometry">
+                                    <div class="geom-ring"></div>
+                                    <div class="geom-ring"></div>
+                                    <div class="geom-ring"></div>
+                                </div>
+                            </div>
+
+                            <div class="story-chapter" style="color: var(--accent-sage);">
+                                SYNERGY • هم‌افزایی
+                            </div>
+
+                            <h2 class="typewriter-target" data-text="${cleanTitle}"
+                                style="text-align:center; margin:0 0 15px 0; font-size:22px; font-weight:600; color:var(--text-ivory); line-height:1.6; position:relative; z-index:2;">
+                            </h2>
+
+                            <div style="width:50px; height:2px; background:linear-gradient(to right, transparent, var(--accent-sage), transparent); margin:0 auto 20px; opacity:0.6;"></div>
+
+                            <!-- محتوای متنیِ ساختاریافته -->
+                            <div class="story-content-wrapper paragraph-target" style="max-height: 50vh; overflow-y: auto; padding-left: 5px;">
+                                ${formattedContent}
+                            </div>
                         </div>
                     </div>
-                </div>
-            `;
+                `;
+                slidesWrapper.appendChild(slideDiv);
+            });
 
-            slidesWrapper.appendChild(slideDiv);
-            container.style.display = 'flex'; // روشن کردن صفحه نمایش نتایج!
+            container.style.display = 'flex';
+            updateStoryUI(); // استفاده از منطق ورق زدن و انیمیشن‌های خودِ سیستم
 
             if (tg && tg.MainButton) {
                 tg.MainButton.setText("بازگشت به چت 🌌");
@@ -1516,7 +1576,6 @@
                 tg.MainButton.onClick(() => tg.close());
             }
         }
-
 
         function showErrorState(title, message) {
             document.getElementById('app').style.display = 'none';
