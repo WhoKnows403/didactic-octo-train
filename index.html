@@ -714,6 +714,32 @@
             text-align: right;
         }
 
+
+        .story-content-wrapper::-webkit-scrollbar {
+            width: 4px;
+        }
+        .story-content-wrapper::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 10px;
+        }
+        .story-content-wrapper::-webkit-scrollbar-thumb {
+            background: var(--accent-sage);
+            border-radius: 10px;
+            opacity: 0.5;
+        }
+
+
+        .story-content-wrapper ul.soul-list {
+            margin: 12px 0 !important;
+            padding-right: 18px !important;
+        }
+
+        .story-content-wrapper ul.soul-list li {
+            margin-bottom: 10px !important;
+            line-height: 1.7 !important;
+            color: rgba(255, 255, 255, 0.85);
+        }
+
         .story-content-wrapper p {
             margin: 0 0 20px 0;
             color: rgba(253, 251, 247, 0.92);
@@ -1438,7 +1464,7 @@
         }
 
 
-        function renderComparisonResultUI(resultText) {
+       function renderComparisonResultUI(resultText) {
             document.getElementById('app').style.display = 'none';
             document.getElementById('intro-screen').style.display = 'none';
 
@@ -1449,10 +1475,8 @@
 
             slidesWrapper.innerHTML = '';
             progressWrapper.innerHTML = '';
-            if (navWrapper) navWrapper.style.display = 'flex'; // دکمه‌های کنترل اسلاید روشن میشن
+            if (navWrapper) navWrapper.style.display = 'flex';
 
-            // ۱. تفکیک هوشمند متن مقایسه بر اساس هدرهای ## (که در لاگ بک‌اندت بود)
-            // هر هدر ## به عنوان یک اسلاید مجزا در نظر گرفته می‌شود
             let rawContent = resultText || "";
             let sections = rawContent.split(/(?=##\s)/);
 
@@ -1473,7 +1497,6 @@
                     });
                 });
             } else {
-                // اگر هدر نداشت، متن را به قطعات مناسب می‌شکنیم
                 parsedSlides.push({
                     title: "تحلیل برخورد دو ذهن",
                     content: rawContent
@@ -1482,7 +1505,6 @@
 
             currentSlideIndex = 0;
 
-            // ۲. ساخت نوار پیشرفت (Neural Nodes) دقیقاً مثل تحلیل شخصی
             parsedSlides.forEach((slide, index) => {
                 const node = document.createElement('div');
                 node.className = 'neural-node';
@@ -1502,11 +1524,10 @@
 
                 const cleanTitle = slide.title.replace(/^\d+\.\s*/, '').replace(/<\/?[^>]+(>|$)/g, "").replace(/\*/g, '');
 
-                // پارس کردن محتوای هر اسلاید (تبدیل بولت‌ها و بومی‌سازی)
                 let processedText = slide.content
                     .replace(/<b>(.*?)<\/b>/g, '<span class="text-highlight">$1</span>')
                     .replace(/\*\*(.*?)\*\*/g, '<span class="text-highlight">$1</span>')
-                    .replace(/^\*\*\*$/gm, '<hr style="border:none; border-top:1px solid rgba(168,230,207,0.3); margin: 20px 0;"/>');
+                    .replace(/^\*\*\*$/gm, '<hr style="border:none; border-top:1px solid rgba(168,230,207,0.2); margin: 18px 0;"/>');
 
                 let paragraphs = processedText.split(/(?:\r?\n){2,}/);
                 let formattedContent = paragraphs.map(para => {
@@ -1516,29 +1537,29 @@
 
                     if (para.match(/^[-*]\s/m)) {
                         let lines = para.split(/\r?\n/);
-                        let listHtml = '<ul class="soul-list" style="padding-right: 20px; margin: 15px 0; list-style-type: none;">';
+                        let listHtml = '<ul class="soul-list">';
                         let textBeforeList = '';
                         lines.forEach(line => {
                             line = line.trim();
                             if (line.match(/^[-*]\s/)) {
-                                listHtml += `<li style="position:relative; margin-bottom:8px;"><span style="position:absolute; right:-15px; color:var(--accent-sage);">•</span>${line.substring(2)}</li>`;
+                                listHtml += `<li><span style="position:absolute; right:-15px; color:var(--accent-sage);">•</span>${line.substring(2)}</li>`;
                             } else if (line) {
-                                textBeforeList += `<p style="margin-bottom:8px;">${line}</p>`;
+                                textBeforeList += `<p>${line}</p>`;
                             }
                         });
                         return textBeforeList + listHtml + '</ul>';
                     }
 
-                    return `<p style="margin-bottom:12px;">${para.replace(/\r?\n/g, '<br>')}</p>`;
+                    return `<p>${para.replace(/\r?\n/g, '<br>')}</p>`;
                 }).join('');
 
-                // ۳. ساخت ساختار کاملاً مشابه با کارت‌های شیشه‌ای و گرافیک نئونی تحلیل شخصی
+                // 🔥 دیزاین تمیز، ایزوله و حرفه‌ای با ارتفاع و فضاگذاری استاندارد
                 slideDiv.innerHTML = `
-                    <div class="glass-card">
+                    <div class="glass-card" style="width: 92%; max-width: 480px; max-height: 82vh; margin: auto; display: flex; flex-direction: column; box-sizing: border-box;">
                         <div class="card-ambient-glow"></div>
 
-                        <div class="glass-card-content">
-                            <div class="sacred-wrapper">
+                        <div class="glass-card-content" style="display: flex; flex-direction: column; height: 100%; overflow: hidden; padding: 25px 22px;">
+                            <div class="sacred-wrapper" style="flex-shrink: 0;">
                                 <div class="liquid-orb"></div>
                                 <div class="sacred-geometry">
                                     <div class="geom-ring"></div>
@@ -1547,18 +1568,18 @@
                                 </div>
                             </div>
 
-                            <div class="story-chapter" style="color: var(--accent-sage);">
+                            <div class="story-chapter" style="color: var(--accent-sage); flex-shrink: 0; text-align: center; margin-bottom: 8px;">
                                 SYNERGY • هم‌افزایی
                             </div>
 
                             <h2 class="typewriter-target" data-text="${cleanTitle}"
-                                style="text-align:center; margin:0 0 15px 0; font-size:22px; font-weight:600; color:var(--text-ivory); line-height:1.6; position:relative; z-index:2;">
+                                style="text-align:center; margin:0 0 12px 0; font-size:20px; font-weight:600; color:var(--text-ivory); line-height:1.5; position:relative; z-index:2; flex-shrink: 0;">
                             </h2>
 
-                            <div style="width:50px; height:2px; background:linear-gradient(to right, transparent, var(--accent-sage), transparent); margin:0 auto 20px; opacity:0.6;"></div>
+                            <div style="width:40px; height:2px; background:linear-gradient(to right, transparent, var(--accent-sage), transparent); margin:0 auto 18px; opacity:0.6; flex-shrink: 0;"></div>
 
-                            <!-- محتوای متنیِ ساختاریافته -->
-                            <div class="story-content-wrapper paragraph-target" style="max-height: 50vh; overflow-y: auto; padding-left: 5px;">
+                            <!-- محتوای متنی با اسکرول داخلیِ تمیز و بدون بهم‌ریختگی -->
+                            <div class="story-content-wrapper paragraph-target" style="overflow-y: auto; flex-grow: 1; padding-left: 8px; text-align: right; direction: rtl;">
                                 ${formattedContent}
                             </div>
                         </div>
@@ -1568,7 +1589,7 @@
             });
 
             container.style.display = 'flex';
-            updateStoryUI(); // استفاده از منطق ورق زدن و انیمیشن‌های خودِ سیستم
+            updateStoryUI();
 
             if (tg && tg.MainButton) {
                 tg.MainButton.setText("بازگشت به چت 🌌");
@@ -1576,6 +1597,7 @@
                 tg.MainButton.onClick(() => tg.close());
             }
         }
+
 
         function showErrorState(title, message) {
             document.getElementById('app').style.display = 'none';
