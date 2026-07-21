@@ -1379,9 +1379,8 @@
 
        async function handleComparisonFlow(requestId) {
             const loadingOverlay = document.getElementById('loading-overlay');
-            if (loadingOverlay) loadingOverlay.style.display = 'flex'; // نمایش لودینگ
+            if (loadingOverlay) loadingOverlay.style.display = 'flex';
 
-            const tg = window.Telegram?.WebApp;
             const initData = tg?.initData || "debug_init_data";
 
             try {
@@ -1403,116 +1402,95 @@
                 if (loadingOverlay) loadingOverlay.style.display = 'none';
 
                 if (response.status === 404) {
-                    showErrorState(
-                        "پیدا نشد • 404",
-                        "تحلیل مشترکی با این مشخصات پیدا نشد، یا هنوز دسترسی معتبری برای ذهن شما صادر نشده است."
-                    );
+                    showErrorState("پیدا نشد • 404", "تحلیل مشترکی با این مشخصات پیدا نشد، یا هنوز دسترسی معتبری برای ذهن شما صادر نشده است.");
                     return;
                 }
 
                 if (response.status === 500) {
-                    showErrorState(
-                        "اختلال هسته • 500",
-                        "سیستم پردازش متمرکز دچار نوسان شده است. مهندسان ما در حال بازبینی کدهای سرور هستند!"
-                    );
+                    showErrorState("اختلال هسته • 500", "سیستم پردازش متمرکز دچار نوسان شده است. مهندسان ما در حال بازبینی کدهای سرور هستند!");
                     return;
                 }
 
-                if (!response.ok) {
-                    throw new Error(`مشکل ناشناخته با کد وضعیت: ${response.status}`);
-                }
+                if (!response.ok) throw new Error(`Status: ${response.status}`);
 
-                // دریافت منعطف دیتا (حل مشکل کرش کردن JSON)
                 let resultText = "";
                 const contentType = response.headers.get("content-type") || "";
-
                 if (contentType.includes("application/json")) {
                     const data = await response.json();
                     resultText = data.comparison_result;
                 } else {
                     const rawText = await response.text();
-                    try {
-                        const parsed = JSON.parse(rawText);
-                        resultText = parsed.comparison_result || rawText;
-                    } catch (e) {
-                        resultText = rawText;
-                    }
+                    try { resultText = JSON.parse(rawText).comparison_result || rawText; }
+                    catch { resultText = rawText; }
                 }
 
                 if (!resultText || resultText.trim() === "") {
-                    showErrorState(
-                        "فضای خالی",
-                        "تحلیلی انجام شده است، اما دیتایی برای نمایش وجود ندارد."
-                    );
+                    showErrorState("فضای خالی", "تحلیلی انجام شده است، اما دیتایی برای نمایش وجود ندارد.");
                     return;
                 }
 
                 renderComparisonResultUI(resultText);
 
             } catch (error) {
-                console.error("Error fetching comparison:", error);
                 if (loadingOverlay) loadingOverlay.style.display = 'none';
-                showErrorState(
-                    "خطای ارتباطی",
-                    "سیگنال بین مینی‌اپ و سرور قطع شد یا اینترنت شما دچار نوسان است."
-                );
+                showErrorState("خطای ارتباطی", "سیگنال بین مینی‌اپ و سرور قطع شد یا اینترنت شما دچار نوسان است.");
             }
         }
 
+
         function renderComparisonResultUI(resultText) {
-            const appDiv = document.getElementById('app');
+            // 1. خاموش کردن محیط کوییز
+            document.getElementById('app').style.display = 'none';
+            document.getElementById('intro-screen').style.display = 'none';
 
-            // 🔥 تزریق استایل‌های حیاتی به کانتینر مادر برای جلوگیری از صفحه سیاه
-            appDiv.style.cssText = 'display: flex; flex-direction: column; width: 100%; min-height: 100vh; overflow-y: auto; overflow-x: hidden; padding: 20px; box-sizing: border-box; align-items: center; justify-content: flex-start;';
-            appDiv.innerHTML = '';
+            // 2. هدف‌گیری کانتینرهای اصلی شما
+            const container = document.getElementById('result-container');
+            const slidesWrapper = document.getElementById('slides-wrapper');
+            const progressWrapper = document.getElementById('story-progress');
+            const navWrapper = document.querySelector('.smart-nav-wrapper');
 
-            // -- 🧠 Smart Markdown Parser --
+            // پاکسازی
+            slidesWrapper.innerHTML = '';
+            if (progressWrapper) progressWrapper.innerHTML = '';
+            if (navWrapper) navWrapper.style.display = 'none'; // چون یک اسلاید است، دکمه بعدی/قبلی نمی‌خواهیم
+
+            // 3. پارسر مارک‌داون
             let formattedContent = (resultText || "").replace(/<b>(.*?)<\/b>/g, '<span class="text-highlight">$1</span>')
                                                 .replace(/\*\*(.*?)\*\*/g, '<span class="text-highlight">$1</span>')
                                                 .replace(/^##\s+(.*)$/gm, '<h3 style="color:var(--accent-sage, #a8e6cf); margin:25px 0 10px; font-size:18px;">$1</h3>')
                                                 .replace(/^\*\*\*$/gm, '<hr style="border:none; border-top:1px solid rgba(168,230,207,0.3); margin: 25px 0;"/>')
                                                 .replace(/^>\s*(.*)$/gm, '<div class="soul-quote" style="border-right:3px solid var(--accent-sage, #a8e6cf); padding-right:15px; margin:15px 0; color:rgba(255,255,255,0.8); font-style:italic;">$1</div>');
 
-            // حل مشکل CRLF در ویندوز/سرورها
             let paragraphs = formattedContent.split(/(?:\r?\n){2,}/);
             formattedContent = paragraphs.map(para => {
                 para = para.trim();
                 if (!para) return '';
-
-                if (para.startsWith('<div class="soul-quote">') || para.startsWith('<h3') || para.startsWith('<hr')) {
-                    return para;
-                }
-
+                if (para.startsWith('<div class="soul-quote">') || para.startsWith('<h3') || para.startsWith('<hr')) return para;
                 if (para.match(/^[-*]\s/m)) {
                     let lines = para.split(/\r?\n/);
                     let listHtml = '<ul class="soul-list" style="padding-right: 20px; margin: 15px 0; list-style-type: none;">';
                     let textBeforeList = '';
-
                     lines.forEach(line => {
                         line = line.trim();
                         if (line.match(/^[-*]\s/)) {
-                            // افزودن بولت کاستوم
                             listHtml += `<li style="position:relative; margin-bottom:10px;"><span style="position:absolute; right:-15px; color:var(--accent-sage, #a8e6cf);">•</span>${line.substring(2)}</li>`;
                         } else if (line) {
                             textBeforeList += `<p style="margin-bottom:10px;">${line}</p>`;
                         }
                     });
-                    listHtml += '</ul>';
-                    return textBeforeList + listHtml;
+                    return textBeforeList + listHtml + '</ul>';
                 }
-
                 return `<p style="margin-bottom:15px;">${para.replace(/\r?\n/g, '<br>')}</p>`;
             }).join('');
 
+            // 4. ساخت اسلاید دقیقا مثل استایل‌های خودت
             const slideDiv = document.createElement('div');
-            // کلاس slide رو هم اضافه کردیم که اگر CSS وابسته به اونه، استایل‌هاش اعمال شه
-            slideDiv.className = 'slide story-slide active';
-            // 🔥 ابعاد و اسکرول داخلی برای کارت شیشه‌ای تا متن طولانی بیرون نزنه
-            slideDiv.style.cssText = 'width: 100%; max-width: 500px; margin: auto; animation: fadeIn 0.5s ease;';
+            slideDiv.className = 'slide active'; // کلاس‌های حیاتی شما
+            slideDiv.style.cssText = 'overflow-y: auto; max-height: 100vh; padding-bottom: 100px; display: flex; align-items: center;';
 
             slideDiv.innerHTML = `
-                <div class="glass-card" style="max-height: 85vh; overflow-y: auto; overflow-x: hidden; padding-bottom: 30px;">
-                    <div class="card-ambient-glow" style="background: radial-gradient(circle at top right, rgba(168,230,207,0.15) 0%, transparent 60%);"></div>
+                <div class="glass-card" style="margin: auto; width: 90%; max-width: 500px;">
+                    <div class="card-ambient-glow"></div>
                     <div class="glass-card-content">
                         <div class="story-chapter" style="color: var(--accent-sage, #a8e6cf); text-align:center; font-size:12px; letter-spacing:2px; margin-bottom:10px;">
                             SYNERGY • هم‌افزایی
@@ -1522,70 +1500,70 @@
                         </h2>
                         <div style="width:50px; height:2px; background:linear-gradient(to right, transparent, var(--accent-sage, #a8e6cf), transparent); margin:0 auto 30px; opacity:0.6;"></div>
 
-                        <div class="story-content-wrapper paragraph-target" style="color:var(--text-ivory, #eee); font-size: 15px; line-height: 1.8; text-align: right; direction: rtl;">
+                        <div class="story-content-wrapper paragraph-target blur-reveal" style="color:var(--text-ivory, #eee); font-size: 14px; line-height: 1.8; text-align: right; direction: rtl; opacity: 1 !important;">
                             ${formattedContent}
                         </div>
                     </div>
                 </div>
             `;
 
-            appDiv.appendChild(slideDiv);
+            slidesWrapper.appendChild(slideDiv);
+            container.style.display = 'flex'; // روشن کردن صفحه نمایش نتایج!
 
-            const tg = window.Telegram?.WebApp;
             if (tg && tg.MainButton) {
-                tg.MainButton.setText("back to chat (:");
+                tg.MainButton.setText("بازگشت به چت 🌌");
                 tg.MainButton.show();
-                tg.MainButton.onClick(() => {
-                    tg.close();
-                });
+                tg.MainButton.onClick(() => tg.close());
             }
         }
 
-        function showErrorState(title, message) {
-            const appDiv = document.getElementById('app');
 
-            // 🔥 تزریق استایل‌های حیاتی (مثل تابع بالا)
-            appDiv.style.cssText = 'display: flex; flex-direction: column; width: 100%; min-height: 100vh; justify-content: center; align-items: center; padding: 20px; box-sizing: border-box;';
-            appDiv.innerHTML = '';
+        function showErrorState(title, message) {
+            document.getElementById('app').style.display = 'none';
+            document.getElementById('intro-screen').style.display = 'none';
+
+            const container = document.getElementById('result-container');
+            const slidesWrapper = document.getElementById('slides-wrapper');
+            const progressWrapper = document.getElementById('story-progress');
+            const navWrapper = document.querySelector('.smart-nav-wrapper');
+
+            slidesWrapper.innerHTML = '';
+            if (progressWrapper) progressWrapper.innerHTML = '';
+            if (navWrapper) navWrapper.style.display = 'none';
 
             const slideDiv = document.createElement('div');
-            slideDiv.className = 'slide story-slide active';
-            slideDiv.style.cssText = 'width: 100%; max-width: 400px; animation: fadeIn 0.5s ease;';
+            slideDiv.className = 'slide active';
+            slideDiv.style.cssText = 'display: flex; align-items: center; justify-content: center; height: 100vh;';
 
             slideDiv.innerHTML = `
-                <div class="glass-card" style="border: 1px solid rgba(230, 126, 34, 0.2); text-align:center;">
+                <div class="glass-card" style="border: 1px solid rgba(230, 126, 34, 0.2); text-align:center; margin: auto; width: 90%; max-width: 400px;">
                     <div class="card-ambient-glow" style="background: radial-gradient(circle at top right, rgba(230, 126, 34, 0.1) 0%, transparent 60%);"></div>
                     <div class="glass-card-content">
-
                         <div class="story-chapter" style="color: #e67e22; letter-spacing: 2px; margin-bottom:10px;">
                             ${title}
                         </div>
-
                         <h2 style="margin:0 0 20px 0; font-size:22px; font-weight:600; color:var(--text-ivory, #fff); line-height:1.6; position:relative; z-index:2;">
                             متوقف شده در مسیر ادراک
                         </h2>
-
                         <div style="width:50px; height:2px; background:linear-gradient(to right, transparent, #e67e22, transparent); margin:0 auto 20px; opacity:0.6;"></div>
-
                         <p style="color: rgba(255, 255, 255, 0.85); line-height: 2; font-size: 15px; direction: rtl;">
                             ${message}
                         </p>
-
                     </div>
                 </div>
             `;
 
-            appDiv.appendChild(slideDiv);
+            slidesWrapper.appendChild(slideDiv);
+            container.style.display = 'flex';
 
-            const tg = window.Telegram?.WebApp;
             if (tg && tg.MainButton) {
                 tg.MainButton.setText("فهمیدم، بازگشت 🌌");
                 tg.MainButton.show();
-                tg.MainButton.onClick(() => {
-                    tg.close();
-                });
+                tg.MainButton.onClick(() => tg.close());
             }
         }
+
+
 
         function renderResultUI(data) {
             document.getElementById('app').style.display = 'none';
