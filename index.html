@@ -1198,20 +1198,26 @@
 
                 const params = new URLSearchParams(window.location.search);
                 const flow = params.get("flow");
+                const comparisonRequestId = params.get("comparison_request_id");
 
-                if (flow === "result") {
-                    document.getElementById('intro-screen').style.display = 'none';
-                    document.getElementById('app').style.display = 'none';
+                document.getElementById('intro-screen').style.display = 'none';
+                document.getElementById('app').style.display = 'none';
 
+                if (flow === "comparison" && comparisonRequestId) {
+                    handleComparisonFlow(comparisonRequestId);
+
+                } else if (flow === "result") {
                     loadAnalysis();
+
                 } else {
-                    intro.style.display = 'flex';
+                    document.getElementById('intro-screen').style.display = 'flex';
                     fetchQuestions();
                 }
 
             } else {
                 document.getElementById('access-denied').style.display = 'flex';
-                intro.style.display = 'none';
+                document.getElementById('intro-screen').style.display = 'none';
+                document.getElementById('app').style.display = 'none';
             }
         };
 
@@ -1369,6 +1375,202 @@
                 }
             }
             type();
+        }
+
+        async function handleComparisonFlow(requestId) {
+            const loadingOverlay = document.getElementById('loading-overlay');
+            loadingOverlay.style.display = 'flex'; // نمایش لودینگ
+
+            const initData = window.Telegram.WebApp.initData || "debug_init_data";
+
+            try {
+                const url = `https://8159-2a01-e5c0-2de4-00-2.ngrok-free.app/comparison/receive-comparison-result`;
+
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        init_data: initData,
+                        comparison_request_id: parseInt(requestId, 10)
+                    })
+                });
+
+                loadingOverlay.style.display = 'none';
+
+                if (response.status === 404) {
+                    showErrorState(
+                        "پیدا نشد • 404",
+                        "تحلیل مشترکی با این مشخصات پیدا نشد، یا هنوز دسترسی معتبری برای ذهن شما صادر نشده است."
+                    );
+                    return;
+                }
+
+                if (response.status === 500) {
+                    showErrorState(
+                        "اختلال هسته • 500",
+                        "سیستم پردازش متمرکز دچار نوسان شده است. مهندسان ما در حال بازبینی کدهای سرور هستند!"
+                    );
+                    return;
+                }
+
+                if (!response.ok) {
+                    throw new Error(`مشکل ناشناخته با کد وضعیت: ${response.status}`);
+                }
+
+                const data = await response.json();
+
+                renderComparisonResultUI(data.comparison_result);
+
+            } catch (error) {
+                console.error("Error fetching comparison:", error);
+                loadingOverlay.style.display = 'none';
+                showErrorState(
+                    "خطای ارتباطی",
+                    "سیگنال بین مینی‌اپ و سرورهای مرکزی قطع شده است. وضعیت اینترنت خود را بررسی کنید."
+                );
+            }
+        }
+
+        function renderComparisonResultUI(resultText) {
+            const appDiv = document.getElementById('app');
+            appDiv.style.display = 'flex';
+            appDiv.innerHTML = ''; // پاکسازی
+
+            const safeContent = resultText || "";
+
+            // -- 🧠 Smart Markdown Parser --
+            // 1. بولد کردن کلمات ستاره‌دار
+            let formattedContent = safeContent.replace(/\*\*(.*?)\*\*/g, '<span class="text-highlight">$1</span>');
+
+            // 2. ساخت Soul Quote برای جملاتی که با ">" شروع می‌شوند
+            formattedContent = formattedContent.replace(/^>\s*(["'].*?["'])/gm, '<div class="soul-quote">$1</div>');
+            formattedContent = formattedContent.replace(/^>\s*(.*)$/gm, '<div class="soul-quote">$1</div>');
+
+            // 3. مدیریت پاراگراف‌ها و لیست‌های نقطه‌ای
+            let paragraphs = formattedContent.split(/\n\n+/);
+            formattedContent = paragraphs.map(para => {
+                para = para.trim();
+                if (!para) return '';
+
+                if (para.startsWith('<div class="soul-quote">')) {
+                    return para;
+                }
+
+                if (para.includes('\n- ') || para.startsWith('- ') || para.includes('\n* ') || para.startsWith('* ')) {
+                    let lines = para.split('\n');
+                    let listHtml = '<ul class="soul-list">';
+                    let textBeforeList = '';
+
+                    lines.forEach(line => {
+                        line = line.trim();
+                        if (line.startsWith('- ') || line.startsWith('* ')) {
+                            listHtml += `<li>${line.substring(2)}</li>`;
+                        } else if (line) {
+                            textBeforeList += `<p>${line.replace(/\n/g, '<br>')}</p>`;
+                        }
+                    });
+                    listHtml += '</ul>';
+                    return textBeforeList + listHtml;
+                }
+
+                return `<p>${para.replace(/\n/g, '<br>')}</p>`;
+            }).join('');
+
+            // -- 🖼️ ساخت دیزاین نهایی (Glassmorphism Slide) --
+            const slideDiv = document.createElement('div');
+            slideDiv.className = 'story-slide active';
+            slideDiv.innerHTML = `
+                <div class="glass-card">
+                    <div class="card-ambient-glow" style="background: radial-gradient(circle at top right, rgba(168,230,207,0.15) 0%, transparent 60%);"></div>
+
+                    <div class="glass-card-content">
+                        <div class="sacred-wrapper">
+                            <div class="liquid-orb" style="box-shadow: 0 0 30px rgba(168,230,207,0.4);"></div>
+                        </div>
+
+                        <div class="story-chapter" style="color: var(--accent-sage);">
+                            SYNERGY • هم‌افزایی
+                        </div>
+
+                        <h2 style="text-align:center; margin:0 0 20px 0; font-size:24px; font-weight:600; color:var(--text-ivory); line-height:1.6; position:relative; z-index:2;">
+                            تحلیل برخورد دو ذهن
+                        </h2>
+
+                        <div style="width:50px; height:2px; background:linear-gradient(to right, transparent, var(--accent-sage), transparent); margin:0 auto 30px; opacity:0.6;"></div>
+
+                        <div class="story-whisper-container">
+                            <div class="story-whisper">
+                                وقتی دو الگوی ادراکی در کنار هم قرار می‌گیرند...
+                            </div>
+                        </div>
+
+                        <!-- محتوای متنی زنده شده با مارک‌داون پارسر ما -->
+                        <div class="story-content-wrapper paragraph-target">
+                            ${formattedContent}
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            appDiv.appendChild(slideDiv);
+
+            // -- 🔘 دکمه خروج (بستن مینی‌اپ) --
+            tg.MainButton.setText("بازگشت به چت 🌌");
+            tg.MainButton.show();
+            tg.MainButton.onClick(() => {
+                tg.close();
+            });
+        }
+
+
+
+        function showErrorState(title, message) {
+            const appDiv = document.getElementById('app');
+            appDiv.style.display = 'flex';
+            appDiv.innerHTML = '';
+
+            const slideDiv = document.createElement('div');
+            slideDiv.className = 'story-slide active';
+
+            // رنگ‌ها متمایل به امبر (نارنجی هشدار) اما در قالب همان استایل گلس‌مورفیسم
+            slideDiv.innerHTML = `
+                <div class="glass-card" style="border: 1px solid rgba(230, 126, 34, 0.15);">
+                    <div class="card-ambient-glow" style="background: radial-gradient(circle at top right, rgba(230, 126, 34, 0.1) 0%, transparent 60%);"></div>
+
+                    <div class="glass-card-content">
+                        <div class="sacred-wrapper">
+                            <div class="liquid-orb" style="box-shadow: 0 0 30px rgba(230, 126, 34, 0.3); background: rgba(230, 126, 34, 0.2);"></div>
+                        </div>
+
+                        <div class="story-chapter" style="color: #e67e22; letter-spacing: 2px;">
+                            ${title}
+                        </div>
+
+                        <h2 style="text-align:center; margin:0 0 20px 0; font-size:22px; font-weight:600; color:var(--text-ivory); line-height:1.6; position:relative; z-index:2;">
+                            متوقف شده در مسیر ادراک
+                        </h2>
+
+                        <div style="width:50px; height:2px; background:linear-gradient(to right, transparent, #e67e22, transparent); margin:0 auto 30px; opacity:0.6;"></div>
+
+                        <div class="story-content-wrapper" style="text-align: center; padding: 0 10px;">
+                            <p style="color: rgba(253, 251, 247, 0.8); line-height: 2; font-size: 15px;">
+                                ${message}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            appDiv.appendChild(slideDiv);
+
+            tg.MainButton.setText("فهمیدم، بازگشت 🌌");
+            tg.MainButton.show();
+            tg.MainButton.onClick(() => {
+                tg.close();
+            });
         }
 
         function renderResultUI(data) {
