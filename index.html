@@ -1379,9 +1379,8 @@
 
        async function handleComparisonFlow(requestId) {
             const loadingOverlay = document.getElementById('loading-overlay');
-            loadingOverlay.style.display = 'flex'; // نمایش لودینگ
+            if (loadingOverlay) loadingOverlay.style.display = 'flex'; // نمایش لودینگ
 
-            // اطمینان از مقداردهی آبجکت تلگرام
             const tg = window.Telegram?.WebApp;
             const initData = tg?.initData || "debug_init_data";
 
@@ -1392,7 +1391,6 @@
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        // هدر Accept را گسترش دادیم تا در صورت ارسال متن خام هم گیر ندهد
                         'Accept': 'application/json, text/plain, */*',
                         'ngrok-skip-browser-warning': 'true'
                     },
@@ -1402,7 +1400,7 @@
                     })
                 });
 
-                loadingOverlay.style.display = 'none';
+                if (loadingOverlay) loadingOverlay.style.display = 'none';
 
                 if (response.status === 404) {
                     showErrorState(
@@ -1424,7 +1422,7 @@
                     throw new Error(`مشکل ناشناخته با کد وضعیت: ${response.status}`);
                 }
 
-                // 🟢 تغییر حیاتی: مدیریت دریافت متن خام یا JSON
+                // دریافت منعطف دیتا (حل مشکل کرش کردن JSON)
                 let resultText = "";
                 const contentType = response.headers.get("content-type") || "";
 
@@ -1432,19 +1430,15 @@
                     const data = await response.json();
                     resultText = data.comparison_result;
                 } else {
-                    // اگر بک‌اند دیتای خام فرستاد، اینجا کرش نمی‌کند
                     const rawText = await response.text();
                     try {
-                        // شاید JSON فرستاده اما هدر content-type نداده
                         const parsed = JSON.parse(rawText);
                         resultText = parsed.comparison_result || rawText;
                     } catch (e) {
-                        // اگر واقعا متن خالص بود
                         resultText = rawText;
                     }
                 }
 
-                // 🟢 هندل کردن صفحه خالی
                 if (!resultText || resultText.trim() === "") {
                     showErrorState(
                         "فضای خالی",
@@ -1457,77 +1451,78 @@
 
             } catch (error) {
                 console.error("Error fetching comparison:", error);
-                loadingOverlay.style.display = 'none';
+                if (loadingOverlay) loadingOverlay.style.display = 'none';
                 showErrorState(
                     "خطای ارتباطی",
-                    "سیگنال بین مینی‌اپ و سرور قطع شد یا دیتای دریافتی نامعتبر است."
+                    "سیگنال بین مینی‌اپ و سرور قطع شد یا اینترنت شما دچار نوسان است."
                 );
             }
         }
 
         function renderComparisonResultUI(resultText) {
             const appDiv = document.getElementById('app');
-            appDiv.style.display = 'flex';
+
+            // 🔥 تزریق استایل‌های حیاتی به کانتینر مادر برای جلوگیری از صفحه سیاه
+            appDiv.style.cssText = 'display: flex; flex-direction: column; width: 100%; min-height: 100vh; overflow-y: auto; overflow-x: hidden; padding: 20px; box-sizing: border-box; align-items: center; justify-content: flex-start;';
             appDiv.innerHTML = '';
 
-            const safeContent = resultText || "";
+            // -- 🧠 Smart Markdown Parser --
+            let formattedContent = (resultText || "").replace(/<b>(.*?)<\/b>/g, '<span class="text-highlight">$1</span>')
+                                                .replace(/\*\*(.*?)\*\*/g, '<span class="text-highlight">$1</span>')
+                                                .replace(/^##\s+(.*)$/gm, '<h3 style="color:var(--accent-sage, #a8e6cf); margin:25px 0 10px; font-size:18px;">$1</h3>')
+                                                .replace(/^\*\*\*$/gm, '<hr style="border:none; border-top:1px solid rgba(168,230,207,0.3); margin: 25px 0;"/>')
+                                                .replace(/^>\s*(.*)$/gm, '<div class="soul-quote" style="border-right:3px solid var(--accent-sage, #a8e6cf); padding-right:15px; margin:15px 0; color:rgba(255,255,255,0.8); font-style:italic;">$1</div>');
 
-            // -- 🧠 Smart Markdown Parser (ارتقا یافته) --
-            let formattedContent = safeContent;
-
-            // تبدیل تگ‌های <b> که در لاگ بک‌اند شما بود
-            formattedContent = formattedContent.replace(/<b>(.*?)<\/b>/g, '<span class="text-highlight">$1</span>');
-            // بولد کردن ستاره‌دارها
-            formattedContent = formattedContent.replace(/\*\*(.*?)\*\*/g, '<span class="text-highlight">$1</span>');
-            // تبدیل هدرهای ##
-            formattedContent = formattedContent.replace(/^##\s+(.*)$/gm, '<h3 style="color:var(--accent-sage); margin-top:20px;">$1</h3>');
-            // تبدیل خطوط جداکننده ***
-            formattedContent = formattedContent.replace(/^\*\*\*$/gm, '<hr style="border-color:rgba(168,230,207,0.3); margin: 20px 0;"/>');
-
-            formattedContent = formattedContent.replace(/^>\s*(.*)$/gm, '<div class="soul-quote">$1</div>');
-
-            let paragraphs = formattedContent.split(/\n\n+/);
+            // حل مشکل CRLF در ویندوز/سرورها
+            let paragraphs = formattedContent.split(/(?:\r?\n){2,}/);
             formattedContent = paragraphs.map(para => {
                 para = para.trim();
                 if (!para) return '';
 
-                // اگر تگ HTML از قبل ساخته شده بود، دست به آن نزنیم
                 if (para.startsWith('<div class="soul-quote">') || para.startsWith('<h3') || para.startsWith('<hr')) {
                     return para;
                 }
 
-                if (para.includes('\n- ') || para.startsWith('- ') || para.includes('\n* ') || para.startsWith('* ')) {
-                    let lines = para.split('\n');
-                    let listHtml = '<ul class="soul-list">';
+                if (para.match(/^[-*]\s/m)) {
+                    let lines = para.split(/\r?\n/);
+                    let listHtml = '<ul class="soul-list" style="padding-right: 20px; margin: 15px 0; list-style-type: none;">';
                     let textBeforeList = '';
 
                     lines.forEach(line => {
                         line = line.trim();
-                        if (line.startsWith('- ') || line.startsWith('* ')) {
-                            listHtml += `<li>${line.substring(2)}</li>`;
+                        if (line.match(/^[-*]\s/)) {
+                            // افزودن بولت کاستوم
+                            listHtml += `<li style="position:relative; margin-bottom:10px;"><span style="position:absolute; right:-15px; color:var(--accent-sage, #a8e6cf);">•</span>${line.substring(2)}</li>`;
                         } else if (line) {
-                            textBeforeList += `<p>${line}</p>`;
+                            textBeforeList += `<p style="margin-bottom:10px;">${line}</p>`;
                         }
                     });
                     listHtml += '</ul>';
                     return textBeforeList + listHtml;
                 }
 
-                return `<p>${para.replace(/\n/g, '<br>')}</p>`;
+                return `<p style="margin-bottom:15px;">${para.replace(/\r?\n/g, '<br>')}</p>`;
             }).join('');
 
             const slideDiv = document.createElement('div');
-            slideDiv.className = 'story-slide active';
+            // کلاس slide رو هم اضافه کردیم که اگر CSS وابسته به اونه، استایل‌هاش اعمال شه
+            slideDiv.className = 'slide story-slide active';
+            // 🔥 ابعاد و اسکرول داخلی برای کارت شیشه‌ای تا متن طولانی بیرون نزنه
+            slideDiv.style.cssText = 'width: 100%; max-width: 500px; margin: auto; animation: fadeIn 0.5s ease;';
+
             slideDiv.innerHTML = `
-                <div class="glass-card">
+                <div class="glass-card" style="max-height: 85vh; overflow-y: auto; overflow-x: hidden; padding-bottom: 30px;">
                     <div class="card-ambient-glow" style="background: radial-gradient(circle at top right, rgba(168,230,207,0.15) 0%, transparent 60%);"></div>
                     <div class="glass-card-content">
-                        <div class="story-chapter" style="color: var(--accent-sage);">SYNERGY • هم‌افزایی</div>
+                        <div class="story-chapter" style="color: var(--accent-sage, #a8e6cf); text-align:center; font-size:12px; letter-spacing:2px; margin-bottom:10px;">
+                            SYNERGY • هم‌افزایی
+                        </div>
                         <h2 style="text-align:center; margin:0 0 20px 0; font-size:24px; font-weight:600; color:var(--text-ivory, #fff); position:relative; z-index:2;">
                             تحلیل برخورد دو ذهن
                         </h2>
                         <div style="width:50px; height:2px; background:linear-gradient(to right, transparent, var(--accent-sage, #a8e6cf), transparent); margin:0 auto 30px; opacity:0.6;"></div>
-                        <div class="story-content-wrapper paragraph-target" style="color:var(--text-ivory, #eee); font-size: 15px; line-height: 1.8;">
+
+                        <div class="story-content-wrapper paragraph-target" style="color:var(--text-ivory, #eee); font-size: 15px; line-height: 1.8; text-align: right; direction: rtl;">
                             ${formattedContent}
                         </div>
                     </div>
@@ -1537,7 +1532,7 @@
             appDiv.appendChild(slideDiv);
 
             const tg = window.Telegram?.WebApp;
-            if (tg) {
+            if (tg && tg.MainButton) {
                 tg.MainButton.setText("بازگشت به چت 🌌");
                 tg.MainButton.show();
                 tg.MainButton.onClick(() => {
@@ -1546,51 +1541,50 @@
             }
         }
 
-
         function showErrorState(title, message) {
             const appDiv = document.getElementById('app');
-            appDiv.style.display = 'flex';
+
+            // 🔥 تزریق استایل‌های حیاتی (مثل تابع بالا)
+            appDiv.style.cssText = 'display: flex; flex-direction: column; width: 100%; min-height: 100vh; justify-content: center; align-items: center; padding: 20px; box-sizing: border-box;';
             appDiv.innerHTML = '';
 
             const slideDiv = document.createElement('div');
-            slideDiv.className = 'story-slide active';
+            slideDiv.className = 'slide story-slide active';
+            slideDiv.style.cssText = 'width: 100%; max-width: 400px; animation: fadeIn 0.5s ease;';
 
-            // رنگ‌ها متمایل به امبر (نارنجی هشدار) اما در قالب همان استایل گلس‌مورفیسم
             slideDiv.innerHTML = `
-                <div class="glass-card" style="border: 1px solid rgba(230, 126, 34, 0.15);">
+                <div class="glass-card" style="border: 1px solid rgba(230, 126, 34, 0.2); text-align:center;">
                     <div class="card-ambient-glow" style="background: radial-gradient(circle at top right, rgba(230, 126, 34, 0.1) 0%, transparent 60%);"></div>
-
                     <div class="glass-card-content">
-                        <div class="sacred-wrapper">
-                            <div class="liquid-orb" style="box-shadow: 0 0 30px rgba(230, 126, 34, 0.3); background: rgba(230, 126, 34, 0.2);"></div>
-                        </div>
 
-                        <div class="story-chapter" style="color: #e67e22; letter-spacing: 2px;">
+                        <div class="story-chapter" style="color: #e67e22; letter-spacing: 2px; margin-bottom:10px;">
                             ${title}
                         </div>
 
-                        <h2 style="text-align:center; margin:0 0 20px 0; font-size:22px; font-weight:600; color:var(--text-ivory); line-height:1.6; position:relative; z-index:2;">
+                        <h2 style="margin:0 0 20px 0; font-size:22px; font-weight:600; color:var(--text-ivory, #fff); line-height:1.6; position:relative; z-index:2;">
                             متوقف شده در مسیر ادراک
                         </h2>
 
-                        <div style="width:50px; height:2px; background:linear-gradient(to right, transparent, #e67e22, transparent); margin:0 auto 30px; opacity:0.6;"></div>
+                        <div style="width:50px; height:2px; background:linear-gradient(to right, transparent, #e67e22, transparent); margin:0 auto 20px; opacity:0.6;"></div>
 
-                        <div class="story-content-wrapper" style="text-align: center; padding: 0 10px;">
-                            <p style="color: rgba(253, 251, 247, 0.8); line-height: 2; font-size: 15px;">
-                                ${message}
-                            </p>
-                        </div>
+                        <p style="color: rgba(255, 255, 255, 0.85); line-height: 2; font-size: 15px; direction: rtl;">
+                            ${message}
+                        </p>
+
                     </div>
                 </div>
             `;
 
             appDiv.appendChild(slideDiv);
 
-            tg.MainButton.setText("فهمیدم، بازگشت 🌌");
-            tg.MainButton.show();
-            tg.MainButton.onClick(() => {
-                tg.close();
-            });
+            const tg = window.Telegram?.WebApp;
+            if (tg && tg.MainButton) {
+                tg.MainButton.setText("فهمیدم، بازگشت 🌌");
+                tg.MainButton.show();
+                tg.MainButton.onClick(() => {
+                    tg.close();
+                });
+            }
         }
 
         function renderResultUI(data) {
