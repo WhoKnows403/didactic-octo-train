@@ -20,6 +20,7 @@
             --gray-light: #2d3133;
             --accent-warm: #E2C2A4;
             --accent-warm-glow: rgba(226, 194, 164, 0.25);
+            --comparison-accent: #C2A878;
         }
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
@@ -289,6 +290,32 @@
             border-top-color: var(--accent-sage); border-radius: 50%;
             animation: spin 1s ease-in-out infinite;
         }
+        .dual-orb {
+            background: radial-gradient(circle at 30% 30%, var(--comparison-accent) 0%, transparent 60%),
+                        radial-gradient(circle at 70% 70%, #7A8999 0%, transparent 60%) !important;
+            opacity: 0.6;
+        }
+        dual-orb {
+            background: radial-gradient(circle at 30% 30%, var(--comparison-accent) 0%, transparent 60%),
+                        radial-gradient(circle at 70% 70%, #7A8999 0%, transparent 60%) !important;
+            opacity: 0.6;
+        }
+
+        .comparison-glow {
+            background: radial-gradient(circle at top right, rgba(194, 168, 120, 0.1) 0%, transparent 60%) !important;
+        }
+
+        .text-highlight.comparison-highlight {
+            background: linear-gradient(120deg, rgba(194, 168, 120, 0.15) 0%, transparent 100%);
+            border-bottom: 1px solid rgba(194, 168, 120, 0.4);
+            color: #E8E0D0;
+        }
+
+        .soul-quote.comparison-quote {
+            border-right: 2px solid var(--comparison-accent);
+            background: linear-gradient(90deg, rgba(194, 168, 120, 0.05) 0%, transparent 100%);
+        }
+
 
         /* 📖 Story Mode UI - Premium Experience */
         #result-container {
@@ -1403,9 +1430,14 @@
             type();
         }
 
-       async function handleComparisonFlow(requestId) {
+        async function handleComparisonFlow(requestId) {
+
             const loadingOverlay = document.getElementById('loading-overlay');
-            if (loadingOverlay) loadingOverlay.style.display = 'flex';
+            if (loadingOverlay) {
+                loadingOverlay.style.display = 'flex';
+                document.querySelector('#loading-overlay h3').innerText = "هم‌گام‌سازی ذهن‌ها";
+                document.querySelector('#loading-overlay p').innerText = "در حال پردازش نقاط اتصال...";
+            }
 
             const initData = tg?.initData || "debug_init_data";
 
@@ -1433,7 +1465,7 @@
                 }
 
                 if (response.status === 500) {
-                    showErrorState("اختلال هسته • 500", "سیستم پردازش متمرکز دچار نوسان شده است. مهندسان ما در حال بازبینی کدهای سرور هستند!");
+                    showErrorState("اختلال هسته • 500", "سیستم پردازش متمرکز دچار نوسان شده است. مهندسان ما در حال بازبینی کدهای سرور هستند.");
                     return;
                 }
 
@@ -1464,7 +1496,7 @@
         }
 
 
-       function renderComparisonResultUI(resultText) {
+        function renderComparisonResultUI(resultText) {
             document.getElementById('app').style.display = 'none';
             document.getElementById('intro-screen').style.display = 'none';
 
@@ -1498,7 +1530,7 @@
                 });
             } else {
                 parsedSlides.push({
-                    title: "تحلیل برخورد دو ذهن",
+                    title: "نقاط اتصال",
                     content: rawContent
                 });
             }
@@ -1507,13 +1539,13 @@
 
             parsedSlides.forEach((slide, index) => {
                 const node = document.createElement('div');
-                node.className = 'neural-node';
+                node.className = 'neural-node comparison-node';
                 node.id = `node-${index}`;
                 progressWrapper.appendChild(node);
 
                 if (index < parsedSlides.length - 1) {
                     const link = document.createElement('div');
-                    link.className = 'neural-link';
+                    link.className = 'neural-link comparison-link';
                     link.id = `link-${index}`;
                     progressWrapper.appendChild(link);
                 }
@@ -1524,62 +1556,79 @@
 
                 const cleanTitle = slide.title.replace(/^\d+\.\s*/, '').replace(/<\/?[^>]+(>|$)/g, "").replace(/\*/g, '');
 
-                let processedText = slide.content
-                    .replace(/<b>(.*?)<\/b>/g, '<span class="text-highlight">$1</span>')
-                    .replace(/\*\*(.*?)\*\*/g, '<span class="text-highlight">$1</span>')
-                    .replace(/^\*\*\*$/gm, '<hr style="border:none; border-top:1px solid rgba(168,230,207,0.2); margin: 18px 0;"/>');
+                // پارس کردن دقیق مارک‌داون (دقیقا مثل تحلیل شخصی)
+                let safeContent = (slide.content || "");
+                let processedText = safeContent.replace(/\*\*(.*?)\*\*/g, '<span class="text-highlight comparison-highlight">$1</span>');
 
-                let paragraphs = processedText.split(/(?:\r?\n){2,}/);
+                let normalizedText = processedText
+                    .replace(/(?:^|\n)(>[^\n]*)/g, '\n\n$1\n\n')
+                    .replace(/\n\n\n+/g, '\n\n');
+
+                let paragraphs = normalizedText.split(/\n\n+/);
                 let formattedContent = paragraphs.map(para => {
                     para = para.trim();
                     if (!para) return '';
-                    if (para.startsWith('<hr')) return para;
 
-                    if (para.match(/^[-*]\s/m)) {
-                        let lines = para.split(/\r?\n/);
-                        let listHtml = '<ul class="soul-list">';
-                        let textBeforeList = '';
-                        lines.forEach(line => {
-                            line = line.trim();
-                            if (line.match(/^[-*]\s/)) {
-                                listHtml += `<li><span style="position:absolute; right:-15px; color:var(--accent-sage);">•</span>${line.substring(2)}</li>`;
-                            } else if (line) {
-                                textBeforeList += `<p>${line}</p>`;
-                            }
-                        });
-                        return textBeforeList + listHtml + '</ul>';
+                    if (para.startsWith('>')) {
+                        let cleanQuote = para.replace(/^>\s*/mg, '').trim();
+                        return `<div class="soul-quote comparison-quote">${cleanQuote.replace(/\n/g, '<br>')}</div>`;
                     }
 
-                    return `<p>${para.replace(/\r?\n/g, '<br>')}</p>`;
+                    if (para.includes('\n- ') || para.startsWith('- ') || para.includes('\n* ') || para.startsWith('* ')) {
+                        let lines = para.split('\n');
+                        let listHtml = '<ul class="soul-list">';
+                        let textBeforeList = '';
+
+                        lines.forEach(line => {
+                            line = line.trim();
+                            if (line.startsWith('- ') || line.startsWith('* ')) {
+                                listHtml += `<li><span style="position:absolute; right:-15px; color:var(--comparison-accent);">•</span>${line.substring(2)}</li>`;
+                            } else if (line) {
+                                textBeforeList += `<p>${line.replace(/\n/g, '<br>')}</p>`;
+                            }
+                        });
+                        listHtml += '</ul>';
+                        return textBeforeList + listHtml;
+                    }
+
+                    return `<p>${para.replace(/\n/g, '<br>')}</p>`;
                 }).join('');
 
-                // 🔥 دیزاین تمیز، ایزوله و حرفه‌ای با ارتفاع و فضاگذاری استاندارد
+                // دیزاین بدون اسکرول داخلی، تمیز و یکپارچه با المان‌های بصری مخصوص مقایسه دو نفر
                 slideDiv.innerHTML = `
-                    <div class="glass-card" style="width: 92%; max-width: 480px; max-height: 82vh; margin: auto; display: flex; flex-direction: column; box-sizing: border-box;">
-                        <div class="card-ambient-glow"></div>
+                    <div class="glass-card comparison-card">
+                        <div class="card-ambient-glow comparison-glow"></div>
 
-                        <div class="glass-card-content" style="display: flex; flex-direction: column; height: 100%; overflow: hidden; padding: 25px 22px;">
-                            <div class="sacred-wrapper" style="flex-shrink: 0;">
-                                <div class="liquid-orb"></div>
+                        <div class="glass-card-content">
+                            <div class="sacred-wrapper">
+                                <!-- نماد دو ذهن متصل به جای یک ذهن -->
+                                <div class="liquid-orb dual-orb"></div>
                                 <div class="sacred-geometry">
                                     <div class="geom-ring"></div>
-                                    <div class="geom-ring"></div>
-                                    <div class="geom-ring"></div>
+                                    <div class="geom-ring" style="transform: scale(0.8) translateX(10px);"></div>
                                 </div>
                             </div>
 
-                            <div class="story-chapter" style="color: var(--accent-sage); flex-shrink: 0; text-align: center; margin-bottom: 8px;">
+                            <div class="story-chapter comparison-chapter" style="color: var(--comparison-accent);">
                                 SYNERGY • هم‌افزایی
                             </div>
 
                             <h2 class="typewriter-target" data-text="${cleanTitle}"
-                                style="text-align:center; margin:0 0 12px 0; font-size:20px; font-weight:600; color:var(--text-ivory); line-height:1.5; position:relative; z-index:2; flex-shrink: 0;">
+                                style="text-align:center; margin:0 0 15px 0; font-size:24px; font-weight:600; color:var(--text-ivory); line-height:1.6; position:relative; z-index:2;">
                             </h2>
 
-                            <div style="width:40px; height:2px; background:linear-gradient(to right, transparent, var(--accent-sage), transparent); margin:0 auto 18px; opacity:0.6; flex-shrink: 0;"></div>
+                            <div style="width:50px; height:2px; background:linear-gradient(to right, transparent, var(--comparison-accent), transparent); margin:0 auto 20px; opacity:0.6;"></div>
 
-                            <!-- محتوای متنی با اسکرول داخلیِ تمیز و بدون بهم‌ریختگی -->
-                            <div class="story-content-wrapper paragraph-target" style="overflow-y: auto; flex-grow: 1; padding-left: 8px; text-align: right; direction: rtl;">
+                            <div class="story-whisper-container">
+                                <div class="story-divider">
+                                    <span style="background: linear-gradient(90deg, transparent, var(--comparison-accent));"></span>
+                                    <span style="color: var(--comparison-accent); font-size: 10px;">✦</span>
+                                    <span style="background: linear-gradient(-90deg, transparent, var(--comparison-accent));"></span>
+                                </div>
+                            </div>
+
+                            <!-- حذف استایل‌های خطی فاجعه‌بار قبلی و سپردن لی‌اوت به کلاس اصلی -->
+                            <div class="story-content-wrapper paragraph-target">
                                 ${formattedContent}
                             </div>
                         </div>
@@ -1587,6 +1636,9 @@
                 `;
                 slidesWrapper.appendChild(slideDiv);
             });
+
+            // ست کردن رنگ اتمسفر برای حالت مقایسه (مثلاً یک رنگ بنفش/طلایی یا هر رنگی که به Synergy بخوره)
+            document.documentElement.style.setProperty('--comparison-accent', '#D4AF37'); // طلایی ملایم
 
             container.style.display = 'flex';
             updateStoryUI();
