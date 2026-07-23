@@ -884,6 +884,145 @@
             opacity: 0.5;
         }
 
+        .climax-card {
+            background: linear-gradient(165deg, rgba(25, 22, 18, 0.85) 0%, rgba(10, 10, 12, 0.95) 100%) !important;
+            border: 1px solid rgba(212, 175, 55, 0.25) !important;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), inset 0 0 30px rgba(212, 175, 55, 0.05);
+        }
+
+        /* نورپردازی پس‌زمینه کارت نهایی */
+        .climax-glow {
+            background: radial-gradient(circle at 50% 20%, rgba(212, 175, 55, 0.12) 0%, rgba(0, 0, 0, 0) 70%) !important;
+        }
+
+        /* پورتال مرکز لایه‌های پنهان */
+        .climax-portal {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(212, 175, 55, 0.6) 0%, rgba(212, 175, 55, 0.05) 70%);
+            box-shadow: 0 0 25px rgba(212, 175, 55, 0.3);
+        }
+
+        .climax-ring-1 {
+            border-color: rgba(212, 175, 55, 0.4) !important;
+        }
+
+        .climax-ring-2 {
+            transform: scale(1.2) rotate(45deg);
+            border-color: rgba(212, 175, 55, 0.15) !important;
+        }
+
+        .climax-chapter {
+            color: #D4AF37 !important;
+            letter-spacing: 2px;
+            font-weight: 500;
+        }
+
+        .climax-title {
+            font-size: 26px !important;
+            font-weight: 700 !important;
+            background: linear-gradient(180deg, #FFFFFF 30%, #D4AF37 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        /* شبکه ویژگی‌ها */
+        .climax-intro {
+            font-size: 14px;
+            line-height: 1.8;
+            color: #E2E2E2;
+            text-align: justify;
+            margin-bottom: 20px;
+        }
+
+        .climax-features-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+            margin: 20px 0;
+        }
+
+        .climax-feature-box {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(212, 175, 55, 0.12);
+            border-radius: 12px;
+            padding: 12px 15px;
+            transition: all 0.3s ease;
+        }
+
+        .climax-feature-box:hover {
+            background: rgba(212, 175, 55, 0.05);
+            border-color: rgba(212, 175, 55, 0.3);
+        }
+
+        .feature-head {
+            color: #F1D06E;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        .climax-feature-box p {
+            color: #B5B5B5;
+            font-size: 12px;
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        .climax-outro {
+            font-size: 13px;
+            color: #D1D1D1;
+            text-align: center;
+            margin: 20px 0 25px;
+            line-height: 1.7;
+        }
+
+        /* دکمه اکشن نهایی (سنگین و لوکس) */
+        .climax-action-area {
+            display: flex;
+            justify-content: center;
+            margin-top: 15px;
+        }
+
+        .climax-cta-button {
+            width: 100%;
+            padding: 16px 24px;
+            background: linear-gradient(135deg, #C5A028 0%, #8A6D14 100%);
+            border: 1px solid rgba(255, 223, 118, 0.4);
+            border-radius: 14px;
+            color: #111;
+            font-weight: 700;
+            font-size: 15px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            box-shadow: 0 10px 25px rgba(197, 160, 40, 0.25);
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .climax-cta-button:active {
+            transform: scale(0.98);
+            box-shadow: 0 5px 15px rgba(197, 160, 40, 0.15);
+        }
+
+        .cta-arrow {
+            font-size: 18px;
+            transition: transform 0.3s ease;
+        }
+
+        .climax-cta-button:hover .cta-arrow {
+            transform: translateX(-4px);
+        }
+
+        /* پروگرس نود ویژه برای اسلاید آخر */
+        .climax-node {
+            background: #D4AF37 !important;
+            box-shadow: 0 0 10px rgba(212, 175, 55, 0.8) !important;
+        }
 
     </style>
 </head>
@@ -1525,21 +1664,30 @@
 
                     parsedSlides.push({
                         title: slideTitle,
-                        content: slideBody
+                        content: slideBody,
+                        isClimax: false
                     });
                 });
             } else {
                 parsedSlides.push({
                     title: "نقاط اتصال",
-                    content: rawContent
+                    content: rawContent,
+                    isClimax: false
                 });
             }
+
+            // 🌟 اضافه کردن اسلاید استاتیک و ویژه "جهان درون شما" به عنوان اسلاید آخر
+            parsedSlides.push({
+                title: "جهان درون شما",
+                isClimax: true
+            });
 
             currentSlideIndex = 0;
 
             parsedSlides.forEach((slide, index) => {
+                // ساخت نقاط و خطوط پیمایش (Progress Nodes)
                 const node = document.createElement('div');
-                node.className = 'neural-node comparison-node';
+                node.className = slide.isClimax ? 'neural-node comparison-node climax-node' : 'neural-node comparison-node';
                 node.id = `node-${index}`;
                 progressWrapper.appendChild(node);
 
@@ -1554,102 +1702,230 @@
                 slideDiv.className = 'slide';
                 slideDiv.id = `slide-${index}`;
 
-                const cleanTitle = slide.title.replace(/^\d+\.\s*/, '').replace(/<\/?[^>]+(>|$)/g, "").replace(/\*/g, '');
+                // اگر اسلاید عادی باشد
+                if (!slide.isClimax) {
+                    const cleanTitle = slide.title.replace(/^\d+\.\s*/, '').replace(/<\/?[^>]+(>|$)/g, "").replace(/\*/g, '');
 
-                // پارس کردن دقیق مارک‌داون (دقیقا مثل تحلیل شخصی)
-                let safeContent = (slide.content || "");
-                let processedText = safeContent.replace(/\*\*(.*?)\*\*/g, '<span class="text-highlight comparison-highlight">$1</span>');
+                    let safeContent = (slide.content || "");
+                    let processedText = safeContent.replace(/\*\*(.*?)\*\*/g, '<span class="text-highlight comparison-highlight">$1</span>');
 
-                let normalizedText = processedText
-                    .replace(/(?:^|\n)(>[^\n]*)/g, '\n\n$1\n\n')
-                    .replace(/\n\n\n+/g, '\n\n');
+                    let normalizedText = processedText
+                        .replace(/(?:^|\n)(>[^\n]*)/g, '\n\n$1\n\n')
+                        .replace(/\n\n\n+/g, '\n\n');
 
-                let paragraphs = normalizedText.split(/\n\n+/);
-                let formattedContent = paragraphs.map(para => {
-                    para = para.trim();
-                    if (!para) return '';
+                    let paragraphs = normalizedText.split(/\n\n+/);
+                    let formattedContent = paragraphs.map(para => {
+                        para = para.trim();
+                        if (!para) return '';
 
-                    if (para.startsWith('>')) {
-                        let cleanQuote = para.replace(/^>\s*/mg, '').trim();
-                        return `<div class="soul-quote comparison-quote">${cleanQuote.replace(/\n/g, '<br>')}</div>`;
-                    }
+                        if (para.startsWith('>')) {
+                            let cleanQuote = para.replace(/^>\s*/mg, '').trim();
+                            return `<div class="soul-quote comparison-quote">${cleanQuote.replace(/\n/g, '<br>')}</div>`;
+                        }
 
-                    if (para.includes('\n- ') || para.startsWith('- ') || para.includes('\n* ') || para.startsWith('* ')) {
-                        let lines = para.split('\n');
-                        let listHtml = '<ul class="soul-list">';
-                        let textBeforeList = '';
+                        if (para.includes('\n- ') || para.startsWith('- ') || para.includes('\n* ') || para.startsWith('* ')) {
+                            let lines = para.split('\n');
+                            let listHtml = '<ul class="soul-list">';
+                            let textBeforeList = '';
 
-                        lines.forEach(line => {
-                            line = line.trim();
-                            if (line.startsWith('- ') || line.startsWith('* ')) {
-                                listHtml += `<li><span style="position:absolute; right:-15px; color:var(--comparison-accent);">•</span>${line.substring(2)}</li>`;
-                            } else if (line) {
-                                textBeforeList += `<p>${line.replace(/\n/g, '<br>')}</p>`;
-                            }
-                        });
-                        listHtml += '</ul>';
-                        return textBeforeList + listHtml;
-                    }
+                            lines.forEach(line => {
+                                line = line.trim();
+                                if (line.startsWith('- ') || line.startsWith('* ')) {
+                                    listHtml += `<li><span style="position:absolute; right:-15px; color:var(--comparison-accent);">•</span>${line.substring(2)}</li>`;
+                                } else if (line) {
+                                    textBeforeList += `<p>${line.replace(/\n/g, '<br>')}</p>`;
+                                }
+                            });
+                            listHtml += '</ul>';
+                            return textBeforeList + listHtml;
+                        }
 
-                    return `<p>${para.replace(/\n/g, '<br>')}</p>`;
-                }).join('');
+                        return `<p>${para.replace(/\n/g, '<br>')}</p>`;
+                    }).join('');
 
-                // دیزاین بدون اسکرول داخلی، تمیز و یکپارچه با المان‌های بصری مخصوص مقایسه دو نفر
-                slideDiv.innerHTML = `
-                    <div class="glass-card comparison-card">
-                        <div class="card-ambient-glow comparison-glow"></div>
-
-                        <div class="glass-card-content">
-                            <div class="sacred-wrapper">
-                                <!-- نماد دو ذهن متصل به جای یک ذهن -->
-                                <div class="liquid-orb dual-orb"></div>
-                                <div class="sacred-geometry">
-                                    <div class="geom-ring"></div>
-                                    <div class="geom-ring" style="transform: scale(0.8) translateX(10px);"></div>
+                    slideDiv.innerHTML = `
+                        <div class="glass-card comparison-card">
+                            <div class="card-ambient-glow comparison-glow"></div>
+                            <div class="glass-card-content">
+                                <div class="sacred-wrapper">
+                                    <div class="liquid-orb dual-orb"></div>
+                                    <div class="sacred-geometry">
+                                        <div class="geom-ring"></div>
+                                        <div class="geom-ring" style="transform: scale(0.8) translateX(10px);"></div>
+                                    </div>
                                 </div>
-                            </div>
 
-                            <div class="story-chapter comparison-chapter" style="color: var(--comparison-accent);">
-                                SYNERGY • هم‌افزایی
-                            </div>
-
-                            <h2 class="typewriter-target" data-text="${cleanTitle}"
-                                style="text-align:center; margin:0 0 15px 0; font-size:24px; font-weight:600; color:var(--text-ivory); line-height:1.6; position:relative; z-index:2;">
-                            </h2>
-
-                            <div style="width:50px; height:2px; background:linear-gradient(to right, transparent, var(--comparison-accent), transparent); margin:0 auto 20px; opacity:0.6;"></div>
-
-                            <div class="story-whisper-container">
-                                <div class="story-divider">
-                                    <span style="background: linear-gradient(90deg, transparent, var(--comparison-accent));"></span>
-                                    <span style="color: var(--comparison-accent); font-size: 10px;">✦</span>
-                                    <span style="background: linear-gradient(-90deg, transparent, var(--comparison-accent));"></span>
+                                <div class="story-chapter comparison-chapter" style="color: var(--comparison-accent);">
+                                    SYNERGY • هم‌افزایی
                                 </div>
-                            </div>
 
-                            <!-- حذف استایل‌های خطی فاجعه‌بار قبلی و سپردن لی‌اوت به کلاس اصلی -->
-                            <div class="story-content-wrapper paragraph-target">
-                                ${formattedContent}
+                                <h2 class="typewriter-target" data-text="${cleanTitle}"
+                                    style="text-align:center; margin:0 0 15px 0; font-size:24px; font-weight:600; color:var(--text-ivory); line-height:1.6; position:relative; z-index:2;">
+                                </h2>
+
+                                <div style="width:50px; height:2px; background:linear-gradient(to right, transparent, var(--comparison-accent), transparent); margin:0 auto 20px; opacity:0.6;"></div>
+
+                                <div class="story-whisper-container">
+                                    <div class="story-divider">
+                                        <span style="background: linear-gradient(90deg, transparent, var(--comparison-accent));"></span>
+                                        <span style="color: var(--comparison-accent); font-size: 10px;">✦</span>
+                                        <span style="background: linear-gradient(-90deg, transparent, var(--comparison-accent));"></span>
+                                    </div>
+                                </div>
+
+                                <div class="story-content-wrapper paragraph-target">
+                                    ${formattedContent}
+                                </div>
                             </div>
                         </div>
-                    </div>
-                `;
+                    `;
+                }
+                // 🌟 ساخت اسلاید نهایی (اوج داستان - جهان درون شما)
+                else {
+                    slideDiv.innerHTML = `
+                        <div class="glass-card comparison-card climax-card">
+                            <div class="card-ambient-glow climax-glow"></div>
+
+                            <div class="glass-card-content">
+                                <div class="sacred-wrapper">
+                                    <div class="climax-portal"></div>
+                                    <div class="sacred-geometry">
+                                        <div class="geom-ring climax-ring-1"></div>
+                                        <div class="geom-ring climax-ring-2"></div>
+                                    </div>
+                                </div>
+
+                                <div class="story-chapter climax-chapter">
+                                    THE DEEP DIVE • لایه‌های پنهان
+                                </div>
+
+                                <h2 class="typewriter-target climax-title" data-text="جهان درون شما">
+                                </h2>
+
+                                <div style="width:70px; height:2px; background:linear-gradient(to right, transparent, #D4AF37, transparent); margin:0 auto 20px; opacity:0.8;"></div>
+
+                                <div class="story-content-wrapper climax-body">
+                                    <p class="climax-intro">
+                                        وقتی دو ساختار فکری کنار هم قرار می‌گیرند، فقط تفاوتِ رفتارها نیست که اهمیت پیدا می‌کند؛
+                                        بلکه اتفاق‌های ظریف‌تری میان دو ذهن شکل می‌گیرد که معمولاً در گفت‌وگوهای روزمره دیده نمی‌شوند.
+                                    </p>
+
+                                    <div class="climax-features-grid">
+                                        <div class="climax-feature-box">
+                                            <div class="feature-head">💬 پشتِ سکوت‌ها و واکنش‌ها</div>
+                                            <p>وقتی یکی از شما سکوت می‌کند یا پافشاری می‌کند، ذهن نفر مقابل آن را چگونه تعبیر می‌کند؟</p>
+                                        </div>
+
+                                        <div class="climax-feature-box">
+                                            <div class="feature-head">☁︎ سوءبرداشت‌های ناخواسته</div>
+                                            <p>بررسی ریشه‌ی سوءتفاهم‌هایی که نه از نیت، بلکه از تفاوت شیوه پردازش اطلاعات به وجود می‌آیند.</p>
+                                        </div>
+
+                                        <div class="climax-feature-box">
+                                            <div class="feature-head">📰 عملکرد در پروژه‌های مشترک</div>
+                                            <p>از یک تصمیم مهم تا یک سفر؛ کجا مکمل هم هستید و کجا ممکن است انرژی یکدیگر را کاهش دهید؟</p>
+                                        </div>
+
+                                        <div class="climax-feature-box">
+                                            <div class="feature-head">🌱 اثر متقابل روی رشد یکدیگر</div>
+                                            <p>حضور هر کدام از شما، کدام بخشِ کمتر دیده‌شده‌ی ذهنِ دیگری را فعال و بیدار می‌کند؟</p>
+                                        </div>
+                                    </div>
+
+                                    <p class="climax-outro">
+                                        علاوه بر این تحلیلِ مشترک، می‌توانید معماری ذهنِ هر کدام از شما را به‌صورت جداگانه و با جزئیات بسیار بیشتری کشف کنید. 🌿
+                                    </p>
+
+                                    <!-- دکمه ارسال درخواست سفارش -->
+                                    <div class="climax-action-area">
+                                        <button id="btn-submit-order" class="climax-cta-button" onclick="handleCreateTelegramOrder()">
+                                            <span>ورود به جهان درون شما</span>
+                                            <span class="cta-arrow">←</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }
+
                 slidesWrapper.appendChild(slideDiv);
             });
 
-            // ست کردن رنگ اتمسفر برای حالت مقایسه (مثلاً یک رنگ بنفش/طلایی یا هر رنگی که به Synergy بخوره)
-            document.documentElement.style.setProperty('--comparison-accent', '#D4AF37'); // طلایی ملایم
+            document.documentElement.style.setProperty('--comparison-accent', '#D4AF37');
 
             container.style.display = 'flex';
             updateStoryUI();
 
             if (tg && tg.MainButton) {
-                tg.MainButton.setText("بازگشت ");
+                tg.MainButton.setText("بازگشت");
                 tg.MainButton.show();
                 tg.MainButton.onClick(() => tg.close());
             }
         }
 
+        async function handleCreateTelegramOrder() {
+            const btn = document.getElementById('btn-submit-order');
+            if (!btn || btn.disabled) return;
+
+            // افکت لودینگ روی دکمه
+            const originalText = btn.innerHTML;
+            btn.disabled = true;
+            btn.style.opacity = '0.7';
+            btn.innerHTML = `<span>در حال صدور فاکتور...</span>`;
+
+            const orderPayload = {
+                // داده‌های مربوط به CreateTelegramOrder
+            };
+
+            try {
+                const response = await fetch('https://9adf-2a01-4ff-f0-fec7-00-1.ngrok-free.app/orders/create-telegram-order', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify(orderPayload)
+                });
+
+                const data = await response.json();
+
+                // 🌟 چک کردن پاسخ بک‌اند بر اساس success و message
+                if (response.ok && data.success && data.message === "invoice_sent") {
+
+                    // ویبره موفقیت در تلگرام
+                    if (window.Telegram?.WebApp?.HapticFeedback) {
+                        window.Telegram.WebApp.HapticFeedback.notificationOccurred('success');
+                    }
+
+                    // پیام به کاربر
+                    alert('فاکتور پرداخت در چت تلگرام برای شما ارسال شد!');
+
+                    // 💡 پیشنهاد UX: بستن وب‌اپ تلگرام تا کاربر مستقیماً فاکتور ارسال‌شده در چت را ببیند
+                    if (window.Telegram?.WebApp) {
+                        window.Telegram.WebApp.close();
+                    }
+
+                } else {
+                    // اگر بک‌اند success را false فرستاده بود یا پیغام دیگری داد
+                    throw new Error(data.message || 'خطای غیرمنتظره در صدور فاکتور');
+                }
+
+            } catch (error) {
+                console.error('Error creating order:', error);
+
+                if (window.Telegram?.WebApp?.HapticFeedback) {
+                    window.Telegram.WebApp.HapticFeedback.notificationOccurred('error');
+                }
+
+                alert('مواجهه با خطا در ثبت درخواست. لطفاً مجدداً تلاش کنید.');
+
+                // بازگرداندن دکمه به حالت اول فقط در صورت بروز خطا
+                btn.disabled = false;
+                btn.style.opacity = '1';
+                btn.innerHTML = originalText;
+            }
+        }
 
         function showErrorState(title, message) {
             document.getElementById('app').style.display = 'none';
