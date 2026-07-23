@@ -1676,7 +1676,6 @@
                 });
             }
 
-            // 🌟 اضافه کردن اسلاید استاتیک و ویژه "جهان درون شما" به عنوان اسلاید آخر
             parsedSlides.push({
                 title: "جهان درون شما",
                 isClimax: true
@@ -1780,7 +1779,6 @@
                         </div>
                     `;
                 }
-                // 🌟 ساخت اسلاید نهایی (اوج داستان - جهان درون شما)
                 else {
                     slideDiv.innerHTML = `
                         <div class="glass-card comparison-card climax-card">
@@ -1799,7 +1797,8 @@
                                     THE DEEP DIVE • لایه‌های پنهان
                                 </div>
 
-                                <h2 class="typewriter-target climax-title" data-text="جهان درون شما">
+                                <h2 class="climax-title" style="text-align:center; margin:0 0 15px 0; font-size:28px; font-weight:800; background: linear-gradient(180deg, #FFFFFF 30%, #D4AF37 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);">
+                                        جهان درون شما
                                 </h2>
 
                                 <div style="width:70px; height:2px; background:linear-gradient(to right, transparent, #D4AF37, transparent); margin:0 auto 20px; opacity:0.8;"></div>
@@ -2194,6 +2193,7 @@
 
 
         function updateStoryUI() {
+            
             parsedSlides.forEach((_, index) => {
                 const slide = document.getElementById(`slide-${index}`);
                 const node = document.getElementById(`node-${index}`);
@@ -2227,45 +2227,63 @@
                             drawSakinorvaChart('sakinorva-canvas', slideData.chartData);
                         }, 200);
                     } else {
+                        // اگر اسلاید آخر (جهان درون شما) باشد و تیتر ثابت بخواهیم، نیازی به تایپ‌رایتر نیست
+                        // اما برای حفظ ساختار قبلی شما این بخش را دست نزدیم تا مابقی اسلایدها درست کار کنند
                         const titleEl = slide.querySelector('.typewriter-target');
                         const pEl = slide.querySelector('.paragraph-target');
 
-                        pEl.classList.remove('blur-reveal');
-                        pEl.style.opacity = '0';
-                        titleEl.innerHTML = "";
+                        if (titleEl && pEl) {
+                            pEl.classList.remove('blur-reveal');
+                            pEl.style.opacity = '0';
+                            titleEl.innerHTML = "";
 
-                        setTimeout(() => {
-                            typeWriterEffect(titleEl, titleEl.getAttribute('data-text'), 40, () => {
-                                pEl.classList.add('blur-reveal');
-                            });
-                        }, 350);
+                            setTimeout(() => {
+                                typeWriterEffect(titleEl, titleEl.getAttribute('data-text'), 40, () => {
+                                    pEl.classList.add('blur-reveal');
+                                });
+                            }, 350);
+                        }
                     }
                 } else {
                     slide.className = 'slide';
                 }
             });
 
+            // === بخش مدیریت دکمه‌های پایین که اصلاح شد ===
             const btnPrev = document.getElementById('btn-prev');
             const nextText = document.getElementById('next-btn-text');
             const nextIcon = document.querySelector('.next-btn svg');
             const navDivider = document.querySelector('.nav-divider');
+            const navWrapper = document.querySelector('.smart-nav-wrapper'); // انتخاب کل نوار نویگیشن
 
+            // مدیریت دکمه بازگشت به اسلاید قبلی
             if (currentSlideIndex > 0) {
-                btnPrev.style.display = 'flex';
-                if(navDivider) navDivider.style.display = 'block';
+                if (btnPrev) btnPrev.style.display = 'flex';
+                if (navDivider) navDivider.style.display = 'block';
             } else {
-                btnPrev.style.display = 'none';
-                if(navDivider) navDivider.style.display = 'none';
+                if (btnPrev) btnPrev.style.display = 'none';
+                if (navDivider) navDivider.style.display = 'none';
             }
 
+            // منطق جدید برای دکمه «ادامه / جهان درون شما» و مخفی کردن در اسلاید آخر
             if (currentSlideIndex === parsedSlides.length - 1) {
-                nextText.innerText = "پایان تحلیل";
-                if (nextIcon) nextIcon.style.display = "none";
+                // ۱. اسلاید آخر: کل نوار دکمه‌ها مخفی شود تا تداخلی با دکمه طلایی ایجاد نکند
+                if (navWrapper) navWrapper.style.display = 'none';
+
+            } else if (currentSlideIndex === parsedSlides.length - 2) {
+                // ۲. اسلاید یکی مانده به آخر: تغییر متن به سمت اسلاید هیجان‌انگیز
+                if (navWrapper) navWrapper.style.display = 'flex';
+                if (nextText) nextText.innerText = "جهان درون شما ✨";
+                if (nextIcon) nextIcon.style.display = "none"; // مخفی کردن آیکون فلش برای تمیزی بیشتر
+
             } else {
-                nextText.innerText = "ادامه";
+                // ۳. اسلایدهای عادی: نمایش حالت پیش‌فرض
+                if (navWrapper) navWrapper.style.display = 'flex';
+                if (nextText) nextText.innerText = "ادامه";
                 if (nextIcon) nextIcon.style.display = "block";
             }
         }
+
 
         function drawSakinorvaChart(canvasId, rawData) {
             const canvas = document.getElementById(canvasId);
