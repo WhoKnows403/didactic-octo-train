@@ -734,7 +734,7 @@
                 /* عکس فقط 60 درصد بالای صفحه رو می‌گیره */
                 height: 60vh;
 
-                background-image: url("analysis_image.webp");
+                background-image: url("1973.webp");
                 background-size: cover;
                 background-position: center top;
 
@@ -1135,34 +1135,46 @@
             /* 🔮 Sacred Geometry Loaders */
 
 
-                        /* ---- Navigation Pill ---- */
+            /* ---- Navigation Pill ---- */
             .smart-nav-wrapper {
                 position: fixed;
                 bottom: 0;
                 left: 0;
                 width: 100%;
 
-                /* یک گرادیان که از پایین کاملاً تاریک و بالا نامرئی میشه */
-                background: linear-gradient(to top, #121214 70%, transparent 100%);
+                /* هم‌رنگ با بک‌گراند پنل محتوا */
+                background: #1a1a1c;
 
-                padding: 40px 20px 25px 20px; /* پدینگ بالا رو زیاد دادیم که گرادیان نرم بشه */
-                z-index: 10;
+                /* یک هاله نوری در بالای دکمه‌ها تا حس جدا شدن از متن اسکرول‌شونده را بدهد */
+                box-shadow: 0 -10px 30px rgba(26, 26, 28, 0.95);
+
+                padding: 15px 20px 25px 20px; /* پدینگ برای دکمه‌ها */
+                z-index: 10; /* بالاترین لایه تا همیشه در دسترس باشد */
 
                 display: flex;
-                justify-content: center;
-                pointer-events: none; /* گرادیان نباید جلوی کلیک شدن متن‌های زیرش رو بگیره */
+                justify-content: center; /* اگر ساختار داخلی دکمه‌هایت فلکس است این کمک می‌کند */
             }
 
 
             .nav-pill {
-                /* باکسِ اصلی دکمه‌ها اینجاست */
-                pointer-events: auto; /* دکمه‌ها باید کلیک بشن */
+                display: flex;
+                align-items: center;
 
-                /* استایل‌های خودت برای دکمه‌ها (رنگ پس‌زمینه دکمه و غیره) رو اینجا نگه دار */
-                background: rgba(255, 255, 255, 0.05); /* یک بک‌گراند نیمه‌شفاف تمیز برای خود نوار دکمه */
-                border: 1px solid rgba(255, 255, 255, 0.1);
-                backdrop-filter: blur(10px);
-                border-radius: 100px;
+                padding: 0;
+
+                background: rgba(17, 19, 17, 0.52);
+
+                border: 1px solid rgba(244, 241, 234, 0.14);
+
+                border-radius: 10px;
+
+                box-shadow:
+                    0 8px 28px rgba(0, 0, 0, 0.22);
+
+                backdrop-filter: blur(12px);
+                -webkit-backdrop-filter: blur(12px);
+
+                pointer-events: auto;
             }
 
             .nav-btn {
