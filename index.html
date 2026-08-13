@@ -8,48 +8,42 @@
         <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@200;300;400;500;600&display=swap" rel="stylesheet">
         <style>
             :root {
+                /* =========================================================
+                RESULT STORY — VISUAL SYSTEM
+                Human / Editorial / Cinematic
+                ========================================================= */
 
-                /* Core Atmosphere */
-                --bg-dark: #17191A;
-                --bg-center: #202324;
+                /* Base */
+                --story-ink: #171817;
+                --story-white: #F4F1EA;
 
+                /* Text */
+                --story-text: rgba(244, 241, 234, 0.94);
+                --story-text-soft: rgba(244, 241, 234, 0.70);
+                --story-text-faint: rgba(244, 241, 234, 0.48);
 
-                /* Typography */
-                --text-ivory: #F7F4EE;
-                --text-muted: rgba(247,244,238,0.62);
+                /* Identity */
+                --accent-sage: #A6B39F;
+                --accent-sage-soft: rgba(166, 179, 159, 0.16);
+                --accent-sage-line: rgba(166, 179, 159, 0.34);
 
+                /* Warm note — used sparingly */
+                --accent-warm: #D2C2AC;
 
-                /* Single Identity Color */
-                --accent-sage: #9DB39B;
+                /* Editorial separators */
+                --story-line: rgba(244, 241, 234, 0.16);
+                --story-line-soft: rgba(244, 241, 234, 0.08);
 
-                --accent-glow:
-                    rgba(157,179,155,0.18);
+                /* Background image treatment */
+                --story-overlay: rgba(12, 14, 13, 0.40);
+                --story-overlay-bottom: rgba(12, 14, 13, 0.72);
 
+                /* Layout */
+                --story-side-padding: clamp(20px, 5vw, 44px);
+                --story-content-width: min(100%, 680px);
 
-                /* Lines */
-                --line-color:
-                    rgba(255,255,255,0.08);
-
-
-                /* Glass */
-                --glass-bg:
-                    rgba(255,255,255,0.025);
-
-
-                --glass-border:
-                    rgba(255,255,255,0.10);
-
-
-                /* Warm secondary */
-                --accent-warm:
-                    #D8C2A6;
-
-
-                --gray-dark:
-                    #111314;
-
-                --gray-light:
-                    #292D2E;
+                /* Motion */
+                --story-ease: cubic-bezier(0.22, 1, 0.36, 1);
             }
 
             * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
@@ -699,63 +693,131 @@
 
             /* 📖 Story Mode UI - Premium Experience */
             #result-container {
+                position: fixed;
+                inset: 0;
+                z-index: 1000;
 
-                display:none;
+                display: none;
+                flex-direction: column;
 
-                flex-direction:column;
+                width: 100%;
+                height: 100%;
 
-
-                width:100%;
-                height:100%;
-
-
-                position:fixed;
-
-
-                inset:0;
-
-
-                background:
-                transparent;
-
-
-                z-index:1000;
-
+                overflow: hidden;
 
                 padding:
-                32px 22px;
+                    max(20px, env(safe-area-inset-top))
+                    var(--story-side-padding)
+                    max(20px, env(safe-area-inset-bottom));
 
+                color: var(--story-text);
 
-                overflow:hidden;
+                isolation: isolate;
+
+                background: var(--story-ink);
+            }
+            .story-background {
+                position: absolute;
+                inset: 0;
+
+                z-index: -2;
+
+                overflow: hidden;
+
+                pointer-events: none;
+            }
+
+            .story-background-image {
+                position: absolute;
+                inset: -2%;
+
+                background-image: url("analysis_image.webp");
+                background-size: cover;
+                background-position: center center;
+                background-repeat: no-repeat;
+
+                transform: scale(1.015);
+
+                filter:
+                    saturate(0.82)
+                    brightness(0.72)
+                    contrast(0.96);
+            }
+
+            .story-background-vignette {
+                position: absolute;
+                inset: 0;
+
+                background:
+                    linear-gradient(
+                        to bottom,
+                        rgba(10, 12, 11, 0.30) 0%,
+                        rgba(10, 12, 11, 0.08) 35%,
+                        rgba(10, 12, 11, 0.22) 62%,
+                        rgba(10, 12, 11, 0.76) 100%
+                    );
+
+                pointer-events: none;
             }
 
             .story-progress-bar {
-                display: flex;
-                gap: 6px;
-                width: 100%;
-                margin-bottom: 40px;
                 position: relative;
-                z-index: 10;
+                z-index: 20;
+
+                display: flex;
+                align-items: center;
+
+                width: 100%;
+                height: 2px;
+
+                gap: 4px;
+
+                margin:
+                    10px 0
+                    clamp(28px, 6vh, 52px);
             }
 
-            .story-tick {
+           .story-tick {
+                position: relative;
+
                 flex: 1;
-                height: 2px; /* خطوط پیشرفت مایکرو */
-                background: rgba(255, 255, 255, 0.06);
-                border-radius: 2px;
+                height: 1px;
+
                 overflow: hidden;
+
+                background: rgba(244, 241, 234, 0.18);
+
+                border-radius: 999px;
             }
+
 
             .story-tick-fill {
+                width: 0;
                 height: 100%;
-                width: 0%;
-                background: linear-gradient(90deg, var(--accent-sage), var(--accent-warm));
-                box-shadow: 0 0 8px var(--accent-warm-glow);
-                transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+
+                background: var(--story-white);
+
+                opacity: 0.85;
+
+                box-shadow: none;
+
+                transition:
+                    width 0.55s var(--story-ease);
             }
 
             .story-tick.active .story-tick-fill {
                 width: 100%;
+            }
+
+            .story-title-rule {
+                width: 34px;
+                height: 1px;
+
+                margin: 24px auto 28px;
+
+                background: var(--story-line);
+
+                opacity: 0.9;
             }
 
             .slide-container {
@@ -777,59 +839,51 @@
             }
 
             .slide {
+                position: absolute;
 
-                position:absolute;
+                width: 100%;
+                max-height: 100%;
 
-                width:100%;
+                padding:
+                    0
+                    0
+                    clamp(110px, 16vh, 150px);
 
+                overflow-y: auto;
 
-                max-height:80vh;
+                opacity: 0;
 
-                overflow-y:auto;
-
-
-                padding-bottom:60px;
-
-
-                opacity:0;
-
-
-                transform:
-                    translateY(10px)
-                    scale(.985);
-
+                transform: translateY(14px);
 
                 transition:
-                    all .6s cubic-bezier(.16,1,.3,1);
+                    opacity 0.55s ease,
+                    transform 0.7s var(--story-ease);
 
+                pointer-events: none;
 
-                pointer-events:none;
+                scrollbar-width: none;
 
+                scroll-behavior: smooth;
 
-                scrollbar-width:none;
-
-                scroll-behavior:smooth;
+                overscroll-behavior: contain;
             }
 
             .slide::-webkit-scrollbar {
-                display: none; /* Chrome */
+                display: none;
             }
 
             .slide.active {
+                opacity: 1;
 
-                opacity:1;
+                transform: translateY(0);
 
-
-                transform:
-                translateY(0)
-                scale(1);
-
-
-                pointer-events:auto;
+                pointer-events: auto;
             }
+
             .slide.passed {
                 opacity: 0;
-                transform: translateY(-20px) scale(0.97);
+
+                transform: translateY(-10px);
             }
 
             .slide h2 {
@@ -855,38 +909,66 @@
            /* 🔘 Floating Continue Button */
             .continue-btn-wrapper {
                 position: absolute;
-                bottom: 35px;
+
+                bottom:
+                    max(22px, env(safe-area-inset-bottom));
+
                 left: 0;
+
                 width: 100%;
+
                 display: flex;
                 justify-content: center;
+
                 z-index: 20;
+
+                pointer-events: none;
             }
 
             .continue-btn {
-                background: transparent;
-                color: var(--accent-sage);
-                border: 1px solid var(--accent-sage);
-                padding: 12px 35px;
+                display: inline-flex;
+                align-items: center;
+
+                gap: 10px;
+
+                min-height: 44px;
+
+                padding: 10px 22px;
+
+                background:
+                    rgba(17, 19, 17, 0.58);
+
+                color: var(--story-white);
+
+                border:
+                    1px solid rgba(244, 241, 234, 0.16);
+
+                border-radius: 9px;
+
+                box-shadow:
+                    0 8px 28px rgba(0, 0, 0, 0.22);
+
+                backdrop-filter: blur(12px);
+                -webkit-backdrop-filter: blur(12px);
+
+                font-family: 'Vazirmatn', sans-serif;
                 font-size: 14px;
                 font-weight: 500;
-                border-radius: 4px; /* لبه‌های مینیمال به جای کپسولی */
-                font-family: 'Vazirmatn', sans-serif;
+
                 cursor: pointer;
-                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
-                display: flex;
-                align-items: center;
-                gap: 12px;
-                transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-                backdrop-filter: blur(8px);
-                letter-spacing: 1px;
+
+                transition:
+                    background-color 0.25s ease,
+                    border-color 0.25s ease;
             }
 
             .continue-btn:active {
-                transform: scale(0.97);
-                background: var(--accent-sage);
-                color: var(--bg-dark);
-                box-shadow: 0 0 15px var(--accent-glow);
+                transform: none;
+
+                background: rgba(166, 179, 159, 0.18);
+
+                box-shadow:
+                    0 8px 24px rgba(0, 0, 0, 0.20);
             }
 
             .continue-btn svg {
@@ -924,24 +1006,48 @@
             /* Back Button for Story Mode */
             .back-story-btn {
                 position: absolute;
-                top: 25px;
-                left: 25px;
-                background: transparent;
-                border: 1px solid rgba(255, 255, 255, 0.05);
-                color: var(--text-muted);
-                cursor: pointer;
+
+                top:
+                    max(20px, env(safe-area-inset-top));
+
+                left: var(--story-side-padding);
+
                 z-index: 101;
-                padding: 8px;
-                border-radius: 50%;
+
                 display: none;
-                transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-                backdrop-filter: blur(5px);
+                align-items: center;
+                justify-content: center;
+
+                width: 38px;
+                height: 38px;
+
+                padding: 0;
+
+                background: rgba(17, 19, 17, 0.38);
+
+                border:
+                    1px solid rgba(244, 241, 234, 0.12);
+
+                border-radius: 8px;
+
+                color: var(--story-text-soft);
+
+                backdrop-filter: blur(10px);
+                -webkit-backdrop-filter: blur(10px);
+
+                cursor: pointer;
+
+                transition:
+                    background-color 0.25s ease,
+                    color 0.25s ease;
             }
 
             .back-story-btn:active {
-                color: var(--accent-warm);
-                border-color: rgba(212, 175, 55, 0.2);
-                transform: scale(0.92);
+                transform: none;
+
+                color: var(--story-white);
+
+                background: rgba(244, 241, 234, 0.08);
             }
 
             .back-story-btn svg {
@@ -957,131 +1063,152 @@
             /* 💠 Glass Card Restyling */
             .glass-card {
                 position: relative;
-                width: 90%;
+
+                width: var(--story-content-width);
+
                 margin: 0 auto;
-                padding: 32px 24px;
 
-                border-radius: 24px;
+                padding:
+                    clamp(10px, 2vw, 18px)
+                    0
+                    30px;
 
-                background: rgba(255,255,255,0.025);
+                background: transparent;
 
-                border: 1px solid rgba(255,255,255,0.10);
+                border: 0;
+                border-radius: 0;
 
-                box-shadow:
-                    0 18px 45px rgba(0,0,0,0.15),
-                    inset 0 1px 0 rgba(255,255,255,0.08);
+                box-shadow: none;
 
-                backdrop-filter: blur(4px) saturate(110%);
-                -webkit-backdrop-filter: blur(4px) saturate(110%);
+                backdrop-filter: none;
+                -webkit-backdrop-filter: none;
             }
 
-            .glass-card::before, .glass-card::after {
-                display: none;
-            }
+
 
             .glass-card-content {
                 position: relative;
-                z-index: 2;
+
                 display: flex;
                 flex-direction: column;
                 align-items: center;
+
+                width: 100%;
             }
 
-            @keyframes rotate-glow {
-                100% { transform: rotate(360deg); }
-            }
+
 
             /* Paragraph Focus Animation */
             .paragraph-target {
                 opacity: 0;
-                filter: blur(8px); /* بلور نرم‌تر */
-                transform: translateY(10px);
+                transform: translateY(8px);
             }
 
             .blur-reveal {
-                animation: blurFocus 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+                animation:
+                    storyContentReveal
+                    0.65s
+                    var(--story-ease)
+                    forwards;
             }
 
-            @keyframes blurFocus {
-                to { opacity: 1; filter: blur(0); transform: translateY(0); }
+            @keyframes storyContentReveal {
+                from {
+                    opacity: 0;
+                    transform: translateY(8px);
+                }
+
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+
+            @media (prefers-reduced-motion: reduce) {
+                .slide,
+                .blur-reveal,
+                .story-whisper-container,
+                .story-tick-fill {
+                    animation: none !important;
+                    transition: none !important;
+                }
+
+                .paragraph-target {
+                    opacity: 1;
+                    transform: none;
+                }
             }
 
             /* 🔮 Sacred Geometry Loaders */
-            .sacred-geometry {
-                position: relative;
-                width: 44px; /* کمی جمع‌وجورتر */
-                height: 44px;
-                margin-bottom: 30px;
-                transform-style: preserve-3d;
-                perspective: 800px;
-            }
 
-            .geom-ring {
-                position: absolute;
-                top: 0; left: 0; right: 0; bottom: 0;
-                border: 1px solid rgba(157, 179, 155, 0.4);
-                border-radius: 50%;
-                opacity: 0.8;
-                transition: border-color 1.5s ease;
-                box-shadow: 0 0 15px rgba(157, 179, 155, 0.05);
-            }
-
-            .geom-ring:nth-child(1) { animation: spin3D_1 6s linear infinite; }
-            .geom-ring:nth-child(2) { animation: spin3D_2 8s linear infinite; }
-            .geom-ring:nth-child(3) { animation: spin3D_3 10s linear infinite; border-color: rgba(212, 175, 55, 0.3); } /* طلایی شدن یکی از حلقه‌ها */
-
-            @keyframes spin3D_1 {
-                0% { transform: rotateX(75deg) rotateZ(0deg); }
-                100% { transform: rotateX(75deg) rotateZ(360deg); }
-            }
-            @keyframes spin3D_2 {
-                0% { transform: rotateY(75deg) rotateZ(0deg); }
-                100% { transform: rotateY(75deg) rotateZ(360deg); }
-            }
-            @keyframes spin3D_3 {
-                0% { transform: rotateX(45deg) rotateY(45deg) rotateZ(0deg); }
-                100% { transform: rotateX(45deg) rotateY(45deg) rotateZ(360deg); }
-            }
 
             /* ---- Navigation Pill ---- */
             .smart-nav-wrapper {
                 position: absolute;
-                bottom: 35px;
+
+                bottom:
+                    max(22px, env(safe-area-inset-bottom));
+
                 left: 0;
+
                 width: 100%;
+
                 display: flex;
                 justify-content: center;
+
                 z-index: 50;
+
+                pointer-events: none;
             }
+
 
             .nav-pill {
                 display: flex;
                 align-items: center;
-                background: rgba(13, 13, 14, 0.7);
-                backdrop-filter: blur(20px);
-                -webkit-backdrop-filter: blur(20px);
-                border: 1px solid rgba(255, 255, 255, 0.05);
-                border-radius: 4px; /* همخوان با بقیه دکمه‌ها */
-                padding: 5px;
-                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
-                transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+
+                padding: 0;
+
+                background: rgba(17, 19, 17, 0.52);
+
+                border: 1px solid rgba(244, 241, 234, 0.14);
+
+                border-radius: 10px;
+
+                box-shadow:
+                    0 8px 28px rgba(0, 0, 0, 0.22);
+
+                backdrop-filter: blur(12px);
+                -webkit-backdrop-filter: blur(12px);
+
+                pointer-events: auto;
             }
 
             .nav-btn {
-                background: transparent;
-                border: none;
-                color: var(--text-ivory);
-                font-family: 'Vazirmatn', sans-serif;
-                font-size: 13px; /* کمی ظریف‌تر */
-                font-weight: 400;
-                cursor: pointer;
-                display: flex;
+                min-height: 42px;
+
+                display: inline-flex;
                 align-items: center;
                 justify-content: center;
+
                 padding: 10px 18px;
-                transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-                border-radius: 3px;
-                letter-spacing: 0.5px;
+
+                background: transparent;
+
+                border: 0;
+
+                color: var(--story-text-soft);
+
+                font-family: 'Vazirmatn', sans-serif;
+                font-size: 13px;
+                font-weight: 500;
+
+                cursor: pointer;
+
+                transition:
+                color 0.25s ease,
+                background-color 0.25s ease;
+                border-radius: 8px;
+
             }
 
             .nav-btn svg {
@@ -1089,10 +1216,12 @@
                 height: 16px;
                 fill: currentColor;
             }
+            .nav-btn:active {
+                background: rgba(244, 241, 234, 0.07);
+            }
 
             .prev-btn {
-                color: var(--text-muted);
-                padding: 10px 15px;
+                color: var(--story-text-faint);
             }
 
             .prev-btn:active {
@@ -1101,35 +1230,58 @@
             }
 
             .next-btn {
-                background: rgba(157, 179, 155, 0.08);
-                color: var(--accent-sage);
                 gap: 8px;
-                padding: 10px 25px;
-                font-weight: 500;
-                border: 1px solid rgba(157, 179, 155, 0.2);
+
+                color: var(--story-white);
+
+                background: rgba(166, 179, 159, 0.14);
+
+                border-right:
+                    1px solid rgba(166, 179, 159, 0.24);
+
+                font-weight: 600;
             }
 
             .next-btn:active {
-                transform: scale(0.97);
-                background: var(--accent-sage);
-                color: var(--bg-dark);
+                transform: none;
+
+                color: var(--story-white);
+
+                background: rgba(166, 179, 159, 0.22);
             }
 
             .nav-divider {
                 width: 1px;
                 height: 20px;
-                background: rgba(255, 255, 255, 0.08);
-                margin: 0 5px;
+
+                margin: 0;
+
+                background: var(--story-line-soft);
             }
 
             /* ---- Typography Upgrades ---- */
             .glass-card h2.typewriter-target {
-                background: linear-gradient(135deg, var(--text-ivory) 0%, var(--accent-warm) 100%); /* تغییر به طلایی شامپاینی */
-                -webkit-background-clip: text;
-                -webkit-text-fill-color: transparent;
-                font-weight: 500;
-                letter-spacing: 1px;
-                text-shadow: 0px 4px 20px rgba(212, 175, 55, 0.1);
+                margin: 0;
+
+                max-width: 620px;
+
+                color: var(--story-white);
+
+                font-size: clamp(25px, 6vw, 34px);
+
+                line-height: 1.55;
+
+                font-weight: 700;
+
+                letter-spacing: -0.025em;
+
+                text-align: center;
+
+                background: none;
+
+                -webkit-text-fill-color: initial;
+
+                text-shadow: none;
             }
 
             .glass-card p.paragraph-target {
@@ -1140,14 +1292,21 @@
                 text-shadow: none; /* تمیز نگه داشتن متن */
             }
 
-            .glass-card p.paragraph-target b,
-            .glass-card p.paragraph-target strong {
-                background: linear-gradient(120deg, var(--text-ivory) 0%, var(--accent-sage) 100%);
-                -webkit-background-clip: text;
-                -webkit-text-fill-color: transparent;
-                font-weight: 600;
-                padding: 0 2px;
-                filter: drop-shadow(0 0 8px rgba(157, 179, 155, 0.2)); /* درخشش زیرپوستی برای بولدها */
+            .story-content-wrapper b,
+            .story-content-wrapper strong,
+            .text-highlight {
+                color: var(--story-white);
+
+                font-weight: 650;
+
+                background: none;
+
+                -webkit-background-clip: initial;
+                -webkit-text-fill-color: initial;
+
+                filter: none;
+
+                padding: 0;
             }
 
             /* 📊 Chart Background Pulse */
@@ -1188,48 +1347,18 @@
             }
 
             .text-highlight {
-
                 color: var(--accent-sage);
 
-                font-weight: 500;
+                font-weight: 600;
 
-                background:none;
+                display: inline;
 
-                -webkit-background-clip: initial;
-                -webkit-text-fill-color: initial;
-
-                padding:0 3px;
-
-                position:relative;
-
-                display:inline-block;
-
-                letter-spacing:0.2px;
+                letter-spacing: 0;
             }
 
-            /* 🔮 Liquid Energy Orb (Zen Palette) 🔮 */
-            .sacred-wrapper {
-                position: relative;
-                width: 50px; /* کمی جمع‌وجورتر و متمرکزتر */
-                height: 50px;
-                margin-bottom: 30px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-            }
 
-            .liquid-orb {
-                position: absolute;
-                width: 100%;
-                height: 100%;
-                background: radial-gradient(circle at 30% 30%, rgba(157, 179, 155, 0.4) 0%, transparent 70%);
-                box-shadow: 0 0 25px rgba(157, 179, 155, 0.15);
-                filter: blur(6px); /* بلور بیشتر برای حس ارگانیک بودن */
-                opacity: 0.8;
-                border-radius: 40% 60% 60% 40% / 50% 50% 40% 60%;
-                animation: morph-orb 10s ease-in-out infinite, spin-orb 15s linear infinite; /* کندتر و سیال‌تر */
-                z-index: 1;
-            }
+
+
 
             .emoji-preserve {
                 -webkit-text-fill-color: initial !important;
@@ -1239,42 +1368,22 @@
                 font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif !important;
             }
 
-            .sacred-geometry {
-                position: absolute;
-                width: 100%;
-                height: 100%;
-                transform-style: preserve-3d;
-                perspective: 800px;
-                z-index: 2;
-            }
-
-            @keyframes morph-orb {
-                0%, 100% { border-radius: 40% 60% 60% 40% / 50% 50% 40% 60%; }
-                33% { border-radius: 60% 40% 50% 50% / 40% 60% 50% 40%; }
-                66% { border-radius: 50% 50% 40% 60% / 60% 40% 60% 40%; }
-            }
-
-            @keyframes spin-orb {
-                100% { transform: rotate(360deg); }
-            }
 
             .story-chapter {
+                margin: 0 0 18px;
 
-                text-align:center;
+                color: var(--story-text-soft);
 
-                font-size:11px;
+                font-size: 11px;
+                line-height: 1.4;
 
-                letter-spacing:2px;
+                font-weight: 500;
 
-                color:var(--accent-sage);
+                letter-spacing: 0.14em;
 
-                opacity:.65;
+                text-align: center;
 
-                margin-bottom:18px;
-
-                text-transform:uppercase;
-
-                font-weight:500;
+                text-transform: uppercase;
             }
 
             .story-divider {
@@ -1294,18 +1403,27 @@
             }
 
             .story-whisper-container {
-                margin-bottom: 25px;
+                width: min(100%, 540px);
+
+                margin:
+                    0 auto
+                    clamp(28px, 5vh, 44px);
+
                 text-align: center;
-                animation: fadeWhisper 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
             }
 
             .story-whisper {
-                color: rgba(253, 251, 247, 0.6);
-                font-size: 13px;
-                line-height: 1.7;
-                font-style: italic;
-                font-weight: 300;
-                letter-spacing: 0.5px;
+                color: var(--story-text-soft);
+
+                font-size: 14px;
+                line-height: 2;
+
+                font-style: normal;
+                font-weight: 400;
+
+                letter-spacing: 0;
+
+                text-wrap: balance;
             }
 
             @keyframes fadeWhisper {
@@ -1314,12 +1432,16 @@
             }
 
             .story-content-wrapper {
-                margin-top: 0;
-                padding-top: 0;
                 width: 100%;
+
+                margin-top: 0;
+
+                padding: 0;
+
                 position: relative;
                 z-index: 2;
-                text-align: right; /* راست‌چین برای فارسی */
+
+                text-align: right;
             }
 
             .story-content-wrapper::-webkit-scrollbar {
@@ -1334,24 +1456,62 @@
             }
 
             .story-content-wrapper ul.soul-list {
-                margin: 15px 0 !important;
-                padding-right: 15px !important;
+                margin: 28px 0;
+
+                padding: 0 24px 0 0;
+
+                list-style: none;
             }
 
             .story-content-wrapper ul.soul-list li {
-                margin-bottom: 12px !important;
-                line-height: 1.9 !important;
-                color: rgba(253, 251, 247, 0.85);
+                position: relative;
+
+                margin-bottom: 16px;
+                padding-right: 18px;
+
+                color: var(--story-text);
+
+                font-size: inherit;
+                line-height: 2;
+            }
+
+            .story-content-wrapper ul.soul-list li::before {
+                content: "";
+
+                position: absolute;
+
+                top: 0.95em;
+                right: 0;
+
+                width: 4px;
+                height: 4px;
+
+                border-radius: 50%;
+
+                background: var(--accent-sage);
+
+                transform: translateY(-50%);
             }
 
             .story-content-wrapper p {
-                margin: 0 0 25px 0; /* تنفس بیشتر بین پاراگراف‌ها */
-                color: rgba(253, 251, 247, 0.9);
-                line-height: 2.1;
-                font-size: 15px;
-                font-weight: 300;
-                letter-spacing: 0.3px;
-                text-shadow: none; /* حذف سایه‌های تارکننده روی متن */
+                max-width: 640px;
+
+                margin: 0 0 24px;
+
+                color: var(--story-text);
+
+                font-size: clamp(15px, 2.9vw, 17px);
+
+                line-height: 2.05;
+
+                font-weight: 400;
+
+                letter-spacing: 0;
+
+                text-align: right;
+
+                text-shadow:
+                    0 1px 12px rgba(0, 0, 0, 0.18);
             }
 
             .story-content-wrapper p:last-child {
@@ -1462,13 +1622,6 @@
                 letter-spacing: 0.5px;
             }
 
-            /* 🌌 Glass Card Enhancements (Ambient Glow) */
-            .glass-card {
-                background: rgba(18, 19, 20, 0.65); /* یکدست با بقیه کارت‌ها */
-                border: 1px solid rgba(255, 255, 255, 0.05);
-                box-shadow: 0 20px 40px rgba(0, 0, 0, 0.7);
-                overflow: hidden;
-            }
 
             .card-ambient-glow {
                 position: absolute;
@@ -1749,6 +1902,10 @@
 
         <!-- Story Mode Result Container -->
         <div id="result-container">
+            <div class="story-background" aria-hidden="true">
+                <div class="story-background-image"></div>
+                <div class="story-background-vignette"></div>
+            </div>
         <div class="smart-nav-wrapper">
             <div class="nav-pill">
                 <button class="nav-btn prev-btn" id="btn-prev" onclick="prevSlide()">
@@ -2406,11 +2563,6 @@
                                 <div class="card-ambient-glow comparison-glow"></div>
                                 <div class="glass-card-content">
                                     <div class="sacred-wrapper" style="margin-bottom: 20px;">
-                                        <div class="liquid-orb dual-orb" style="box-shadow: 0 0 30px rgba(212, 175, 55, 0.2);"></div>
-                                        <div class="sacred-geometry">
-                                            <div class="geom-ring" style="border-color: rgba(212, 175, 55, 0.4);"></div>
-                                            <div class="geom-ring" style="transform: scale(0.8) translateX(10px); border-color: rgba(212, 175, 55, 0.2);"></div>
-                                        </div>
                                     </div>
 
                                     <div class="story-chapter comparison-chapter" style="color: var(--comparison-accent); font-weight: 700; letter-spacing: 2px; font-size: 11px; margin-bottom: 10px;">
@@ -2446,10 +2598,6 @@
                             <div class="glass-card-content">
                                 <div class="sacred-wrapper" style="margin-bottom: 25px;">
                                     <div class="climax-portal" style="box-shadow: inset 0 0 20px rgba(212, 175, 55, 0.5), 0 0 30px rgba(212, 175, 55, 0.2);"></div>
-                                    <div class="sacred-geometry">
-                                        <div class="geom-ring climax-ring-1" style="border-color: rgba(212, 175, 55, 0.5);"></div>
-                                        <div class="geom-ring climax-ring-2" style="border-color: rgba(212, 175, 55, 0.3);"></div>
-                                    </div>
                                 </div>
 
                                 <div class="story-chapter climax-chapter" style="color: #D4AF37; font-weight: 700; letter-spacing: 2px; font-size: 11px; margin-bottom: 12px; text-transform: uppercase;">
@@ -2801,13 +2949,6 @@
                                 <div class="card-ambient-glow"></div>
 
                                 <div class="glass-card-content">
-                                    <div class="sacred-wrapper" style="margin-bottom: 20px;">
-                                        <div class="liquid-orb" style="box-shadow: 0 0 30px var(--accent-glow);"></div>
-                                        <div class="sacred-geometry">
-                                            <div class="geom-ring"></div>
-                                            <div class="geom-ring" style="opacity: 0.6; transform: scale(0.85);"></div>
-                                            <div class="geom-ring" style="opacity: 0.3; transform: scale(0.7);"></div>
-                                        </div>
                                     </div>
 
                                     ${chapterBlock}
@@ -2816,7 +2957,7 @@
                                         style="text-align:center; margin:0 0 15px 0; font-size:24px; font-weight:700; background: linear-gradient(135deg, #FFFFFF 40%, var(--accent-sage) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; line-height:1.5; position:relative; z-index:2; text-shadow: 0 4px 20px rgba(0,0,0,0.2);">
                                     </h2>
 
-                                    <div style="width:40px; height:3px; background:linear-gradient(to right, transparent, var(--accent-sage), transparent); margin:0 auto 20px; border-radius: 2px; opacity:0.8;"></div>
+                                    <div class="story-title-rule" aria-hidden="true"></div>
 
                                     ${whisperBlock}
 
@@ -2839,14 +2980,8 @@
 
             function setAtmosphere(hex, rgb) {
                 const root = document.documentElement;
+
                 root.style.setProperty('--accent-sage', hex);
-                // دادن عمق و حجم بیشتر به هاله‌های پس‌زمینه برای خروج از حالت تخت
-                root.style.setProperty('--accent-glow', `rgba(${rgb}, 0.25)`);
-                root.style.setProperty('--blob-1', `rgba(${rgb}, 0.20)`);
-                root.style.setProperty('--blob-2', `rgba(${rgb}, 0.15)`);
-                root.style.setProperty('--blob-3', `rgba(${rgb}, 0.10)`);
-                // ایجاد یک گرادیانت نرم و درخشان برای کلمات کلیدی
-                root.style.setProperty('--text-highlight-grad', `linear-gradient(135deg, #FFFFFF 15%, ${hex} 100%)`);
             }
 
             function applyMoodTheme(){
