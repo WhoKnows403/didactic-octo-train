@@ -717,31 +717,24 @@
                 background: var(--story-ink);
             }
             .story-background {
-                position: absolute;
-                inset: 0;
-
-                z-index: -2;
-
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 45vh; /* دقیقا ۴۵ درصد از ارتفاع صفحه را می‌گیرد */
+                z-index: 1;
                 overflow: hidden;
-
-                pointer-events: none;
             }
 
             .story-background-image {
                 position: absolute;
-                inset: -2%;
-
+                inset: 0;
                 background-image: url("analysis_image.webp");
                 background-size: cover;
-                background-position: center center;
+                background-position: center;
                 background-repeat: no-repeat;
-
-                transform: scale(1.015);
-
-                filter:
-                    saturate(0.82)
-                    brightness(0.72)
-                    contrast(0.96);
+                /* فیلترهای نوری خودت رو نگه داشتم */
+                filter: saturate(0.82) brightness(0.72) contrast(0.96);
             }
 
             .story-background-vignette {
@@ -1060,36 +1053,35 @@
                 to { transform: rotate(360deg); }
             }
 
-            /* 💠 Glass Card Restyling */
             .glass-card {
                 position: relative;
-                width: var(--story-content-width, 90%);
-                margin: 0 auto 30px auto;
+                width: 100%; /* عرض کامل صفحه را می‌گیرد */
+                margin: 40vh auto 0 auto; /* هل داده می‌شود به پایین تا زیر عکس قرار بگیرد */
 
-                /* ---------------------------------------- */
-                /* اصلاحات دقیق برای زنده شدن پس‌زمینه */
-                /* ---------------------------------------- */
+                /* یک رنگ تاریکِ کاملا سالید و غیرشفاف (می‌توانی کد رنگ رو بر اساس تم خودت دقیق کنی) */
+                background: #1a1a1c;
 
-                /* ۱. رنگ پایه: تغییر از هاله سفید به یک هاله تیره (دودی) */
-                /* این کار باعث میشه متن سفیدت روی عکس روشن هم عالی خوانده بشه */
-                background: rgba(15, 15, 20, 0.45);
+                /* فقط گوشه‌های بالا انحنا دارند، دقیقا مثل سیستم‌عامل iOS */
+                border-radius: 32px 32px 0 0;
 
-                /* ۲. کاهش شدید بلور: از 16px به 6px یا 8px می‌رسیم */
-                /* اشباع رنگ (saturate) رو هم کمی پایین میاریم تا عکس طبیعی‌تر بمونه */
-                backdrop-filter: blur(8px) saturate(110%);
-                -webkit-backdrop-filter: blur(8px) saturate(110%);
+                /* یک خط بسیار ظریف در لبه بالایی برای القای حس برجستگی */
+                border-top: 1px solid rgba(255, 255, 255, 0.08);
+                border-left: none;
+                border-right: none;
+                border-bottom: none;
 
-                /* ۳. حاشیه نوری: برای اینکه شیشه بودن حس بشه، این لاین رو نگه می‌داریم */
-                border: 1px solid rgba(255, 255, 255, 0.12);
+                /* سایه رو به بالا تا پنل از عکس جدا شود */
+                box-shadow: 0 -15px 40px rgba(0, 0, 0, 0.6);
 
-                border-radius: 24px;
+                /* پدینگ پایین رو زیاد دادم که وقتی اسکرول به آخر می‌رسد، متن زیر دکمه‌ها نرود */
+                padding: 35px 25px 120px 25px;
 
-                /* سایه رو کمی نرم‌تر می‌کنیم تا کادر از پس‌زمینه جدا بشه */
-                box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+                /* حذف کامل بلور و افکت‌های شیشه‌ای */
+                backdrop-filter: none;
+                -webkit-backdrop-filter: none;
 
-                padding: 35px 25px;
-                overflow: hidden;
-                z-index: 1;
+                z-index: 2; /* بالاتر از عکس قرار می‌گیرد */
+                min-height: 60vh; /* حداقل ارتفاع تا پایین صفحه را پر کند */
             }
 
             .glass-card-content {
@@ -1149,21 +1141,22 @@
 
             /* ---- Navigation Pill ---- */
             .smart-nav-wrapper {
-                position: absolute;
-
-                bottom:
-                    max(22px, env(safe-area-inset-bottom));
-
+                position: fixed;
+                bottom: 0;
                 left: 0;
-
                 width: 100%;
 
+                /* هم‌رنگ با بک‌گراند پنل محتوا */
+                background: #1a1a1c;
+
+                /* یک هاله نوری در بالای دکمه‌ها تا حس جدا شدن از متن اسکرول‌شونده را بدهد */
+                box-shadow: 0 -10px 30px rgba(26, 26, 28, 0.95);
+
+                padding: 15px 20px 25px 20px; /* پدینگ برای دکمه‌ها */
+                z-index: 10; /* بالاترین لایه تا همیشه در دسترس باشد */
+
                 display: flex;
-                justify-content: center;
-
-                z-index: 50;
-
-                pointer-events: none;
+                justify-content: center; /* اگر ساختار داخلی دکمه‌هایت فلکس است این کمک می‌کند */
             }
 
 
