@@ -236,6 +236,7 @@
                 position: relative; z-index: 30;
             }
 
+
             .q-counter {
                 color: rgba(253, 251, 247, 0.72);
 
@@ -312,23 +313,23 @@
            /* 🎵 Ambient Music Toggle */
             .music-toggle {
                 position: absolute;
-                top: 25px;
-                left: 25px;
-                width: 44px;
-                height: 44px;
+                top: 20px;
+                left: 20px;
+                width: 42px;
+                height: 42px;
                 border-radius: 50%;
-                background: rgba(13, 13, 14, 0.4);
-                border: 1px solid rgba(255, 255, 255, 0.05);
+                background: rgba(13, 13, 14, 0.45);
+                border: 1px solid rgba(255, 255, 255, 0.12);
                 color: var(--text-muted);
                 display: flex;
                 align-items: center;
                 justify-content: center;
                 cursor: pointer;
                 z-index: 100;
-                backdrop-filter: blur(10px);
-                -webkit-backdrop-filter: blur(10px);
-                transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+                backdrop-filter: blur(12px);
+                -webkit-backdrop-filter: blur(12px);
+                transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
             }
 
             .music-toggle:active {
@@ -337,16 +338,15 @@
             }
 
             .music-toggle svg {
-                width: 18px;
-                height: 18px;
+                width: 20px;
+                height: 20px;
                 fill: currentColor;
-                transition: all 0.4s ease;
             }
 
             .music-toggle.playing {
-                color: var(--accent-warm); /* طلایی شامپاینی برای حالت فعال */
-                border-color: rgba(212, 175, 55, 0.2);
-                box-shadow: 0 0 20px rgba(212, 175, 55, 0.08);
+                color: var(--accent-warm, #d4af37);
+                border-color: rgba(212, 175, 55, 0.3);
+                box-shadow: 0 0 20px rgba(212, 175, 55, 0.15);
             }
 
             /* 🎴 Question Stage */
@@ -386,55 +386,46 @@
             }
 
             .q-text-content {
-                max-width: 350px;
-
-                font-size: 22px;
+                font-family: 'Vazirmatn', 'Yekan Bakh', sans-serif; /* حتماً فونت استاندارد فارسی تعریف شود */
+                font-size: clamp(1.1rem, 2.3vw, 1.35rem);
                 font-weight: 400;
-
                 line-height: 1.85;
-
-                letter-spacing: 0;
-
-                color: var(--text-ivory);
-
+                color: #ffffff;
                 text-align: center;
-
-                text-wrap: balance;
-
-                text-shadow:
-                    0 2px 10px rgba(0, 0, 0, 0.32),
-                    0 6px 24px rgba(0, 0, 0, 0.20);
-
-                position: relative;
-                z-index: 21;
+                direction: rtl;
+                letter-spacing: -0.2px;
+                text-shadow: 0 4px 25px rgba(0, 0, 0, 0.7);
+                max-width: 520px;
+                margin: 0 auto;
             }
 
             /* 🔘 Interaction Area (Likert Scale) */
             .interaction-area {
                 width: 100%;
-
-                margin-bottom: 50px;
-
-                position: relative;
-
-                z-index: 30;
+                max-width: 420px;
+                margin: 0 auto;
+                padding: 0 24px;
             }
 
             .scale-container {
                 position: relative;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
                 width: 100%;
-                padding: 0 10px;
             }
+
 
             .scale-line {
                 position: absolute;
-                top: 15px;
-                left: 25px;
-                right: 25px;
-                height: 1px; /* مایکرو-لاین ظریف */
+                top: 20px; /* وسط دایره ۴۰ پیکسلی */
+                left: 20px;
+                right: 20px;
+                height: 1px;
                 background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1) 15%, rgba(255, 255, 255, 0.1) 85%, transparent);
-                z-index: 0;
+                z-index: 1;
                 border-radius: 2px;
+
             }
 
             .options-grid {
