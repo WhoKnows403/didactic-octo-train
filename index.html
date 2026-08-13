@@ -369,39 +369,45 @@
 
             #card {
                 width: 100%;
-                max-width: 440px;
-                min-height: 160px;
+                max-width: 420px;
+                min-height: 150px;
                 display: flex;
                 flex-direction: column;
                 align-items: center;
                 justify-content: center;
                 text-align: center;
-                /* position: absolute; را حذف نکردم تا انیمیشن‌های جاوااسکریپتت خراب نشه */
                 position: absolute;
                 opacity: 1;
-
-                /* 🔴 جادوی Glassmorphism برای نجات خوانایی 🔴 */
-                background: rgba(18, 20, 24, 0.45); /* بک‌گراند تیره نیمه‌شفاف */
-                backdrop-filter: blur(16px);
-                -webkit-backdrop-filter: blur(16px);
-                border: 1px solid rgba(255, 255, 255, 0.12);
-                border-radius: 20px;
-                box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
-                padding: 24px 20px;
+                padding: 28px 22px;
                 box-sizing: border-box;
                 z-index: 20;
+
+                /* 🌟 جادوی شیشه شفاف: رنگ کدر حذف شد! */
+                background: rgba(255, 255, 255, 0.03); /* فقط ۳ درصد سفیدی، کاملا شفاف */
+                backdrop-filter: blur(25px) saturate(120%); /* بلر بالا برای جداسازی متن از درخت */
+                -webkit-backdrop-filter: blur(25px) saturate(120%);
+
+                /* لبه نوری بسیار ظریف به جای سایه کثیف */
+                border: 1px solid rgba(255, 255, 255, 0.15);
+                border-radius: 24px;
+
+                /* سایه عمیق اما بسیار نرم و مدرن */
+                box-shadow:
+                    0 30px 60px rgba(0, 0, 0, 0.4),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.2);
             }
 
+            /* متن سوال روی شیشه */
             .q-text-content {
                 max-width: 100%;
-                font-size: clamp(17px, 4.5vw, 21px);
-                font-weight: 500; /* وزن بیشتر برای جبران بلر پس‌زمینه */
-                line-height: 1.85;
-                letter-spacing: -0.2px;
-                color: #FFFFFF; /* اجبار به سفید خالص */
+                font-size: clamp(17px, 4.2vw, 20px);
+                font-weight: 500;
+                line-height: 1.9;
+                color: #FFFFFF;
                 text-align: center;
                 text-wrap: balance;
-                text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6); /* سایه استانداردتر */
+                /* سایه متن برای وضوح بیشتر بدون کثیف کردن صفحه */
+                text-shadow: 0 2px 12px rgba(0, 0, 0, 0.7);
                 position: relative;
                 z-index: 21;
                 direction: rtl;
