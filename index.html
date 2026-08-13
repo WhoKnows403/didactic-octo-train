@@ -1063,37 +1063,43 @@
             /* 💠 Glass Card Restyling */
             .glass-card {
                 position: relative;
+                width: var(--story-content-width, 90%); /* عرض مناسب برای جلوگیری از چسبیدن به لبه‌های گوشی */
+                margin: 0 auto 30px auto; /* وسط‌چین کردن و ایجاد فاصله از پایین */
 
-                width: var(--story-content-width);
+                /* ---------------------------------------- */
+                /* اصول مهندسی گلس‌مورفیسم (Glassmorphism) */
+                /* ---------------------------------------- */
 
-                margin: 0 auto;
+                /* ۱. رنگ پایه: یک لایه بسیار شفاف از رنگ سفید یا مشکی. برای تم تاریک، سفید با شفافیت ۸ درصد عالی است */
+                background: rgba(255, 255, 255, 0.08);
 
-                padding:
-                    clamp(10px, 2vw, 18px)
-                    0
-                    30px;
+                /* ۲. افکت محوشدگی (Blur): این مهم‌ترین بخش است. پس‌زمینه زیر باکس را تار و رنگ‌هایش را کمی غلیظ می‌کند */
+                backdrop-filter: blur(16px) saturate(120%);
+                -webkit-backdrop-filter: blur(16px) saturate(120%); /* برای پشتیبانی در سافاری/iOS */
 
-                background: transparent;
+                /* ۳. حاشیه نوری (Border Reflection): شیشه واقعی همیشه در لبه‌ها نور را بازتاب می‌دهد */
+                border: 1px solid rgba(255, 255, 255, 0.15);
 
-                border: 0;
-                border-radius: 0;
+                /* ۴. انحنا (Border Radius): گوشه‌های نرم، حس روانی امن‌تر و مدرن‌تری به کاربر می‌دهد */
+                border-radius: 24px;
 
-                box-shadow: none;
+                /* ۵. سایه و عمق (Box Shadow): برای جدا کردن جعبه از پس‌زمینه و ایجاد حس معلق بودن */
+                box-shadow: 0 10px 40px rgba(0, 0, 0, 0.25);
 
-                backdrop-filter: none;
-                -webkit-backdrop-filter: none;
+                /* فضای تنفس (Padding): متن هرگز نباید به دیواره‌های شیشه بچسبد */
+                padding: 35px 25px;
+
+                overflow: hidden; /* جلوگیری از بیرون زدن هاله‌های نوری داخلی */
+                z-index: 1;
             }
-
-
 
             .glass-card-content {
                 position: relative;
-
                 display: flex;
                 flex-direction: column;
                 align-items: center;
-
                 width: 100%;
+                z-index: 2; /* محتوا باید یک لایه بالاتر از شیشه باشد */
             }
 
 
@@ -1433,14 +1439,10 @@
 
             .story-content-wrapper {
                 width: 100%;
-
-                margin-top: 0;
-
+                margin-top: 20px; /* فاصله دادن از تیتر بالا */
                 padding: 0;
-
                 position: relative;
                 z-index: 2;
-
                 text-align: right;
             }
 
@@ -1456,11 +1458,10 @@
             }
 
             .story-content-wrapper ul.soul-list {
-                margin: 28px 0;
-
-                padding: 0 24px 0 0;
-
+                margin: 20px 0;
+                padding: 0 20px 0 0;
                 list-style: none;
+                border-right: 2px solid rgba(255, 255, 255, 0.1); /* یک خط راهنمای ظریف در کنار لیست */
             }
 
             .story-content-wrapper ul.soul-list li {
@@ -1477,41 +1478,30 @@
 
             .story-content-wrapper ul.soul-list li::before {
                 content: "";
-
                 position: absolute;
-
-                top: 0.95em;
+                top: 14px; /* تنظیم دقیق محل بولت */
                 right: 0;
-
-                width: 4px;
-                height: 4px;
-
+                width: 6px;
+                height: 6px;
                 border-radius: 50%;
-
-                background: var(--accent-sage);
-
-                transform: translateY(-50%);
+                background: var(--accent-sage); /* رنگ سبز/تاکیدی شما */
+                box-shadow: 0 0 8px var(--accent-sage); /* درخشش ملایم بولت‌پوینت‌ها */
             }
 
             .story-content-wrapper p {
                 max-width: 640px;
-
                 margin: 0 0 24px;
 
-                color: var(--story-text);
+                /* رنگ متن روی شیشه تاریک باید سفید با شفافیت بالا باشد تا چشم را نزند */
+                color: rgba(255, 255, 255, 0.9);
 
-                font-size: clamp(15px, 2.9vw, 17px);
-
-                line-height: 2.05;
-
-                font-weight: 400;
-
-                letter-spacing: 0;
-
+                font-size: clamp(15px, 3vw, 17px);
+                line-height: 2.1; /* فاصله خطوط (Leading) بیشتر، خوانایی متن‌های طولانی را راحت‌تر می‌کند */
+                font-weight: 300; /* وزن سبک‌تر برای انتقال حس آرامش */
                 text-align: right;
 
-                text-shadow:
-                    0 1px 12px rgba(0, 0, 0, 0.18);
+                /* یک سایه بسیار نرم زیر خود متن برای تضمین خوانایی در صورت روشن بودن پس‌زمینه عکس */
+                text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
             }
 
             .story-content-wrapper p:last-child {
@@ -2945,27 +2935,25 @@
                         ` : "";
 
                        slideDiv.innerHTML = `
-                            <div class="glass-card" style="padding: 25px;">
-                                <div class="card-ambient-glow"></div>
+                        <div class="glass-card" style="padding: 25px;">
+                            <div class="card-ambient-glow"></div>
 
-                                <div class="glass-card-content">
-                                    </div>
+                            <div class="glass-card-content"> <!-- باز شد -->
+                                ${chapterBlock}
 
-                                    ${chapterBlock}
+                                <h2 class="typewriter-target" data-text="${cleanTitle}"
+                                    style="text-align:center; margin:0 0 15px 0; font-size:24px; font-weight:700; background: linear-gradient(135deg, #FFFFFF 40%, var(--accent-sage) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; line-height:1.5; position:relative; z-index:2; text-shadow: 0 4px 20px rgba(0,0,0,0.2);">
+                                </h2>
 
-                                    <h2 class="typewriter-target" data-text="${cleanTitle}"
-                                        style="text-align:center; margin:0 0 15px 0; font-size:24px; font-weight:700; background: linear-gradient(135deg, #FFFFFF 40%, var(--accent-sage) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; line-height:1.5; position:relative; z-index:2; text-shadow: 0 4px 20px rgba(0,0,0,0.2);">
-                                    </h2>
+                                <div class="story-title-rule" aria-hidden="true"></div>
 
-                                    <div class="story-title-rule" aria-hidden="true"></div>
+                                ${whisperBlock}
 
-                                    ${whisperBlock}
-
-                                    <div class="story-content-wrapper paragraph-target" style="line-height: 1.8; font-size: 15px; color: rgba(255,255,255,0.85); font-weight: 300;">
-                                        ${formattedContent}
-                                    </div>
+                                <div class="story-content-wrapper paragraph-target" style="line-height: 1.8; font-size: 15px; color: rgba(255,255,255,0.85); font-weight: 300;">
+                                    ${formattedContent}
                                 </div>
-                            </div>
+                            </div> <!-- 👈 اینجا باید بسته بشه! -->
+                        </div>
                         `;
                     }
                     slidesWrapper.appendChild(slideDiv);
