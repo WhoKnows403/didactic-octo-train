@@ -698,16 +698,24 @@
 
 
             /* 📖 Story Mode UI - Premium Experience */
+
             #result-container {
-                display: none; /* توسط JS به flex تغییر می‌کند */
-                flex-direction: column;
-                width: 100%;
-                height: 100%;
-                position: fixed;
-                inset: 0;
-                overflow: hidden; /* جلوگیری از بیرون زدن محتوا */
-                z-index: 1000;
-                background: linear-gradient(180deg, rgba(18,20,22,0.75), rgba(18,20,22,0.95)), url("analysis_image.webp") center/cover no-repeat;
+
+                display:none;
+
+                flex-direction:column;
+
+                background:
+                linear-gradient(
+                    180deg,
+                    rgba(10,12,14,.55),
+                    rgba(10,12,14,.88)
+                ),
+                url("analysis_image.webp");
+
+                background-size:cover;
+                background-position:center;
+
             }
 
             #result-container::before {
@@ -771,36 +779,34 @@
             }
 
             .slide-container {
-                position: relative;
-                flex: 1;
-                width: 100%;
-                overflow: hidden;
-                display: flex;
-                justify-content: center;
-                align-items: center; /* تراز دقیق در وسط صفحه */
-                padding: 0 20px;
-                box-sizing: border-box;
-                z-index: 10;
-            }
 
+                flex:1;
+
+                width:100%;
+
+                display:flex;
+
+                align-items:center;
+
+                justify-content:center;
+
+                padding:80px 20px 100px;
+
+                overflow:hidden;
+
+            }
             .slide {
 
-            position: absolute; /* این خط حیاتی بود که یادت رفته بود! */
-            width: 100%;
-            max-width: 440px; /* جلوگیری از کش آمدن بیش از حد در دسکتاپ */
-            opacity:0;
+
+                position:absolute;
+
+                width:min(440px,92%);
 
 
-            transform:
-            translateY(14px);
+                max-height:calc(100vh - 220px);
 
-
-            transition:
-            opacity .6s ease,
-            transform .6s cubic-bezier(.16,1,.3,1);
 
             }
-
 
             .slide.active {
                 opacity: 1;
@@ -942,57 +948,62 @@
             }
 
             /* 💠 Glass Card Restyling */
+
             .glass-card {
 
-                position:relative;
 
-                width:90%;
+                width:100%;
 
-                margin:0 auto;
-
-
-                padding:30px 24px;
+                max-height:100%;
 
 
-                border-radius:28px;
+                display:flex;
+
+                flex-direction:column;
+
+
+                overflow:hidden;
 
 
                 background:
-                rgba(255,255,255,.035);
-
-
-                border:
-                1px solid rgba(255,255,255,.08);
-
-
-
-                box-shadow:
-
-                0 30px 80px rgba(0,0,0,.35);
+                rgba(20,24,26,.55);
 
 
 
                 backdrop-filter:
-                blur(12px);
+                blur(18px);
 
-
-                -webkit-backdrop-filter:
-                blur(12px);
-                direction: rtl;
 
 
             }
+
 
             .glass-card::before, .glass-card::after {
                 display: none;
             }
 
             .glass-card-content {
-                position: relative;
-                z-index: 2;
-                display: flex;
-                flex-direction: column;
-                align-items: center;
+
+
+                overflow-y:auto;
+
+                max-height:
+                calc(100vh - 270px);
+
+
+
+                padding:32px 24px;
+
+
+
+                scrollbar-width:none;
+
+
+            }
+            .glass-card-content::-webkit-scrollbar{
+
+                display:none;
+
             }
 
             @keyframes rotate-glow {
@@ -1040,15 +1051,12 @@
 
             /* ---- Navigation Pill ---- */
             .smart-nav-wrapper {
-                position: absolute;
-                bottom: 35px;
-                left: 0;
-                width: 100%;
-                display: flex;
-                justify-content: center;
-                z-index: 50;
-                pointer-events: none; /* تا مزاحم کلیک‌های اطراف نشود */
+
+
+                bottom:25px;
+
             }
+
 
             .nav-pill {
                 display: flex;
@@ -1316,10 +1324,11 @@
             }
 
             .story-content-wrapper {
-                margin-top: 0;
-                text-align: right;
-            }
 
+
+                text-align:right;
+
+            }
             .story-content-wrapper::-webkit-scrollbar {
                 width: 2px; /* اسکرول‌بار مایکرو */
             }
@@ -1342,14 +1351,15 @@
                 color: rgba(253, 251, 247, 0.85);
             }
 
+
             .story-content-wrapper p {
-                margin: 0 0 25px 0; /* تنفس بیشتر بین پاراگراف‌ها */
-                color: rgba(253, 251, 247, 0.9);
-                line-height: 2.1;
-                font-size: 15px;
-                font-weight: 300;
-                letter-spacing: 0.3px;
-                text-shadow: none; /* حذف سایه‌های تارکننده روی متن */
+
+
+                font-size:15px;
+
+                line-height:2.05;
+
+
             }
 
             .story-content-wrapper p:last-child {
@@ -2667,7 +2677,7 @@
 
                 parsedSlides.forEach((slide, index) => {
                     const node = document.createElement('div');
-                    node.className = 'neural-node';
+                    node.className = 'story-tick';
                     node.id = `node-${index}`;
                     progressWrapper.appendChild(node);
 
