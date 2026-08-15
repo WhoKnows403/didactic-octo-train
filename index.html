@@ -749,21 +749,36 @@
                 position: absolute;
                 top: 0;
                 left: 0;
-                width: 100%;
-
-                /* عکس فقط 60 درصد بالای صفحه رو می‌گیره */
-                height: 60vh;
+                width: 110%; /* Slightly wider for panning */
+                height: 110%; /* Slightly taller for panning */
 
                 background-image: url("analysis_image.webp");
                 background-size: cover;
-                background-position: center top;
+                background-position: center center;
 
                 /* فیلترهای نوری */
-                filter: saturate(0.85) brightness(0.8) contrast(0.95);
+                filter: saturate(0.85) brightness(0.7) contrast(1.05);
 
                 /* 🔥 جادوی اصلی: محو کردن نرمِ پایین عکس توی بک‌گراند */
-                -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 40%, rgba(0,0,0,0) 100%);
-                mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 40%, rgba(0,0,0,0) 100%);
+                -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 45%, rgba(0,0,0,0) 100%);
+                mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 45%, rgba(0,0,0,0) 100%);
+
+                /* Cinematic movement */
+                animation: cinematicPan 45s ease-in-out infinite alternate;
+                transition: opacity 1.5s ease;
+            }
+
+            @keyframes cinematicPan {
+                0% { transform: scale(1.0) translate(0, 0); }
+                100% { transform: scale(1.1) translate(-2%, -2%); }
+            }
+
+            .story-background-overlay {
+                position: absolute;
+                inset: 0;
+                background: radial-gradient(circle at center, transparent 30%, rgba(18, 18, 20, 0.4) 100%);
+                pointer-events: none;
+                z-index: 0;
             }
 
             .story-background-vignette {
@@ -773,13 +788,14 @@
                 background:
                     linear-gradient(
                         to bottom,
-                        rgba(10, 12, 11, 0.30) 0%,
-                        rgba(10, 12, 11, 0.08) 35%,
-                        rgba(10, 12, 11, 0.22) 62%,
-                        rgba(10, 12, 11, 0.76) 100%
+                        rgba(10, 12, 11, 0.15) 0%,
+                        rgba(10, 12, 11, 0.05) 30%,
+                        rgba(10, 12, 11, 0.25) 60%,
+                        rgba(10, 12, 11, 0.85) 100%
                     );
 
                 pointer-events: none;
+                z-index: 1;
             }
 
             .story-progress-bar {
@@ -790,13 +806,13 @@
                 align-items: center;
 
                 width: 100%;
-                height: 2px;
+                height: 1.5px;
 
-                gap: 4px;
+                gap: 5px;
 
                 margin:
-                    10px 0
-                    clamp(28px, 6vh, 52px);
+                    8px 0
+                    clamp(32px, 7vh, 56px);
             }
 
            .story-tick {
@@ -1277,17 +1293,17 @@
             .glass-card h2.typewriter-target {
                 margin: 0;
 
-                max-width: 620px;
+                max-width: 640px;
 
                 color: var(--story-white);
 
-                font-size: clamp(25px, 6vw, 34px);
+                font-size: clamp(28px, 7.5vw, 42px);
 
-                line-height: 1.55;
+                line-height: 1.35;
 
                 font-weight: 700;
 
-                letter-spacing: -0.025em;
+                letter-spacing: -0.03em;
 
                 text-align: center;
 
@@ -1295,32 +1311,38 @@
 
                 -webkit-text-fill-color: initial;
 
-                text-shadow: none;
+                text-shadow: 0 4px 20px rgba(0,0,0,0.4);
             }
 
             .glass-card p.paragraph-target {
-                font-size: 15px;
-                line-height: 2.1;
-                color: rgba(253, 251, 247, 0.85);
-                letter-spacing: 0.3px;
-                text-shadow: none; /* تمیز نگه داشتن متن */
+                font-size: clamp(15.5px, 4vw, 17.5px);
+                line-height: 2.2;
+                color: rgba(244, 241, 234, 0.82);
+                letter-spacing: 0.4px;
+                text-shadow: none;
+                margin-top: 10px;
+                font-weight: 300;
             }
 
             .story-content-wrapper b,
             .story-content-wrapper strong,
             .text-highlight {
                 color: var(--story-white);
-
-                font-weight: 650;
-
+                font-weight: 600;
                 background: none;
-
                 -webkit-background-clip: initial;
                 -webkit-text-fill-color: initial;
-
                 filter: none;
-
                 padding: 0;
+            }
+
+            .text-highlight.comparison-highlight {
+                color: var(--story-white);
+                background: rgba(210, 194, 172, 0.15);
+                border-bottom: 1.5px solid rgba(210, 194, 172, 0.5);
+                padding: 0 4px;
+                border-radius: 4px;
+                font-weight: 600;
             }
 
             /* 📊 Chart Background Pulse */
@@ -2229,8 +2251,10 @@
 
             let parsedSlides = [];
             let currentSlideIndex = 0;
+            let isComparisonFlow = false;
 
             async function loadAnalysis() {
+                isComparisonFlow = false;
                 document.getElementById('network-error').style.display = 'none';
 
                 const initDataRaw = window.Telegram.WebApp.initData;
@@ -2815,6 +2839,13 @@
                         chartData: data.sakinorva_result
                     });
                 }
+
+                // Add Premium/Final Slide
+                parsedSlides.push({
+                    title: "جهان درون شما",
+                    isClimax: true
+                });
+
                 currentSlideIndex = 0;
 
                 const container = document.getElementById('result-container');
@@ -2826,7 +2857,7 @@
 
                 parsedSlides.forEach((slide, index) => {
                     const node = document.createElement('div');
-                    node.className = 'neural-node';
+                    node.className = slide.isClimax ? 'neural-node climax-node' : 'neural-node';
                     node.id = `node-${index}`;
                     progressWrapper.appendChild(node);
 
@@ -2840,18 +2871,54 @@
                     const slideDiv = document.createElement('div');
                     slideDiv.className = 'slide';
                     slideDiv.id = `slide-${index}`;
-                    const cleanTitle = slide.title.replace(/^\d+\.\s*/, '').replace(/<\/?[^>]+(>|$)/g, "").replace(/\*/g, '');
-                    let safeTitle = cleanTitle.replace(/([\u2700-\u27BF]|[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDD10-\uDDFF])/g, '<span class="emoji-preserve">$1</span>');
-                    const meta = getSlideMeta(cleanTitle);
 
-                    if(slide.isChart) {
+                    if (slide.isClimax) {
+                         slideDiv.innerHTML = `
+                        <div class="glass-card" style="background: transparent; border: none; box-shadow: none; padding: 40px 20px; text-align: center;">
+                            <div class="glass-card-content" style="align-items: center;">
+                                <div class="story-chapter" style="color: var(--accent-sage); opacity: 0.8; letter-spacing: 3px; font-size: 11px; margin-bottom: 20px; text-transform: uppercase;">
+                                    CHAPTER • عمیق‌ترین فصل
+                                </div>
+
+                                <h2 style="font-size: 32px; font-weight: 600; color: var(--story-white); margin-bottom: 25px; line-height: 1.4; text-shadow: 0 4px 15px rgba(0,0,0,0.5);">
+                                    جهان درون شما
+                                </h2>
+
+                                <div style="width: 30px; height: 1px; background: var(--accent-sage); margin: 0 auto 35px; opacity: 0.4;"></div>
+
+                                <p style="font-size: 16px; color: var(--story-text-soft); line-height: 2.1; margin-bottom: 60px; max-width: 340px; margin-left: auto; margin-right: auto; font-weight: 300; text-align: center; letter-spacing: 0.2px;">
+                                    ما تا اینجا فقط سطح را دیدیم؛<br>
+                                    اکنون نوبت به ورود به دنیای درونی‌ترِ شماست.<br>
+                                    جایی که الگوهای پنهان معنا پیدا می‌کنند.
+                                </p>
+
+                                <div class="climax-cta-container" style="width: 100%; display: flex; flex-direction: column; align-items: center; gap: 20px;">
+                                    <button id="btn-submit-order" onclick="handleCreateTelegramOrder()"
+                                        style="background: #F4F1EA; color: #171817; border: none; padding: 18px 45px; border-radius: 14px; font-size: 16px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 12px; transition: all 0.4s cubic-bezier(0.2, 1, 0.3, 1); box-shadow: 0 12px 35px rgba(0,0,0,0.4); width: 100%; max-width: 320px;">
+                                        <span>ورود به جهان درون شما</span>
+                                        <span style="font-size: 20px;">←</span>
+                                    </button>
+                                    <div style="display: flex; flex-direction: column; gap: 4px; align-items: center;">
+                                        <span style="font-size: 13px; color: var(--accent-sage); opacity: 0.8; font-weight: 400; letter-spacing: 0.5px;">
+                                            تحلیل عمیق‌تر الگوهای پنهانِ خود
+                                        </span>
+                                        <span style="font-size: 11px; color: var(--story-text-faint); font-weight: 300; letter-spacing: 1px;">
+                                            PREMIUM EXPERIENCE
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    }
+                    else if(slide.isChart) {
                         const userType = slide.chartData.myers_type || "";
 
                         slideDiv.innerHTML = `
                             <div class="glass-card chart-slide" style="display:flex; flex-direction:column; justify-content:center; align-items:center; padding: 30px 20px;">
                                 <div class="glass-card-content" style="width:100%; text-align:center; position:relative;">
 
-                                    <h2 style="text-align: center; margin: 0 0 5px 0; color: var(--accent-sage); font-weight:700; font-size:26px; text-shadow: 0 4px 15px rgba(0,0,0,0.3); letter-spacing: -0.5px;">${cleanTitle}</h2>
+                                    <h2 style="text-align: center; margin: 0 0 5px 0; color: var(--accent-sage); font-weight:700; font-size:26px; text-shadow: 0 4px 15px rgba(0,0,0,0.3); letter-spacing: -0.5px;">${slide.title}</h2>
                                     <p style="color: rgba(255,255,255,0.6); font-size:13px; font-weight:300; margin-bottom:30px; letter-spacing: 0.5px;">فضای هندسی ادراک و تصمیم‌گیری ${userType ? `(${userType})` : ''}</p>
 
                                     <div style="position:relative; width:280px; height:280px; margin:0 auto; display:flex; justify-content:center; align-items:center;">
@@ -2871,6 +2938,10 @@
                         `;
                     }
                     else {
+                        const cleanTitle = slide.title.replace(/^\d+\.\s*/, '').replace(/<\/?[^>]+(>|$)/g, "").replace(/\*/g, '');
+                        let safeTitle = cleanTitle.replace(/([\u2700-\u27BF]|[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDD10-\uDDFF])/g, '<span class="emoji-preserve">$1</span>');
+                        const meta = getSlideMeta(cleanTitle);
+
                         const safeContent = (slide.content || "");
 
                         // ۱. تبدیل کلمات ستاره‌دار به تگ هایلایت
@@ -3013,6 +3084,18 @@
                         applyMoodTheme(parsedSlides[currentSlideIndex].title, parsedSlides[currentSlideIndex].content);
 
                         const slideData = parsedSlides[currentSlideIndex];
+
+                        // Cinematic Background Polish
+                        const bgImg = document.querySelector('.story-background-image');
+                        if (bgImg) {
+                            if (slideData.isClimax) {
+                                bgImg.style.backgroundImage = 'url("comparison_analysis.webp")';
+                                bgImg.style.opacity = '0.7';
+                            } else {
+                                bgImg.style.backgroundImage = 'url("analysis_image.webp")';
+                                bgImg.style.opacity = '0.9';
+                            }
+                        }
 
                         if (slideData.isChart) {
                             setTimeout(() => {
