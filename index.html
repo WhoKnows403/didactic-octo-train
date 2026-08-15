@@ -664,30 +664,50 @@
             }
 
             .comparison-glow {
-                background: radial-gradient(circle at top right, rgba(194, 168, 120, 0.06) 0%, transparent 70%) !important;
+                background: radial-gradient(circle at 50% 20%, rgba(210, 194, 172, 0.08) 0%, transparent 65%) !important;
+            }
+
+            .glass-card.comparison-card {
+                background: linear-gradient(180deg, rgba(23, 24, 23, 0.45) 0%, rgba(23, 24, 23, 0.75) 100%);
+                backdrop-filter: blur(16px);
+                -webkit-backdrop-filter: blur(16px);
+                border: 1px solid rgba(244, 241, 234, 0.07);
+                border-radius: 20px;
+                box-shadow: 0 12px 35px rgba(0, 0, 0, 0.35);
             }
 
             .text-highlight.comparison-highlight {
-
-                color:var(--text-ivory);
-
-                background:
-                    rgba(194,168,120,0.08);
-
-                border-bottom:
-                    1px solid rgba(194,168,120,0.35);
-
-                padding:0 5px;
-
-                border-radius:6px;
+                color: var(--story-white);
+                background: rgba(210, 194, 172, 0.12);
+                border-bottom: 1px solid rgba(210, 194, 172, 0.45);
+                padding: 1px 6px;
+                border-radius: 4px;
+                font-weight: 600;
             }
 
             .soul-quote.comparison-quote {
-                border-right: 2px solid rgba(194, 168, 120, 0.5);
-                background: linear-gradient(90deg, rgba(194, 168, 120, 0.04) 0%, transparent 100%);
-                padding: 15px 20px;
-                border-radius: 4px;
+                border-right: 2px solid rgba(210, 194, 172, 0.6);
+                background: linear-gradient(90deg, rgba(210, 194, 172, 0.06) 0%, transparent 100%);
+                padding: 18px 22px;
+                border-radius: 6px;
                 font-style: italic;
+                color: var(--story-text);
+                line-height: 2.1;
+                margin: 20px 0;
+            }
+
+            .relationship-signature {
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+                padding: 4px 14px;
+                background: rgba(210, 194, 172, 0.08);
+                border: 1px solid rgba(210, 194, 172, 0.2);
+                border-radius: 999px;
+                font-size: 11px;
+                letter-spacing: 0.08em;
+                color: var(--accent-warm);
+                margin-bottom: 16px;
             }
 
 
@@ -2290,6 +2310,29 @@
                 }
             }
 
+            function getComparisonSlideMeta(titleText) {
+                let meta = { chapter: "", whisper: "" };
+
+                if (titleText.includes('لحظه‌') || titleText.includes('واقعی') || titleText.includes('اتصال') || titleText.includes('شما دو نفر')) {
+                    meta.chapter = "CHAPTER • لحظه‌های مشترک";
+                    meta.whisper = "در هر ارتباط، لحظاتی هست<br>که بدون کلام معنا پیدا می‌کنند.";
+                }
+                else if (titleText.includes('کنار هم') || titleText.includes('رشد') || titleText.includes('به دست') || titleText.includes('هم‌افزایی')) {
+                    meta.chapter = "CHAPTER • افقِ رشد";
+                    meta.whisper = "کنار هم، فضایی برای گسترش و کمال پیدا می‌کنید.";
+                }
+                else if (titleText.includes('اشتباه') || titleText.includes('سکوت') || titleText.includes('فاصله') || titleText.includes('سایه') || titleText.includes('چالش')) {
+                    meta.chapter = "CHAPTER • زاویه‌های دید";
+                    meta.whisper = "تفاوت‌ها، همیشه فاصله نیستند؛<br>گاهی فقط زاویه‌ی دیگری از نگاهند.";
+                }
+                else {
+                    meta.chapter = "CHAPTER • پیوند دو جهان";
+                    meta.whisper = "کاوش در الگوهای نادیده‌ای<br>که میان شما شکل گرفته‌اند.";
+                }
+
+                return meta;
+            }
+
             function getSlideMeta(titleText) {
                 let meta = { chapter: "", whisper: "" };
 
@@ -2536,41 +2579,45 @@
                             return `<p>${para.replace(/\n/g, '<br>')}</p>`;
                         }).join('');
 
-                        const meta = getSlideMeta(cleanTitle);
+                        const meta = getComparisonSlideMeta(cleanTitle);
                         const chapterBlock = meta.chapter ? `
-                            <div class="story-chapter comparison-chapter" style="color: var(--accent-sage); font-weight: 600; letter-spacing: 1px; margin-bottom: 8px;">
+                            <div class="story-chapter comparison-chapter" style="color: var(--accent-warm); font-weight: 500; letter-spacing: 2px; font-size: 11px; margin-bottom: 8px; text-transform: uppercase;">
                                 ${meta.chapter}
                             </div>
                         ` : "";
 
                         const whisperBlock = meta.whisper ? `
-                            <div class="story-whisper-container" style="margin: 15px 0;">
-                                <div class="story-divider" style="display: flex; align-items: center; justify-content: center; gap: 8px; opacity: 0.6;">
-                                    <span style="height: 1px; width: 40px; background: linear-gradient(90deg, transparent, var(--accent-sage));"></span>
-                                    <span style="color: var(--accent-sage); font-size: 12px;">✦</span>
-                                    <span style="height: 1px; width: 40px; background: linear-gradient(-90deg, transparent, var(--accent-sage));"></span>
+                            <div class="story-whisper-container" style="margin: 18px 0 24px 0;">
+                                <div class="story-divider" style="display: flex; align-items: center; justify-content: center; gap: 8px; opacity: 0.45;">
+                                    <span style="height: 1px; width: 36px; background: linear-gradient(90deg, transparent, var(--accent-warm));"></span>
+                                    <span style="color: var(--accent-warm); font-size: 11px;">✦</span>
+                                    <span style="height: 1px; width: 36px; background: linear-gradient(-90deg, transparent, var(--accent-warm));"></span>
                                 </div>
-                                <div class="story-whisper" style="font-style: italic; font-size: 14px; color: rgba(255,255,255,0.7); margin-top: 10px; font-weight: 300;">
+                                <div class="story-whisper" style="font-style: italic; font-size: 14px; color: var(--story-text-soft); margin-top: 10px; font-weight: 300; line-height: 1.9;">
                                     ${meta.whisper}
                                 </div>
                             </div>
                         ` : "";
 
                         slideDiv.innerHTML = `
-                            <div class="glass-card comparison-card" style="padding: 25px;">
+                            <div class="glass-card comparison-card" style="padding: 28px 24px;">
                                 <div class="card-ambient-glow comparison-glow"></div>
                                 <div class="glass-card-content">
+                                    <div class="relationship-signature">
+                                        <span>روایتِ دو نگاه در یک قاب</span>
+                                    </div>
+
                                     ${chapterBlock}
 
                                     <h2 class="typewriter-target" data-text="${cleanTitle}"
-                                        style="text-align:center; margin:0 0 15px 0; font-size:24px; font-weight:700; background: linear-gradient(135deg, #FFFFFF 40%, var(--accent-sage) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; line-height:1.5; position:relative; z-index:2; text-shadow: 0 4px 20px rgba(0,0,0,0.2);">
+                                        style="text-align:center; margin:0 0 15px 0; font-size:24px; font-weight:700; background: linear-gradient(135deg, #FFFFFF 40%, var(--accent-warm) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; line-height:1.5; position:relative; z-index:2; text-shadow: 0 4px 20px rgba(0,0,0,0.3);">
                                     </h2>
 
-                                    <div class="story-title-rule" aria-hidden="true"></div>
+                                    <div class="story-title-rule" style="background: rgba(210, 194, 172, 0.25);" aria-hidden="true"></div>
 
                                     ${whisperBlock}
 
-                                    <div class="story-content-wrapper paragraph-target" style="line-height: 1.8; font-size: 15px; color: rgba(255,255,255,0.85); font-weight: 300;">
+                                    <div class="story-content-wrapper paragraph-target" style="line-height: 1.9; font-size: 15px; color: var(--story-text); font-weight: 300;">
                                         ${formattedContent}
                                     </div>
                                 </div>
@@ -2579,80 +2626,75 @@
                     }
                     else {
                         slideDiv.innerHTML = `
-                        <div class="glass-card comparison-card climax-card" style="padding: 30px 20px; border: 1px solid rgba(212, 175, 55, 0.3); box-shadow: 0 20px 40px -10px rgba(212, 175, 55, 0.15);">
-                            <div class="card-ambient-glow climax-glow" style="background: radial-gradient(circle at 50% 30%, rgba(212, 175, 55, 0.15) 0%, transparent 70%);"></div>
+                        <div class="glass-card comparison-card climax-card" style="padding: 32px 22px; background: linear-gradient(180deg, rgba(23, 24, 23, 0.7) 0%, rgba(20, 21, 20, 0.92) 100%); border: 1px solid rgba(210, 194, 172, 0.2); box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45);">
+                            <div class="card-ambient-glow climax-glow" style="background: radial-gradient(circle at 50% 15%, rgba(210, 194, 172, 0.12) 0%, transparent 65%);"></div>
 
                             <div class="glass-card-content">
-                                <div class="sacred-wrapper" style="margin-bottom: 25px;">
-                                    <div class="climax-portal" style="box-shadow: inset 0 0 20px rgba(212, 175, 55, 0.5), 0 0 30px rgba(212, 175, 55, 0.2);"></div>
+                                <div class="story-chapter climax-chapter" style="color: var(--accent-warm); font-weight: 500; letter-spacing: 2px; font-size: 11px; margin-bottom: 12px; text-transform: uppercase;">
+                                    CHAPTER VII • افقِ ناپیدا
                                 </div>
 
-                                <div class="story-chapter climax-chapter" style="color: #D4AF37; font-weight: 700; letter-spacing: 2px; font-size: 11px; margin-bottom: 12px; text-transform: uppercase;">
-                                    THE DEEP DIVE • لایه‌های پنهانِ این رفاقت
-                                </div>
-
-                                <h2 class="climax-title" style="text-align:center; margin:0 0 15px 0; font-size:30px; font-weight:800; background: linear-gradient(135deg, #FFFFFF 20%, #FDE08B 60%, #D4AF37 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 0 10px 25px rgba(212,175,55,0.2); letter-spacing: -0.5px;">
-                                    جهان درون شما
+                                <h2 class="climax-title" style="text-align:center; margin:0 0 15px 0; font-size:28px; font-weight:700; background: linear-gradient(135deg, #FFFFFF 30%, var(--accent-warm) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 0 8px 25px rgba(210, 194, 172, 0.15); letter-spacing: -0.5px;">
+                                    لایه‌های عمیق‌ترِ این رابطه
                                 </h2>
 
-                                <div style="width:50px; height:3px; background:linear-gradient(to right, transparent, #D4AF37, transparent); margin:0 auto 25px; border-radius: 2px; opacity: 0.9;"></div>
+                                <div style="width:40px; height:2px; background:linear-gradient(to right, transparent, var(--accent-warm), transparent); margin:0 auto 24px; border-radius: 2px; opacity: 0.6;"></div>
 
                                 <div class="story-content-wrapper climax-body" style="font-weight: 300;">
 
-                                    <p class="climax-intro" style="color: rgba(255,255,255,0.9); line-height: 1.8; font-size: 15px; margin-bottom: 25px;">
-                                        <i style="color: #FDE08B; opacity: 0.9;">چیزی که تا اینجا خواندید، تنها اولین لایه از این تعامل بود؛ تصویری اولیه از اینکه این شباهت‌ها و تفاوت‌ها در ظاهر چگونه خودشان را نشان می‌دهند.</i>
+                                    <p class="climax-intro" style="color: var(--story-text); line-height: 1.95; font-size: 15px; margin-bottom: 25px; text-align: justify;">
+                                        <i style="color: var(--accent-warm); opacity: 0.95; font-style: normal; display: block; margin-bottom: 12px; font-weight: 400;">آنچه تا اینجا دیدید، روایتِ نخستین لایه از کنار هم بودن بود؛ تصویری شفاف از نقاط تلاقی و الگوهای رفتاریِ آشکار.</i>
+                                        اما زیر هر گفت‌وگو، لایه‌های پنهانی از درک و احساس جریان دارند. جایی که کلمات تمام می‌شوند و برداشت‌های درونی از یک رویداد مشترک آغاز می‌گردد.
                                         <br><br>
-                                        اما هر ارتباطی، لایه‌هایی دارد که در نگاه اول دیده نمی‌شوند. گاهی دو نفر از یک اتفاق، برداشت کاملاً متفاوتی دارند؛ نه چون یکی اشتباه می‌کند، بلکه چون دنیا را از زاویه‌ی متفاوتی می‌بینند.
-                                        <br><br>
-                                        در <b style="color: #fff; font-weight: 600;">«جهان درون شما»</b>، این بخش‌های کمتر دیده‌شده را دقیق‌تر بررسی می‌کنیم؛ تا ببینیم چرا گاهی چیزی که برای یکی طبیعی است، برای دیگری معنای متفاوتی دارد.
+                                        در گزارش تفصیلیِ <b style="color: var(--story-white); font-weight: 600;">«جهان درون شما»</b>، به آرامی به این لایه‌های نادیده نگاه می‌کنیم تا دلایل ظریفِ تفاوت‌ها و فرصت‌های همدلی را عمیق‌تر لمس کنید.
                                     </p>
 
-                                    <div class="climax-features-grid" style="display: grid; gap: 15px; margin-bottom: 30px;">
-                                        <div class="climax-feature-box" style="background: rgba(212, 175, 55, 0.05); border: 1px solid rgba(212, 175, 55, 0.15); padding: 15px; border-radius: 16px; backdrop-filter: blur(5px);">
-                                            <div class="feature-head" style="color: #D4AF37; font-weight: 600; font-size: 14px; margin-bottom: 8px; display: flex; align-items: center; gap: 8px;">
-                                                <span style="font-size: 16px;">💬</span> یک گفت‌وگو، دو برداشت
+                                    <div class="climax-features-grid" style="display: grid; gap: 12px; margin-bottom: 28px;">
+                                        <div class="climax-feature-box" style="background: rgba(244, 241, 234, 0.03); border: 1px solid rgba(210, 194, 172, 0.12); padding: 16px 18px; border-radius: 12px; backdrop-filter: blur(8px);">
+                                            <div class="feature-head" style="color: var(--accent-warm); font-weight: 500; font-size: 13px; margin-bottom: 6px; display: flex; align-items: center; gap: 8px;">
+                                                <span style="font-size: 15px;">💬</span> یک گفت‌وگو، دو برداشت
                                             </div>
-                                            <p style="color: rgba(255,255,255,0.7); font-size: 13px; line-height: 1.7; margin: 0;">
-                                                چرا در لحظاتی که هر دو نیتِ خوبی دارید، تفاوتِ فکری باعث می‌شود تعبیر متفاوتی از یک گفت‌وگوی مشترک بسازید؟
+                                            <p style="color: var(--story-text-soft); font-size: 13px; line-height: 1.75; margin: 0;">
+                                                چرا گاهی با وجود نیت پاکِ دو طرف، زاویه نگاه‌ها تعابیر متفاوتی از یک جمله می‌سازد؟
                                             </p>
                                         </div>
 
-                                        <div class="climax-feature-box" style="background: rgba(212, 175, 55, 0.05); border: 1px solid rgba(212, 175, 55, 0.15); padding: 15px; border-radius: 16px; backdrop-filter: blur(5px);">
-                                            <div class="feature-head" style="color: #D4AF37; font-weight: 600; font-size: 14px; margin-bottom: 8px; display: flex; align-items: center; gap: 8px;">
-                                                <span style="font-size: 16px;">🧭</span> پشتِ سکوت‌ها و فاصله‌ها
+                                        <div class="climax-feature-box" style="background: rgba(244, 241, 234, 0.03); border: 1px solid rgba(210, 194, 172, 0.12); padding: 16px 18px; border-radius: 12px; backdrop-filter: blur(8px);">
+                                            <div class="feature-head" style="color: var(--accent-warm); font-weight: 500; font-size: 13px; margin-bottom: 6px; display: flex; align-items: center; gap: 8px;">
+                                                <span style="font-size: 15px;">🧭</span> پشتِ سکوت‌ها و فاصله‌ها
                                             </div>
-                                            <p style="color: rgba(255,255,255,0.7); font-size: 13px; line-height: 1.7; margin: 0;">
-                                                وقتی یکی از شما سکوت می‌کند، نفر مقابل معمولاً این سکوت را چطور معنا می‌کند؟ و این تعبیر چقدر با واقعیتِ درون او فاصله دارد؟
+                                            <p style="color: var(--story-text-soft); font-size: 13px; line-height: 1.75; margin: 0;">
+                                                سکوتِ هرکدام از شما چه معنایی دارد و دیگری آن را چگونه می‌شنود؟
                                             </p>
                                         </div>
 
-                                        <div class="climax-feature-box" style="background: rgba(212, 175, 55, 0.05); border: 1px solid rgba(212, 175, 55, 0.15); padding: 15px; border-radius: 16px; backdrop-filter: blur(5px);">
-                                            <div class="feature-head" style="color: #D4AF37; font-weight: 600; font-size: 14px; margin-bottom: 8px; display: flex; align-items: center; gap: 8px;">
-                                                <span style="font-size: 16px;">🤝</span> وقتی کنار هم چیزی می‌سازید
+                                        <div class="climax-feature-box" style="background: rgba(244, 241, 234, 0.03); border: 1px solid rgba(210, 194, 172, 0.12); padding: 16px 18px; border-radius: 12px; backdrop-filter: blur(8px);">
+                                            <div class="feature-head" style="color: var(--accent-warm); font-weight: 500; font-size: 13px; margin-bottom: 6px; display: flex; align-items: center; gap: 8px;">
+                                                <span style="font-size: 15px;">🤝</span> ساختن در کنار یکدیگر
                                             </div>
-                                            <p style="color: rgba(255,255,255,0.7); font-size: 13px; line-height: 1.7; margin: 0;">
-                                                در انجام کارهای مشترک؛ کجا مکمل هم می‌شوید و در چه موقعیت‌هایی ممکن است ناخواسته انرژی یکدیگر را کاهش دهید.؟
+                                            <p style="color: var(--story-text-soft); font-size: 13px; line-height: 1.75; margin: 0;">
+                                                در پروژه‌ها و اهداف مشترک، انرژیِ هم را چگونه تقویت یا ناخواسته مهار می‌کنید؟
                                             </p>
                                         </div>
 
-                                        <div class="climax-feature-box" style="background: rgba(212, 175, 55, 0.05); border: 1px solid rgba(212, 175, 55, 0.15); padding: 15px; border-radius: 16px; backdrop-filter: blur(5px);">
-                                            <div class="feature-head" style="color: #D4AF37; font-weight: 600; font-size: 14px; margin-bottom: 8px; display: flex; align-items: center; gap: 8px;">
-                                                <span style="font-size: 16px;">🌱</span> تأثیری که روی رشدِ هم دارید
+                                        <div class="climax-feature-box" style="background: rgba(244, 241, 234, 0.03); border: 1px solid rgba(210, 194, 172, 0.12); padding: 16px 18px; border-radius: 12px; backdrop-filter: blur(8px);">
+                                            <div class="feature-head" style="color: var(--accent-warm); font-weight: 500; font-size: 13px; margin-bottom: 6px; display: flex; align-items: center; gap: 8px;">
+                                                <span style="font-size: 15px;">🌱</span> ردپای حضور بر رشدِ فردی
                                             </div>
-                                            <p style="color: rgba(255,255,255,0.7); font-size: 13px; line-height: 1.7; margin: 0;">
-                                                حضور هر یک از شما، کدام بخشِ پنهانِ ذهنِ دیگری را بیدار می‌کند و چطور به شناختِ بیشتر و رشدِ هم کمک می‌کنید؟
+                                            <p style="color: var(--story-text-soft); font-size: 13px; line-height: 1.75; margin: 0;">
+                                                حضور او کدام بخشِ خاموش از جهانِ درونی شما را بیدار و بالنده می‌کند؟
                                             </p>
                                         </div>
                                     </div>
 
-                                    <p class="climax-outro" style="color: rgba(255,255,255,0.85); line-height: 1.8; font-size: 14px; margin-bottom: 30px; text-align: center;">
-                                        اگر دوست داشته باشید، <b style="color: #fff;">«جهان درون شما»</b> این مسیر را یک قدم جلوتر می‌برد؛ تا این بار فقط به رفتارها نگاه نکنید، بلکه ببینید چرا گاهی یک اتفاقِ مشترک، برای هر کدام از شما معنای متفاوتی پیدا می‌کند.. 🌿
+                                    <p class="climax-outro" style="color: var(--story-text-soft); line-height: 1.85; font-size: 14px; margin-bottom: 28px; text-align: center;">
+                                        اگر مایلید، می‌توانید این مسیر شناخت را یک گام به جلو بردارید و لایه‌های عمیق‌تر این رابطه را بخوانید. 🌿
                                     </p>
 
                                     <div class="climax-action-area" style="display: flex; justify-content: center;">
-                                        <button id="btn-submit-order" class="climax-cta-button" onclick="handleCreateTelegramOrder()" style="background: linear-gradient(135deg, #D4AF37 0%, #AA8922 100%); border: none; padding: 14px 28px; border-radius: 30px; color: #000; font-weight: 700; font-size: 16px; cursor: pointer; display: flex; align-items: center; gap: 10px; box-shadow: 0 10px 20px rgba(212,175,55,0.3); transition: all 0.3s ease;">
-                                            <span>🔭 جهان درون شما</span>
-                                            <span class="cta-arrow" style="font-size: 20px;">←</span>
+                                        <button id="btn-submit-order" class="climax-cta-button" onclick="handleCreateTelegramOrder()" style="background: var(--accent-warm); border: none; padding: 15px 32px; border-radius: 12px; color: #171817; font-weight: 600; font-size: 15px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; box-shadow: 0 8px 24px rgba(0,0,0,0.3); transition: all 0.3s ease; width: 100%; max-width: 360px;">
+                                            <span>دیدن لایه عمیق‌تر رابطه</span>
+                                            <span class="cta-arrow" style="font-size: 18px;">←</span>
                                         </button>
                                     </div>
 
