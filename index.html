@@ -734,7 +734,7 @@
                 /* عکس فقط 60 درصد بالای صفحه رو می‌گیره */
                 height: 60vh;
 
-                background-image: url("1973.webp");
+                background-image: url("analysis_image.webp");
                 background-size: cover;
                 background-position: center top;
 
@@ -2536,30 +2536,39 @@
                             return `<p>${para.replace(/\n/g, '<br>')}</p>`;
                         }).join('');
 
+                        const meta = getSlideMeta(cleanTitle);
+                        const chapterBlock = meta.chapter ? `
+                            <div class="story-chapter comparison-chapter" style="color: var(--accent-sage); font-weight: 600; letter-spacing: 1px; margin-bottom: 8px;">
+                                ${meta.chapter}
+                            </div>
+                        ` : "";
+
+                        const whisperBlock = meta.whisper ? `
+                            <div class="story-whisper-container" style="margin: 15px 0;">
+                                <div class="story-divider" style="display: flex; align-items: center; justify-content: center; gap: 8px; opacity: 0.6;">
+                                    <span style="height: 1px; width: 40px; background: linear-gradient(90deg, transparent, var(--accent-sage));"></span>
+                                    <span style="color: var(--accent-sage); font-size: 12px;">✦</span>
+                                    <span style="height: 1px; width: 40px; background: linear-gradient(-90deg, transparent, var(--accent-sage));"></span>
+                                </div>
+                                <div class="story-whisper" style="font-style: italic; font-size: 14px; color: rgba(255,255,255,0.7); margin-top: 10px; font-weight: 300;">
+                                    ${meta.whisper}
+                                </div>
+                            </div>
+                        ` : "";
+
                         slideDiv.innerHTML = `
                             <div class="glass-card comparison-card" style="padding: 25px;">
                                 <div class="card-ambient-glow comparison-glow"></div>
                                 <div class="glass-card-content">
-                                    <div class="sacred-wrapper" style="margin-bottom: 20px;">
-                                    </div>
-
-                                    <div class="story-chapter comparison-chapter" style="color: var(--comparison-accent); font-weight: 700; letter-spacing: 2px; font-size: 11px; margin-bottom: 10px;">
-                                        SYNERGY • هم‌افزایی
-                                    </div>
+                                    ${chapterBlock}
 
                                     <h2 class="typewriter-target" data-text="${cleanTitle}"
-                                        style="text-align:center; margin:0 0 15px 0; font-size:24px; font-weight:700; background: linear-gradient(135deg, #FFFFFF 40%, var(--comparison-accent) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; line-height:1.5; position:relative; z-index:2;">
+                                        style="text-align:center; margin:0 0 15px 0; font-size:24px; font-weight:700; background: linear-gradient(135deg, #FFFFFF 40%, var(--accent-sage) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; line-height:1.5; position:relative; z-index:2; text-shadow: 0 4px 20px rgba(0,0,0,0.2);">
                                     </h2>
 
-                                    <div style="width:40px; height:3px; background:linear-gradient(to right, transparent, var(--comparison-accent), transparent); margin:0 auto 20px; border-radius: 2px; opacity:0.8;"></div>
+                                    <div class="story-title-rule" aria-hidden="true"></div>
 
-                                    <div class="story-whisper-container" style="margin-bottom: 20px;">
-                                        <div class="story-divider" style="display: flex; align-items: center; justify-content: center; gap: 8px;">
-                                            <span style="height: 1px; width: 40px; background: linear-gradient(90deg, transparent, var(--comparison-accent)); opacity: 0.5;"></span>
-                                            <span style="color: var(--comparison-accent); font-size: 14px; text-shadow: 0 0 10px var(--comparison-accent);">✦</span>
-                                            <span style="height: 1px; width: 40px; background: linear-gradient(-90deg, transparent, var(--comparison-accent)); opacity: 0.5;"></span>
-                                        </div>
-                                    </div>
+                                    ${whisperBlock}
 
                                     <div class="story-content-wrapper paragraph-target" style="line-height: 1.8; font-size: 15px; color: rgba(255,255,255,0.85); font-weight: 300;">
                                         ${formattedContent}
