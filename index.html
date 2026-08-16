@@ -3397,139 +3397,6 @@
                 return result;
             }
 
-            function normalizePremiumAnalysis(analysis) {
-
-                if (!analysis) {
-                    return [];
-                }
-
-
-                /*
-                * Preferred future format:
-                *
-                * {
-                *   title: "...",
-                *   slides: [...]
-                * }
-                *
-                * If backend already sends slides,
-                * use them directly.
-                */
-
-                if (Array.isArray(analysis.slides)) {
-
-                    return analysis.slides
-                        .filter(Boolean)
-                        .map((slide, index) => ({
-                            id: slide.id || `premium-${index}`,
-
-                            chapter:
-                                slide.chapter ||
-                                `CHAPTER ${toRoman(index + 1)}`,
-
-                            title:
-                                slide.title ||
-                                '',
-
-                            subtitle:
-                                slide.subtitle ||
-                                '',
-
-                            content:
-                                slide.content ||
-                                '',
-
-                            quote:
-                                slide.quote ||
-                                '',
-
-                            type:
-                                slide.type ||
-                                'article'
-                        }));
-                }
-
-
-                /*
-                * Temporary compatibility layer
-                *
-                * This lets the current backend continue working
-                * while we migrate its structure.
-                */
-
-                const slides = [];
-
-
-                if (analysis.title) {
-
-                    slides.push({
-                        id: 'premium-opening',
-
-                        type: 'opening',
-
-                        chapter: 'INNER WORLD',
-
-                        title: analysis.title,
-
-                        subtitle:
-                            analysis.subtitle ||
-                            'پرونده‌ی شخصی شما',
-
-                        content:
-                            analysis.introduction ||
-                            ''
-                    });
-                }
-
-
-                const possibleSections = [
-                    'section_1_text',
-                    'section_2_text',
-                    'section_3_text',
-                    'section_4_text',
-                    'section_5_text',
-                    'section_6_text',
-                    'section_7_text',
-                    'section_8_text'
-                ];
-
-
-                possibleSections.forEach(
-                    (key, index) => {
-
-                        if (!analysis[key]) {
-                            return;
-                        }
-
-
-                        slides.push({
-
-                            id: `premium-section-${index}`,
-
-                            type: 'article',
-
-                            chapter:
-                                `CHAPTER ${toRoman(index + 1)}`,
-
-                            title:
-                                analysis[`section_${index + 1}_title`] ||
-                                '',
-
-                            content:
-                                analysis[key]
-                        });
-                    }
-                );
-
-
-                /*
-                * If the current backend has another shape,
-                * we will replace this adapter once we see
-                * the actual payload.
-                */
-
-                return slides;
-            }
 
             // Premium Inner World Loader and Renderer
 
@@ -3693,9 +3560,7 @@
                 * Convert backend data into editorial slides
                 */
 
-                premiumSlides = normalizePremiumAnalysis(
-                    analysis
-                );
+                premiumSlides = parseMarkdownToSlides(analysis);
 
 
                 /*
@@ -3835,69 +3700,34 @@
 
             function renderPremiumSlides() {
 
-                const wrapper =
-                    document.getElementById(
-                        'premium-slides-wrapper'
-                    );
-
+                const wrapper = document.getElementById(
+                    'premium-slides-wrapper'
+                );
 
                 if (!wrapper) {
                     console.error(
                         '[Inner World] Slides wrapper not found.'
                     );
-
                     return;
                 }
 
-
-                /*
-                * Clear previous render
-                */
-
                 wrapper.innerHTML = '';
 
+                premiumSlides.forEach((slide, index) => {
 
-                /*
-                * Build every slide
-                */
+                    const slideElement =
+                        document.createElement('article');
 
-                premiumSlides.forEach(
-                    (slide, index) => {
+                    slideElement.className = 'premium-slide';
+                    slideElement.dataset.index = index;
+                    slideElement.id = `premium-slide-${index}`;
 
-                        const slideElement =
-                            document.createElement('article');
+                    slideElement.innerHTML =
+                        buildPremiumSlideHTML(slide, index);
 
-
-                        slideElement.className =
-                            'premium-slide';
-
-
-                        slideElement.dataset.index =
-                            index;
-
-
-                        slideElement.id =
-                            `premium-slide-${index}`;
-
-
-                        /*
-                        * Content
-                        */
-
-                        slideElement.innerHTML =
-                            buildPremiumSlideHTML(
-                                slide,
-                                index
-                            );
-
-
-                        wrapper.appendChild(
-                            slideElement
-                        );
-                    }
-                );
+                    wrapper.appendChild(slideElement);
+                });
             }
-
 
             function buildPremiumSlideHTML(slide, index) {
 
@@ -4171,15 +4001,35 @@
             }
 
             function parseMarkdownToSlides(rawText) {
-                const cleanText = rawText.replace(/---/g, '');
 
-                const rawParts = cleanText.split('##').map(p => p.trim()).filter(p => p.length > 0);
+                if (typeof rawText !== 'string' || !rawText.trim()) {
+                    return [];
+                }
 
-                return rawParts.map(part => {
+                const normalizedText = rawText
+                    .replace(/\r\n/g, '\n')
+                    .replace(/\r/g, '\n')
+                    .trim();
+
+                const parts = normalizedText
+                    .split(/^##\s+/m)
+                    .map(part => part.trim())
+                    .filter(Boolean);
+
+                return parts.map(part => {
+
                     const lines = part.split('\n');
-                    const title = lines[0].trim();
-                    const content = lines.slice(1).join('<br><br>').trim();
-                    return { title, content };
+
+                    const title = lines.shift()?.trim() || '';
+
+                    const content = lines
+                        .join('\n')
+                        .trim();
+
+                    return {
+                        title,
+                        content
+                    };
                 });
             }
 
