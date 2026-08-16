@@ -1854,320 +1854,947 @@
                     );
             }
 
-/* Premium Inner World Page - Dark Editorial Psychological Experience */
+/* =========================================================
+   PREMIUM INNER WORLD — DARK EDITORIAL PSYCHOLOGICAL EXPERIENCE
+   Personal Study Room / Living Psychological Book
+   ========================================================= */
             #premium-inner-world {
+
+                --premium-bg: #0d0f0e;
+                --premium-paper: #f0ede6;
+                --premium-soft: rgba(240, 237, 230, 0.72);
+                --premium-muted: rgba(240, 237, 230, 0.46);
+                --premium-faint: rgba(240, 237, 230, 0.20);
+
+                --premium-sage: #aebaa8;
+                --premium-brass: #c3b18d;
+
                 position: fixed;
                 inset: 0;
+
                 z-index: 1000;
+
                 display: none;
-                flex-direction: column;
+
                 width: 100%;
                 height: 100%;
-                overflow: hidden;
-                padding: 0;
-                background: var(--story-ink);
-                isolation: isolate;
-            }
 
-            .premium-background {
+                overflow: hidden;
+
+                background: var(--premium-bg);
+
+                color: var(--premium-paper);
+
+                isolation: isolate;
+
+                direction: rtl;
+
+                font-family: 'Vazirmatn', sans-serif;
+
+                -webkit-font-smoothing: antialiased;
+
+                user-select: none;
+        }
+
+        .premium-atmosphere {
+
+            position: absolute;
+
+            inset: 0;
+
+            z-index: -1;
+
+            overflow: hidden;
+
+            pointer-events: none;
+        }
+
+        .premium-atmosphere-image {
+
+            position: absolute;
+
+            inset: -4%;
+
+            background-image:
+                url("inner_world.webp");
+
+            background-size: cover;
+
+            background-position: center;
+
+            background-repeat: no-repeat;
+
+            opacity: 0.16;
+
+            filter:
+                saturate(0.28)
+                brightness(0.42)
+                contrast(1.02);
+
+            transform: scale(1.02);
+        }
+
+        .premium-atmosphere-vignette {
+
+            position: absolute;
+
+            inset: 0;
+
+            background:
+                linear-gradient(
+                    to bottom,
+                    rgba(13, 15, 14, 0.42) 0%,
+                    rgba(13, 15, 14, 0.10) 35%,
+                    rgba(13, 15, 14, 0.54) 72%,
+                    rgba(13, 15, 14, 0.94) 100%
+                );
+
+            pointer-events: none;
+        }
+
+        .premium-header {
+
+            position: relative;
+
+            z-index: 10;
+
+            width: min(
+                100%,
+                620px
+            );
+
+            margin: 0 auto;
+
+            padding:
+                max(22px, env(safe-area-inset-top))
+                24px
+                0;
+
+            box-sizing: border-box;
+
+            text-align: center;
+        }
+
+
+        .premium-header-meta {
+
+            display: flex;
+
+            justify-content: center;
+
+            align-items: center;
+
+            gap: 7px;
+
+            color: var(--premium-muted);
+
+            font-size: 10px;
+
+            font-weight: 500;
+
+            letter-spacing: 0.12em;
+
+            text-transform: uppercase;
+        }
+
+
+        .premium-header-separator {
+
+            color: var(--premium-brass);
+
+            opacity: 0.65;
+        }
+
+        .premium-story-progress {
+
+            width: min(
+                180px,
+                45vw
+            );
+
+            margin:
+                13px
+                auto
+                0;
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 4px;
+        }
+
+
+        .premium-progress-mark {
+
+            flex: 1;
+
+            height: 1px;
+
+            background:
+                rgba(
+                    240,
+                    237,
+                    230,
+                    0.12
+                );
+
+            transition:
+                background-color 420ms ease,
+                opacity 420ms ease;
+        }
+
+
+        .premium-progress-mark.is-active {
+
+            background:
+                var(--premium-brass);
+
+            opacity: 0.9;
+        }
+
+
+        .premium-progress-mark.is-passed {
+
+            background:
+                rgba(
+                    240,
+                    237,
+                    230,
+                    0.32
+                );
+        }
+
+        .premium-slides-wrapper {
+
+            position: relative;
+
+            flex: 1;
+
+            width: min(
+                100%,
+                700px
+            );
+
+            margin: 0 auto;
+
+            overflow: hidden;
+
+            box-sizing: border-box;
+        }
+
+            .premium-editorial-bg {
                 position: fixed;
                 inset: 0;
                 z-index: -1;
-                background-color: #0a0c0d;
-                opacity: 0.95;
+                background-color: #0D0F0E;
+                pointer-events: none;
             }
 
-            .premium-bg-image {
+            .premium-editorial-bg-image {
                 position: absolute;
                 inset: 0;
                 width: 100%;
                 height: 100%;
                 background-image: url("inner_world.webp");
                 background-size: cover;
-                background-position: center;
+                background-position: center center;
                 background-repeat: no-repeat;
-                filter: saturate(0.7) brightness(0.6) contrast(1.02);
-                opacity: 0.85;
-                transition: opacity 1.5s ease;
+                opacity: 0.20;
+                filter: saturate(0.35) brightness(0.32) contrast(1.08);
             }
 
-            .premium-bg-overlay {
+            .premium-editorial-bg-vignette {
                 position: absolute;
                 inset: 0;
-                background: linear-gradient(
-                    to bottom,
-                    rgba(12, 14, 13, 0.3) 0%,
-                    rgba(12, 14, 13, 0.15) 40%,
-                    rgba(12, 14, 13, 0.6) 100%
-                );
+                background:
+                    radial-gradient(ellipse at 50% 30%, rgba(13, 15, 14, 0.45) 0%, rgba(13, 15, 14, 0.88) 75%, #0D0F0E 100%),
+                    linear-gradient(to bottom, rgba(13, 15, 14, 0.3) 0%, rgba(13, 15, 14, 0.1) 25%, rgba(13, 15, 14, 0.75) 70%, #0D0F0E 100%);
                 pointer-events: none;
-                z-index: 1;
             }
 
-            .premium-content-wrapper {
+            /* Header & Progress Indicator */
+            .premium-editorial-header {
                 position: relative;
-                z-index: 10;
-                flex: 1;
+                z-index: 20;
+                width: 100%;
+                max-width: 620px;
+                margin: 0 auto;
+                padding: max(18px, env(safe-area-inset-top)) clamp(20px, 5vw, 40px) 0;
                 display: flex;
                 flex-direction: column;
                 align-items: center;
-                justify-content: flex-start;
-                padding: clamp(24px, 6vw, 48px) clamp(20px, 5vw, 44px);
-                max-width: 100%;
-                overflow: hidden;
+                box-sizing: border-box;
             }
 
-            .premium-chapter {
-                color: var(--accent-warm);
-                font-size: 12px;
-                font-weight: 500;
-                letter-spacing: 0.2em;
-                text-transform: uppercase;
-                text-align: center;
-                margin-bottom: clamp(16px, 3vh, 28px);
-                opacity: 0.85;
-                line-height: 1.3;
-            }
-
-            .premium-title {
-                font-size: clamp(28px, 7vw, 42px);
-                font-weight: 700;
-                color: var(--story-white);
-                text-align: center;
-                line-height: 1.25;
-                letter-spacing: -0.02em;
-                text-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
-                margin: 0 auto 32px;
-                max-width: 85%;
-                position: relative;
-                z-index: 2;
-            }
-
-            .premium-title-line {
-                width: 42px;
-                height: 1px;
-                background: var(--accent-warm);
-                opacity: 0.35;
-                margin: 28px auto 32px;
-            }
-
-            .premium-section {
+            .premium-editorial-progress {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 6px;
                 width: 100%;
-                max-width: 580px;
-                margin: 0 auto;
-                opacity: 0;
-                transform: translateY(20px);
-                transition: opacity 0.6s var(--story-ease), transform 0.6s var(--story-ease);
+                max-width: 200px;
+                margin: 6px auto 0;
             }
 
-            .premium-section.active {
+            .premium-progress-tick {
+                flex: 1;
+                height: 2px;
+                background: rgba(242, 239, 233, 0.14);
+                border-radius: 1px;
+                transition: background-color 0.4s ease, opacity 0.4s ease;
+            }
+
+            .premium-progress-tick.active {
+                background: #C8B89A;
+                opacity: 0.9;
+            }
+
+            .premium-progress-tick.passed {
+                background: rgba(242, 239, 233, 0.35);
+            }
+
+            /* Slide Container */
+            .premium-slides-container {
+                position: relative;
+                flex: 1;
+                width: 100%;
+                max-width: 640px;
+                margin: 0 auto;
+                overflow: hidden;
+                display: flex;
+                justify-content: center;
+            }
+
+       .premium-slide {
+
+            position: absolute;
+
+            inset: 0;
+
+            width: 100%;
+
+            height: 100%;
+
+            padding:
+                clamp(48px, 9vh, 96px)
+                clamp(24px, 7vw, 52px)
+                130px;
+
+            box-sizing: border-box;
+
+            overflow-y: auto;
+
+            scrollbar-width: none;
+
+            opacity: 0;
+
+            transform:
+                translateY(12px);
+
+            pointer-events: none;
+
+            transition:
+                opacity 480ms
+                cubic-bezier(
+                    0.22,
+                    1,
+                    0.36,
+                    1
+                ),
+                transform 480ms
+                cubic-bezier(
+                    0.22,
+                    1,
+                    0.36,
+                    1
+                );
+        }
+
+
+            .premium-slide::-webkit-scrollbar {
+                display: none;
+            }
+
+            .premium-slide.active {
                 opacity: 1;
                 transform: translateY(0);
+                pointer-events: auto;
             }
 
-            .premium-section-header {
-                font-size: clamp(18px, 4vw, 22px);
+            .premium-slide.is-active {
+
+                opacity: 1;
+
+                transform:
+                    translateY(0);
+
+                pointer-events: auto;
+            }
+
+            .premium-slide.is-before {
+
+                opacity: 0;
+
+                transform:
+                    translateY(-12px);
+            }
+
+
+            .premium-slide.is-after {
+
+                opacity: 0;
+
+                transform:
+                    translateY(12px);
+            }
+
+            .premium-slide.passed {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+
+        .premium-editorial-article {
+
+            width: 100%;
+
+            max-width: 590px;
+
+            margin: 0 auto;
+
+            display: flex;
+
+            flex-direction: column;
+
+            align-items: stretch;
+        }
+
+        .premium-slide-chapter {
+
+            margin-bottom: 18px;
+
+            color:
+                var(--premium-brass);
+
+            font-size: 10px;
+
+            font-weight: 500;
+
+            letter-spacing: 0.16em;
+
+            line-height: 1.5;
+
+            text-align: center;
+
+            text-transform: uppercase;
+
+            opacity: 0.82;
+        }
+
+        .premium-slide-title {
+
+            max-width: 570px;
+
+            margin:
+                0 auto;
+
+            color:
+                var(--premium-paper);
+
+            font-size:
+                clamp(
+                    28px,
+                    7.5vw,
+                    42px
+                );
+
+            font-weight: 600;
+
+            line-height: 1.55;
+
+            letter-spacing: -0.025em;
+
+            text-align: center;
+        }
+
+
+        .premium-slide-subtitle {
+
+            max-width: 460px;
+
+            margin:
+                14px auto 0;
+
+            color:
+                var(--premium-muted);
+
+            font-size: 14px;
+
+            font-weight: 400;
+
+            line-height: 2;
+
+            text-align: center;
+        }
+
+
+        .premium-slide-rule {
+
+            width: 34px;
+
+            height: 1px;
+
+            margin:
+                34px auto 42px;
+
+            background:
+                rgba(
+                    195,
+                    177,
+                    141,
+                    0.38
+                );
+        }
+
+
+        .premium-slide-body {
+
+            width: 100%;
+
+            color:
+                var(--premium-soft);
+
+            font-size:
+                clamp(
+                    15.5px,
+                    3.9vw,
+                    17px
+                );
+
+            font-weight: 400;
+
+            line-height: 2.35;
+
+            letter-spacing: 0;
+
+            text-align: right;
+        }
+
+
+        .premium-slide-body p {
+
+            margin:
+                0 0 27px;
+
+            color:
+                var(--premium-soft);
+
+            line-height: 2.35;
+        }
+
+
+        .premium-slide-body p:last-child {
+
+            margin-bottom: 0;
+        }
+
+        .premium-inline-quote {
+
+            margin:
+                34px 0;
+
+            padding:
+                4px 22px 4px 0;
+
+            border-right:
+                1px solid
+                rgba(
+                    195,
+                    177,
+                    141,
+                    0.55
+                );
+
+            color:
+                var(--premium-paper);
+
+            font-size: 15px;
+
+            font-style: italic;
+
+            line-height: 2.2;
+
+            opacity: 0.88;
+        }
+
+
+        .premium-navigation {
+
+            position: fixed;
+
+            right: 0;
+
+            bottom: 0;
+
+            left: 0;
+
+            z-index: 20;
+
+            display: flex;
+
+            justify-content: center;
+
+            align-items: center;
+
+            gap: 18px;
+
+            padding:
+                18px
+                24px
+                max(
+                    24px,
+                    env(safe-area-inset-bottom)
+                );
+
+            background:
+                linear-gradient(
+                    to top,
+                    rgba(13, 15, 14, 0.96),
+                    rgba(13, 15, 14, 0.72),
+                    transparent
+                );
+
+            pointer-events: none;
+        }
+
+
+        .premium-nav-button {
+
+            min-width: 90px;
+
+            padding: 8px 4px;
+
+            display: inline-flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            gap: 8px;
+
+            border: 0;
+
+            background: transparent;
+
+            color:
+                var(--premium-soft);
+
+            font-family:
+                'Vazirmatn',
+                sans-serif;
+
+            font-size: 12px;
+
+            font-weight: 500;
+
+            cursor: pointer;
+
+            pointer-events: auto;
+
+            transition:
+                color 220ms ease,
+                opacity 220ms ease;
+        }
+
+
+        .premium-nav-index {
+
+            min-width: 32px;
+
+            color:
+                var(--premium-muted);
+
+            font-size: 10px;
+
+            font-weight: 500;
+
+            letter-spacing: 0.12em;
+
+            text-align: center;
+
+            pointer-events: none;
+        }
+
+                .premium-nav-button:hover {
+
+            color:
+                var(--premium-paper);
+        }
+
+
+        .premium-nav-button:disabled {
+
+            opacity: 0.22;
+
+            cursor: default;
+        }
+
+
+        .premium-nav-arrow {
+
+            font-size: 17px;
+
+            line-height: 1;
+
+            color:
+                var(--premium-brass);
+
+            opacity: 0.8;
+        }
+
+
+            .premium-editorial-chapter {
+                font-size: 11px;
+                font-weight: 500;
+                letter-spacing: 0.16em;
+                color: #C8B89A;
+                text-transform: uppercase;
+                text-align: center;
+                margin-bottom: 12px;
+                opacity: 0.85;
+            }
+
+            .premium-editorial-heading {
+                font-size: clamp(22px, 5.5vw, 30px);
                 font-weight: 600;
-                color: var(--story-white);
+                color: #F2EFE9;
                 text-align: center;
-                margin-bottom: 18px;
-                letter-spacing: 0.5px;
+                line-height: 1.45;
+                letter-spacing: -0.01em;
+                margin: 0 auto 16px;
+                max-width: 95%;
             }
 
-            .premium-text {
-                font-size: clamp(15px, 3.8vw, 17px);
-                line-height: 1.85;
-                color: var(--story-text);
-                font-weight: 300;
-                text-align: right;
-                margin: 0;
-                direction: rtl;
-            }
-
-            .premium-whisper-container {
-                margin: 28px auto;
-                max-width: 520px;
-                text-align: center;
-            }
-
-            .premium-whisper-divider {
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                gap: 12px;
-                margin-bottom: 14px;
-            }
-
-            .premium-whisper-line {
-                width: 36px;
+            .premium-editorial-rule {
+                width: 32px;
                 height: 1px;
-                background: linear-gradient(90deg, transparent, rgba(210, 194, 172, 0.45), transparent);
+                background: rgba(200, 184, 154, 0.3);
+                margin: 0 auto clamp(22px, 4vh, 32px);
             }
 
-            .premium-whisper-text {
-                font-size: 13px;
-                color: var(--story-text-soft);
+            .premium-editorial-body {
+                width: 100%;
+                font-size: clamp(15.5px, 3.6vw, 17px);
+                line-height: 2.25;
                 font-weight: 300;
-                font-style: italic;
-                line-height: 1.6;
-                letter-spacing: 0.3px;
+                color: rgba(242, 239, 233, 0.86);
+                letter-spacing: 0.2px;
             }
 
-            .premium-content {
-                font-size: clamp(15.5px, 3.7vw, 16.5px);
-                line-height: 1.9;
-                color: var(--story-text);
-                font-weight: 300;
-                text-align: right;
-                margin: 0;
+            .premium-editorial-body p {
+                margin: 0 0 22px 0;
+                color: rgba(242, 239, 233, 0.86);
+                line-height: 2.25;
+                text-align: justify;
             }
 
-            .premium-highlight {
-                color: var(--accent-warm);
+            .premium-editorial-body p:last-child {
+                margin-bottom: 0;
+            }
+
+            .premium-editorial-highlight {
+                color: #F2EFE9;
                 font-weight: 600;
-                background: none;
-                -webkit-text-fill-color: initial;
-                padding: 0 2px;
+                background: rgba(200, 184, 154, 0.08);
+                border-bottom: 1px solid rgba(200, 184, 154, 0.35);
+                padding: 0 4px;
+                border-radius: 3px;
             }
 
-            .premium-list {
-                margin: 22px 0;
-                padding: 0 22px;
-                list-style: none;
-                direction: rtl;
-            }
-
-            .premium-list li {
-                margin-bottom: 14px;
-                font-size: inherit;
-                line-height: 1.8;
-                color: var(--story-text);
+            .premium-editorial-quote,
+            #premium-inner-world .soul-quote {
                 position: relative;
-                padding-right: 20px;
+                margin: 26px 0;
+                padding: 18px 22px;
+                background: rgba(242, 239, 233, 0.025);
+                border-right: 2px solid #C8B89A;
+                border-radius: 4px 10px 10px 4px;
+                color: #F2EFE9;
+                font-style: italic;
+                font-size: 14.5px;
+                line-height: 2.15;
+                letter-spacing: 0.2px;
             }
 
-            .premium-list li::before {
-                content: "";
+            .premium-editorial-quote p,
+            #premium-inner-world .soul-quote p {
+                margin: 0;
+                color: #F2EFE9;
+                font-style: italic;
+                line-height: 2.15;
+            }
+
+            .premium-editorial-list,
+            #premium-inner-world .soul-list {
+                margin: 24px 0;
+                padding: 0 16px 0 0;
+                list-style: none;
+                border-right: 1px solid rgba(242, 239, 233, 0.12);
+            }
+
+            .premium-editorial-list li,
+            #premium-inner-world .soul-list li {
+                position: relative;
+                margin-bottom: 14px;
+                padding-right: 16px;
+                color: rgba(242, 239, 233, 0.86);
+                font-size: inherit;
+                line-height: 2.1;
+            }
+
+            .premium-editorial-list li::before,
+            #premium-inner-world .soul-list li::before {
+                content: "—";
                 position: absolute;
                 right: 0;
-                top: 50%;
-                transform: translateY(-50%);
-                width: 8px;
-                height: 1px;
-                background: var(--accent-warm);
-                opacity: 0.4;
+                color: #C8B89A;
+                opacity: 0.75;
+                font-size: 13px;
+                font-weight: 400;
             }
 
-            .premium-quote {
-                margin: 26px 0;
-                padding: 20px 22px;
-                background: rgba(255, 255, 255, 0.03);
-                border-right: 1px solid rgba(210, 194, 172, 0.25);
-                border-radius: 12px;
-                font-style: italic;
-                color: var(--story-text-soft);
-                font-size: 14px;
-                line-height: 1.9;
-            }
-
-            .premium-quote::before {
-                content: "“";
-                position: absolute;
-                top: -8px;
-                right: 14px;
-                font-size: 36px;
-                color: var(--accent-warm);
-                opacity: 0.12;
-                font-family: Georgia, serif;
-            }
-
-            .premium-nav-wrapper {
-                position: absolute;
-                bottom: clamp(20px, 5vw, 36px);
+            /* Restrained Editorial Navigation Bar */
+            .premium-nav-bar {
+                position: fixed;
+                bottom: 0;
                 left: 0;
                 width: 100%;
+                padding: 14px 20px max(24px, env(safe-area-inset-bottom));
                 display: flex;
                 justify-content: center;
-                padding: 0 clamp(20px, 5vw, 44px);
-                z-index: 10;
+                background: linear-gradient(to top, rgba(13, 15, 14, 0.96) 0%, rgba(13, 15, 14, 0.8) 60%, transparent 100%);
+                z-index: 50;
+                pointer-events: none;
+                box-sizing: border-box;
             }
 
-            .premium-nav-pill {
-                display: flex;
+            .premium-editorial-nav-pill {
+                display: inline-flex;
                 align-items: center;
-                gap: 14px;
-                background: rgba(17, 19, 17, 0.55);
-                border: 1px solid rgba(244, 241, 234, 0.12);
-                border-radius: 12px;
-                padding: 12px 24px;
+                gap: 0;
+                background: rgba(19, 22, 20, 0.85);
+                border: 1px solid rgba(200, 184, 154, 0.2);
+                border-radius: 10px;
+                padding: 3px;
                 backdrop-filter: blur(12px);
                 -webkit-backdrop-filter: blur(12px);
-                box-shadow: 0 6px 24px rgba(0, 0, 0, 0.28);
+                box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+                pointer-events: auto;
             }
 
-            .premium-nav-btn {
+            .premium-editorial-nav-btn {
+                min-height: 40px;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                padding: 8px 18px;
+                background: transparent;
+                border: none;
+                border-radius: 7px;
                 font-family: 'Vazirmatn', sans-serif;
                 font-size: 13px;
                 font-weight: 500;
-                color: var(--story-text-soft);
-                background: transparent;
-                border: none;
-                border-radius: 8px;
+                color: rgba(242, 239, 233, 0.75);
                 cursor: pointer;
-                padding: 8px 14px;
-                transition: all 0.3s ease;
-                letter-spacing: 0.3px;
+                transition: background-color 0.25s ease, color 0.25s ease;
+                gap: 8px;
             }
 
-            .premium-nav-btn:hover {
-                background: rgba(244, 241, 234, 0.08);
-                color: var(--story-white);
+            .premium-editorial-nav-btn:active {
+                background: rgba(242, 239, 233, 0.08);
             }
 
-            .premium-nav-btn:active {
-                transform: scale(0.96);
+            .premium-editorial-nav-btn.prev-btn {
+                color: rgba(242, 239, 233, 0.45);
             }
 
-            .premium-nav-divider {
+            .premium-editorial-nav-btn.next-btn {
+                color: #F2EFE9;
+                font-weight: 600;
+                background: rgba(200, 184, 154, 0.12);
+                border-right: 1px solid rgba(200, 184, 154, 0.18);
+            }
+
+            .premium-editorial-nav-divider {
                 width: 1px;
                 height: 18px;
-                background: var(--story-line);
-                opacity: 0.6;
+                background: rgba(242, 239, 233, 0.12);
             }
 
-            .premium-close-btn {
-                position: absolute;
-                top: clamp(16px, 4vw, 28px);
-                right: clamp(16px, 4vw, 28px);
-                width: 36px;
-                height: 36px;
-                border-radius: 50%;
-                background: rgba(17, 19, 17, 0.45);
-                border: 1px solid rgba(244, 241, 234, 0.15);
-                color: var(--story-text-soft);
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                cursor: pointer;
-                z-index: 11;
-                transition: all 0.3s ease;
-            }
 
-            .premium-close-btn:hover {
-                background: rgba(244, 241, 234, 0.2);
-                color: var(--story-white);
-            }
+            @media (max-width: 420px) {
 
-            .premium-close-btn svg {
-                width: 18px;
-                height: 18px;
-                fill: currentColor;
+                .premium-slide {
+
+                    padding-right: 22px;
+
+                    padding-left: 22px;
+
+                    padding-top:
+                        clamp(
+                            38px,
+                            7vh,
+                            64px
+                        );
+                }
+
+
+                .premium-slide-title {
+
+                    font-size: 28px;
+
+                    line-height: 1.58;
+                }
+
+
+                .premium-slide-body {
+
+                    font-size: 15.5px;
+
+                    line-height: 2.3;
+                }
+
+
+                .premium-navigation {
+
+                    gap: 10px;
+
+                    padding-right: 16px;
+
+                    padding-left: 16px;
+                }
             }
 
             @media (prefers-reduced-motion: reduce) {
-                .premium-section,
-                .premium-bg-image {
-                    animation: none !important;
+
+                .premium-slide {
+
+                    transition: none;
+                }
+
+                .premium-progress-mark {
+
+                    transition: none;
+                }
+
+                .premium-nav-button {
+
+                    transition: none;
+                }
+            }
+
+            @media (prefers-reduced-motion: reduce) {
+                .premium-slide {
                     transition: none !important;
                 }
             }
@@ -2261,59 +2888,95 @@
             <div class="slide-container" id="slides-wrapper"></div>
         </div>
 
-        <!-- Premium Inner World Page -->
-        <div id="premium-inner-world">
-            <div class="premium-background">
-                <div class="premium-bg-image"></div>
-                <div class="premium-bg-overlay"></div>
+
+
+            <!-- =========================================================
+            PREMIUM INNER WORLD
+            Dark Editorial Psychological Experience
+            ========================================================= -->
+
+        <div id="premium-inner-world" aria-hidden="true">
+
+            <!-- Atmospheric background.
+                It belongs to the environment, not the content layer. -->
+            <div class="premium-atmosphere" aria-hidden="true">
+                <div class="premium-atmosphere-image"></div>
+                <div class="premium-atmosphere-vignette"></div>
             </div>
 
-            <button class="premium-close-btn" onclick="closePremiumPage()">
-                <svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
-            </button>
 
-            <div class="premium-content-wrapper" id="premium-content">
-                <div class="premium-chapter">پروفشنال</div>
+            <!-- -----------------------------------------------------
+                Editorial Header
+                ----------------------------------------------------- -->
 
-                <h2 class="premium-title" id="premium-title">تحلیل‌تان در دسترس است</h2>
+            <header class="premium-header">
 
-                <div class="premium-title-line"></div>
-
-                <div class="premium-section active" id="premium-section-0">
-                    <div class="premium-section-header">بخش اول</div>
-                    <p class="premium-text" id="premium-text-0"></p>
+                <div class="premium-header-meta">
+                    <span id="premium-chapter-label">INNER WORLD</span>
+                    <span class="premium-header-separator">·</span>
+                    <span id="premium-chapter-counter">01 / 01</span>
                 </div>
 
-                <div class="premium-section" id="premium-section-1">
-                    <div class="premium-section-header">بخش دوم</div>
-                    <p class="premium-text" id="premium-text-1"></p>
+                <div
+                    id="premium-story-progress"
+                    class="premium-story-progress"
+                    aria-hidden="true">
                 </div>
 
-                <div class="premium-whisper-container">
-                    <div class="premium-whisper-divider">
-                        <span class="premium-whisper-line"></span>
-                        <span class="premium-whisper-text">✦</span>
-                        <span class="premium-whisper-line"></span>
-                    </div>
-                    <p class="premium-whisper-text">تحلیل عمیق‌تر الگوهای پنهانِ خود</p>
+            </header>
+
+
+            <!-- -----------------------------------------------------
+                Story / Slide Viewport
+                ----------------------------------------------------- -->
+
+            <main
+                id="premium-slides-wrapper"
+                class="premium-slides-wrapper"
+                aria-live="polite">
+            </main>
+
+
+            <!-- -----------------------------------------------------
+                Editorial Navigation
+                ----------------------------------------------------- -->
+
+            <nav
+                class="premium-navigation"
+                aria-label="ناوبری تحلیل">
+
+                <button
+                    id="premium-btn-prev"
+                    class="premium-nav-button premium-nav-prev"
+                    type="button"
+                    onclick="prevPremiumSlide()">
+
+                    <span class="premium-nav-arrow" aria-hidden="true">→</span>
+                    <span>فصل قبل</span>
+
+                </button>
+
+
+                <div
+                    id="premium-nav-index"
+                    class="premium-nav-index">
+                    01
                 </div>
 
-                <div class="premium-section" id="premium-section-2">
-                    <p class="premium-content" id="premium-content-2"></p>
-                </div>
 
-                <div class="premium-nav-wrapper">
-                    <div class="premium-nav-pill">
-                        <button class="premium-nav-btn" id="premium-prev-btn" onclick="prevPremiumSection()">
-                            قبلی
-                        </button>
-                        <div class="premium-nav-divider"></div>
-                        <button class="premium-nav-btn" id="premium-next-btn" onclick="nextPremiumSection()">
-                            ادامه
-                        </button>
-                    </div>
-                </div>
-            </div>
+                <button
+                    id="premium-btn-next"
+                    class="premium-nav-button premium-nav-next"
+                    type="button"
+                    onclick="nextPremiumSlide()">
+
+                    <span id="premium-next-btn-text">فصل بعد</span>
+                    <span class="premium-nav-arrow" aria-hidden="true">←</span>
+
+                </button>
+
+            </nav>
+
         </div>
 
 <!-- Beautiful Network Error -->
@@ -2710,106 +3373,735 @@
                 }
             }
 
+            function toRoman(number) {
+
+                const values = [
+                    [10, 'X'],
+                    [9, 'IX'],
+                    [5, 'V'],
+                    [4, 'IV'],
+                    [1, 'I']
+                ];
+
+                let result = '';
+
+                for (const [value, symbol] of values) {
+
+                    while (number >= value) {
+
+                        result += symbol;
+                        number -= value;
+                    }
+                }
+
+                return result;
+            }
+
+            function normalizePremiumAnalysis(analysis) {
+
+                if (!analysis) {
+                    return [];
+                }
+
+
+                /*
+                * Preferred future format:
+                *
+                * {
+                *   title: "...",
+                *   slides: [...]
+                * }
+                *
+                * If backend already sends slides,
+                * use them directly.
+                */
+
+                if (Array.isArray(analysis.slides)) {
+
+                    return analysis.slides
+                        .filter(Boolean)
+                        .map((slide, index) => ({
+                            id: slide.id || `premium-${index}`,
+
+                            chapter:
+                                slide.chapter ||
+                                `CHAPTER ${toRoman(index + 1)}`,
+
+                            title:
+                                slide.title ||
+                                '',
+
+                            subtitle:
+                                slide.subtitle ||
+                                '',
+
+                            content:
+                                slide.content ||
+                                '',
+
+                            quote:
+                                slide.quote ||
+                                '',
+
+                            type:
+                                slide.type ||
+                                'article'
+                        }));
+                }
+
+
+                /*
+                * Temporary compatibility layer
+                *
+                * This lets the current backend continue working
+                * while we migrate its structure.
+                */
+
+                const slides = [];
+
+
+                if (analysis.title) {
+
+                    slides.push({
+                        id: 'premium-opening',
+
+                        type: 'opening',
+
+                        chapter: 'INNER WORLD',
+
+                        title: analysis.title,
+
+                        subtitle:
+                            analysis.subtitle ||
+                            'پرونده‌ی شخصی شما',
+
+                        content:
+                            analysis.introduction ||
+                            ''
+                    });
+                }
+
+
+                const possibleSections = [
+                    'section_1_text',
+                    'section_2_text',
+                    'section_3_text',
+                    'section_4_text',
+                    'section_5_text',
+                    'section_6_text',
+                    'section_7_text',
+                    'section_8_text'
+                ];
+
+
+                possibleSections.forEach(
+                    (key, index) => {
+
+                        if (!analysis[key]) {
+                            return;
+                        }
+
+
+                        slides.push({
+
+                            id: `premium-section-${index}`,
+
+                            type: 'article',
+
+                            chapter:
+                                `CHAPTER ${toRoman(index + 1)}`,
+
+                            title:
+                                analysis[`section_${index + 1}_title`] ||
+                                '',
+
+                            content:
+                                analysis[key]
+                        });
+                    }
+                );
+
+
+                /*
+                * If the current backend has another shape,
+                * we will replace this adapter once we see
+                * the actual payload.
+                */
+
+                return slides;
+            }
+
             // Premium Inner World Loader and Renderer
+
             async function loadInnerWorld() {
-                document.getElementById('network-error').style.display = 'none';
-                document.getElementById('loading-overlay').style.display = 'flex';
-                document.querySelector('#loading-overlay h3').innerText = "تحلیل جهان درون";
-                document.querySelector('#loading-overlay p').innerText = "در حال بارگذاری تحلیل عمیق...";
+
+                const loadingOverlay = document.getElementById('loading-overlay');
+                const networkError = document.getElementById('network-error');
+
+                networkError.style.display = 'none';
+
+                loadingOverlay.style.display = 'flex';
+
+                const loadingTitle = loadingOverlay.querySelector('h3');
+                const loadingText = loadingOverlay.querySelector('p');
+
+                if (loadingTitle) {
+                    loadingTitle.innerText = 'تحلیل جهان درون';
+                }
+
+                if (loadingText) {
+                    loadingText.innerText = 'در حال آماده‌سازی پرونده‌ی شخصی شما...';
+                }
 
                 const initDataRaw = window.Telegram.WebApp.initData;
 
                 const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), 30000);
+
+                const timeoutId = setTimeout(() => {
+                    controller.abort();
+                }, 30000);
+
 
                 try {
-                    const response = await fetch('https://90c2-2a0b-4140-101a-00-2.ngrok-free.app/subscription/receive-sub-analysis', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({ init_data: initDataRaw }),
-                        signal: controller.signal
-                    });
 
-                    clearTimeout(timeoutId);
+                    const response = await fetch(
+                        'https://90c2-2a0b-4140-101a-00-2.ngrok-free.app/subscription/receive-sub-analysis',
+                        {
+                            method: 'POST',
 
-                    if (response.ok) {
-                        const data = await response.json();
-                        document.getElementById('loading-overlay').style.display = 'none';
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
 
-                        if (data.inner_world_analysis) {
-                            renderInnerWorldUI(data.inner_world_analysis);
-                        } else {
-                            tg.showAlert("داده‌ای برای نمایش وجود ندارد.");
-                            tg.close();
+                            body: JSON.stringify({
+                                init_data: initDataRaw
+                            }),
+
+                            signal: controller.signal
                         }
-                    } else {
-                        clearTimeout(timeoutId);
-                        document.getElementById('loading-overlay').style.display = 'none';
-                        tg.showAlert("تحلیل در دسترس نیست. لطفاً دوباره تلاش کنید.");
-                        tg.close();
-                    }
-                } catch (error) {
-                    clearTimeout(timeoutId);
-                    document.getElementById('loading-overlay').style.display = 'none';
+                    );
 
-                    const isNetworkError = error.name === 'AbortError' ||
-                                        error.name === 'TypeError' ||
-                                        error.message.includes('Failed to fetch') ||
-                                        error.message.includes('Network');
+
+                    clearTimeout(timeoutId);
+
+
+                    if (!response.ok) {
+                        throw new Error(
+                            `Inner World request failed: ${response.status}`
+                        );
+                    }
+
+
+                    const data = await response.json();
+
+
+                    if (!data.inner_world_analysis) {
+
+                        loadingOverlay.style.display = 'none';
+
+                        tg.showAlert(
+                            'تحلیل جهان درون هنوز در دسترس نیست.'
+                        );
+
+                        tg.close();
+
+                        return;
+                    }
+
+
+                    loadingOverlay.style.display = 'none';
+
+
+                    renderInnerWorldUI(
+                        data.inner_world_analysis
+                    );
+
+
+                } catch (error) {
+
+                    clearTimeout(timeoutId);
+
+                    loadingOverlay.style.display = 'none';
+
+
+                    const isNetworkError =
+                        error.name === 'AbortError' ||
+                        error.name === 'TypeError' ||
+                        error.message.includes('Failed to fetch') ||
+                        error.message.includes('Network');
+
 
                     if (isNetworkError) {
-                        document.getElementById('network-error').style.display = 'flex';
-                        if (tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('error');
-                    } else {
-                        tg.showAlert("خطای غیرمنتظره: " + error.message);
+
+                        networkError.style.display = 'flex';
+
+                        if (tg.HapticFeedback) {
+                            tg.HapticFeedback.notificationOccurred('error');
+                        }
+
+                        return;
                     }
+
+
+                    console.error(
+                        '[Inner World]',
+                        error
+                    );
+
+
+                    tg.showAlert(
+                        'در بارگذاری تحلیل مشکلی پیش آمد.'
+                    );
                 }
             }
 
+
             function renderInnerWorldUI(analysis) {
-                // Hide all other screens
-                document.getElementById('app').style.display = 'none';
-                document.getElementById('intro-screen').style.display = 'none';
-                document.getElementById('network-error').style.display = 'none';
 
+                const app = document.getElementById('app');
+                const introScreen = document.getElementById('intro-screen');
+                const networkError = document.getElementById('network-error');
                 const premiumPage = document.getElementById('premium-inner-world');
+
+
+                /*
+                * Hide previous experience
+                */
+
+                if (app) {
+                    app.style.display = 'none';
+                }
+
+                if (introScreen) {
+                    introScreen.style.display = 'none';
+                }
+
+                if (networkError) {
+                    networkError.style.display = 'none';
+                }
+
+
+                /*
+                * Reset Premium
+                */
+
+                premiumSlides = [];
+                currentPremiumSlideIndex = 0;
+
+
+                /*
+                * Convert backend data into editorial slides
+                */
+
+                premiumSlides = normalizePremiumAnalysis(
+                    analysis
+                );
+
+
+                /*
+                * Safety check
+                */
+
+                if (!premiumSlides.length) {
+
+                    console.error(
+                        '[Inner World] No premium slides generated.',
+                        analysis
+                    );
+
+                    tg.showAlert(
+                        'محتوای تحلیل برای نمایش آماده نیست.'
+                    );
+
+                    return;
+                }
+
+
+                /*
+                * Show Premium
+                */
+
                 if (premiumPage) {
+
                     premiumPage.style.display = 'flex';
+
+                    premiumPage.setAttribute(
+                        'aria-hidden',
+                        'false'
+                    );
                 }
 
-                // Update title
-                const titleEl = document.getElementById('premium-title');
-                if (titleEl) {
-                    titleEl.textContent = analysis.title || 'تحلیل جهان درون شما';
-                }
 
-                // Update sections with real data
-                const sections = [
-                    { id: 'premium-section-0', textId: 'premium-text-0', key: 'section_1_text', default: '...' },
-                    { id: 'premium-section-1', textId: 'premium-text-1', key: 'section_2_text', default: '...' },
-                    { id: 'premium-section-2', textId: 'premium-content-2', key: 'section_3_text', default: '...' }
-                ];
+                /*
+                * Render DOM
+                */
 
-                sections.forEach(section => {
-                    const textEl = document.getElementById(section.textId);
-                    if (textEl) {
-                        textEl.textContent = analysis[section.key] || section.default;
-                    }
-                });
+                renderPremiumSlides();
 
-                // Update navigation button state
-                const prevBtn = document.getElementById('premium-prev-btn');
-                const nextBtn = document.getElementById('premium-next-btn');
-                if (prevBtn) prevBtn.disabled = false;
-                if (nextBtn) nextBtn.disabled = false;
-                currentPremiumSection = 0;
 
-                // Telegram MainButton
+                /*
+                * Render progress
+                */
+
+                renderPremiumProgress();
+
+
+                /*
+                * Initial UI state
+                */
+
+                updatePremiumUI();
+
+
+                /*
+                * Telegram MainButton should not compete
+                * with the editorial navigation.
+                */
+
                 if (tg && tg.MainButton) {
                     tg.MainButton.hide();
                 }
+            }
+
+
+            function renderPremiumProgress() {
+
+                const wrapper =
+                    document.getElementById(
+                        'premium-story-progress'
+                    );
+
+
+                if (!wrapper) {
+                    return;
+                }
+
+
+                wrapper.innerHTML = '';
+
+
+                premiumSlides.forEach(
+                    (_, index) => {
+
+                        const mark =
+                            document.createElement('span');
+
+
+                        mark.className =
+                            'premium-progress-mark';
+
+
+                        mark.dataset.index =
+                            index;
+
+
+                        wrapper.appendChild(
+                            mark
+                        );
+                    }
+                );
+
+
+                updatePremiumProgress();
+            }
+
+
+            function updatePremiumProgress() {
+
+                const marks =
+                    document.querySelectorAll(
+                        '.premium-progress-mark'
+                    );
+
+
+                marks.forEach(
+                    (mark, index) => {
+
+                        mark.classList.toggle(
+                            'is-active',
+                            index === currentPremiumSlideIndex
+                        );
+
+
+                        mark.classList.toggle(
+                            'is-passed',
+                            index < currentPremiumSlideIndex
+                        );
+                    }
+                );
+            }
+
+
+
+            function renderPremiumSlides() {
+
+                const wrapper =
+                    document.getElementById(
+                        'premium-slides-wrapper'
+                    );
+
+
+                if (!wrapper) {
+                    console.error(
+                        '[Inner World] Slides wrapper not found.'
+                    );
+
+                    return;
+                }
+
+
+                /*
+                * Clear previous render
+                */
+
+                wrapper.innerHTML = '';
+
+
+                /*
+                * Build every slide
+                */
+
+                premiumSlides.forEach(
+                    (slide, index) => {
+
+                        const slideElement =
+                            document.createElement('article');
+
+
+                        slideElement.className =
+                            'premium-slide';
+
+
+                        slideElement.dataset.index =
+                            index;
+
+
+                        slideElement.id =
+                            `premium-slide-${index}`;
+
+
+                        /*
+                        * Content
+                        */
+
+                        slideElement.innerHTML =
+                            buildPremiumSlideHTML(
+                                slide,
+                                index
+                            );
+
+
+                        wrapper.appendChild(
+                            slideElement
+                        );
+                    }
+                );
+            }
+
+
+            function buildPremiumSlideHTML(slide, index) {
+
+                const isOpening =
+                    slide.type === 'opening';
+
+
+                const chapterHTML =
+                    slide.chapter
+                        ? `
+                            <div class="premium-slide-chapter">
+                                ${escapeHTML(slide.chapter)}
+                            </div>
+                        `
+                        : '';
+
+
+                const titleHTML =
+                    slide.title
+                        ? `
+                            <h1 class="premium-slide-title">
+                                ${escapeHTML(slide.title)}
+                            </h1>
+                        `
+                        : '';
+
+
+                const subtitleHTML =
+                    slide.subtitle
+                        ? `
+                            <p class="premium-slide-subtitle">
+                                ${escapeHTML(slide.subtitle)}
+                            </p>
+                        `
+                        : '';
+
+
+                const ruleHTML =
+                    `
+                        <div
+                            class="premium-slide-rule"
+                            aria-hidden="true">
+                        </div>
+                    `;
+
+
+                const contentHTML =
+                    slide.content
+                        ? `
+                            <div class="premium-slide-body">
+                                ${formatPremiumContent(slide.content)}
+                            </div>
+                        `
+                        : '';
+
+
+                const quoteHTML =
+                    slide.quote
+                        ? `
+                            <blockquote class="premium-slide-quote">
+                                ${formatPremiumContent(slide.quote)}
+                            </blockquote>
+                        `
+                        : '';
+
+
+                return `
+                    <div
+                        class="
+                            premium-editorial-article
+                            ${isOpening ? 'premium-opening' : ''}
+                        ">
+
+                        ${chapterHTML}
+
+                        ${titleHTML}
+
+                        ${subtitleHTML}
+
+                        ${ruleHTML}
+
+                        ${contentHTML}
+
+                        ${quoteHTML}
+
+                    </div>
+                `;
+            }
+
+
+
+
+            function formatPremiumContent(text) {
+
+                if (!text) {
+                    return '';
+                }
+
+
+                let safeText =
+                    escapeHTML(text);
+
+
+                /*
+                * Markdown bold
+                */
+
+                safeText =
+                    safeText.replace(
+                        /\*\*(.*?)\*\*/g,
+                        '<strong>$1</strong>'
+                    );
+
+
+                /*
+                * Block quote
+                */
+
+                const lines =
+                    safeText.split('\n');
+
+
+                let html = '';
+
+                let paragraph = [];
+
+
+                function flushParagraph() {
+
+                    if (!paragraph.length) {
+                        return;
+                    }
+
+
+                    const content =
+                        paragraph.join('<br>');
+
+
+                    html += `
+                        <p>
+                            ${content}
+                        </p>
+                    `;
+
+
+                    paragraph = [];
+                }
+
+
+                lines.forEach(line => {
+
+                    const trimmed =
+                        line.trim();
+
+
+                    if (!trimmed) {
+
+                        flushParagraph();
+
+                        return;
+                    }
+
+
+                    if (trimmed.startsWith('>')) {
+
+                        flushParagraph();
+
+
+                        const quote =
+                            trimmed
+                                .replace(/^>\s?/, '');
+
+
+                        html += `
+                            <blockquote
+                                class="premium-inline-quote">
+
+                                ${quote}
+
+                            </blockquote>
+                        `;
+
+                        return;
+                    }
+
+
+                    paragraph.push(trimmed);
+                });
+
+
+                flushParagraph();
+
+
+                return html;
+            }
+
+            function escapeHTML(value) {
+
+                return String(value)
+                    .replace(/&/g, '&amp;')
+                    .replace(/</g, '&lt;')
+                    .replace(/>/g, '&gt;')
+                    .replace(/"/g, '&quot;')
+                    .replace(/'/g, '&#039;');
             }
 
             function getComparisonSlideMeta(titleText) {
@@ -3848,6 +5140,201 @@
                     currentSlideIndex--;
                     updateStoryUI();
                 }
+            }
+
+            /* =========================================================
+            PREMIUM INNER WORLD — NAVIGATION
+            ========================================================= */
+
+            function nextPremiumSlide() {
+
+                if (
+                    currentPremiumSlideIndex >=
+                    premiumSlides.length - 1
+                ) {
+                    return;
+                }
+
+
+                currentPremiumSlideIndex++;
+
+
+                updatePremiumUI();
+
+
+                if (
+                    tg &&
+                    tg.HapticFeedback
+                ) {
+
+                    tg.HapticFeedback
+                        .impactOccurred('light');
+                }
+            }
+
+
+            function prevPremiumSlide() {
+
+                if (
+                    currentPremiumSlideIndex <= 0
+                ) {
+                    return;
+                }
+
+
+                currentPremiumSlideIndex--;
+
+
+                updatePremiumUI();
+
+
+                if (
+                    tg &&
+                    tg.HapticFeedback
+                ) {
+
+                    tg.HapticFeedback
+                        .impactOccurred('light');
+                }
+            }
+
+            /* =========================================================
+            PREMIUM INNER WORLD — UI STATE
+            ========================================================= */
+
+            function updatePremiumUI() {
+
+                const slides =
+                    document.querySelectorAll(
+                        '#premium-slides-wrapper .premium-slide'
+                    );
+
+
+                const total =
+                    premiumSlides.length;
+
+
+                slides.forEach(
+                    (slide, index) => {
+
+                        slide.classList.toggle(
+                            'is-active',
+                            index === currentPremiumSlideIndex
+                        );
+
+
+                        slide.classList.toggle(
+                            'is-before',
+                            index < currentPremiumSlideIndex
+                        );
+
+
+                        slide.classList.toggle(
+                            'is-after',
+                            index > currentPremiumSlideIndex
+                        );
+                    }
+                );
+
+
+                /*
+                * Counter
+                */
+
+                const counter =
+                    document.getElementById(
+                        'premium-chapter-counter'
+                    );
+
+
+                if (counter) {
+
+                    counter.textContent =
+                        `${String(currentPremiumSlideIndex + 1).padStart(2, '0')} / ${String(total).padStart(2, '0')}`;
+                }
+
+
+                /*
+                * Navigation
+                */
+
+                const prevButton =
+                    document.getElementById(
+                        'premium-btn-prev'
+                    );
+
+
+                const nextButton =
+                    document.getElementById(
+                        'premium-btn-next'
+                    );
+
+
+                if (prevButton) {
+
+                    prevButton.disabled =
+                        currentPremiumSlideIndex === 0;
+                }
+
+
+                if (nextButton) {
+
+                    nextButton.disabled =
+                        currentPremiumSlideIndex >= total - 1;
+                }
+
+
+                /*
+                * Next button label
+                */
+
+                const nextText =
+                    document.getElementById(
+                        'premium-next-btn-text'
+                    );
+
+
+                if (nextText) {
+
+                    nextText.textContent =
+                        currentPremiumSlideIndex >= total - 1
+                            ? 'پایان'
+                            : 'فصل بعد';
+                }
+
+
+                /*
+                * Current chapter
+                */
+
+                const currentSlide =
+                    premiumSlides[
+                        currentPremiumSlideIndex
+                    ];
+
+
+                const chapterLabel =
+                    document.getElementById(
+                        'premium-chapter-label'
+                    );
+
+
+                if (
+                    chapterLabel &&
+                    currentSlide
+                ) {
+
+                    chapterLabel.textContent =
+                        currentSlide.chapter ||
+                        'INNER WORLD';
+                }
+
+
+                /*
+                * Progress
+                */
+
+                updatePremiumProgress();
             }
 
             // Premium Inner World Functions
