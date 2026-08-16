@@ -1,324 +1,406 @@
-<!DOCTYPE html>
-<html lang="fa" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>تحلیل شخصیت </title>
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@200;300;400;500;600&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            /* =========================================================
-            RESULT STORY — VISUAL SYSTEM
-            Human / Editorial / Cinematic
-            ========================================================= */
+    <!DOCTYPE html>
+    <html lang="fa" dir="rtl">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+        <title>تحلیل شخصیت </title>
+        <script src="https://telegram.org/js/telegram-web-app.js"></script>
+        <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+        <style>
+            :root {
+                /* =========================================================
+                RESULT STORY — VISUAL SYSTEM
+                Human / Editorial / Cinematic
+                ========================================================= */
 
-            /* Base */
-            --story-ink: #171817;
-            --story-white: #F4F1EA;
+                /* Base */
+                --story-ink: #171817;
+                --story-white: #F4F1EA;
 
-            /* Text */
-            --story-text: rgba(244, 241, 234, 0.94);
-            --story-text-soft: rgba(244, 241, 234, 0.70);
-            --story-text-faint: rgba(244, 241, 234, 0.48);
+                /* Text */
+                --story-text: rgba(244, 241, 234, 0.94);
+                --story-text-soft: rgba(244, 241, 234, 0.70);
+                --story-text-faint: rgba(244, 241, 234, 0.48);
 
-            /* Identity */
-            --accent-sage: #A6B39F;
-            --accent-sage-soft: rgba(166, 179, 159, 0.16);
-            --accent-sage-line: rgba(166, 179, 159, 0.34);
+                /* Identity */
+                --accent-sage: #A6B39F;
+                --accent-sage-soft: rgba(166, 179, 159, 0.16);
+                --accent-sage-line: rgba(166, 179, 159, 0.34);
 
-            /* Warm note — used sparingly */
-            --accent-warm: #D2C2AC;
+                /* Warm note — used sparingly */
+                --accent-warm: #D2C2AC;
 
-            /* Editorial separators */
-            --story-line: rgba(244, 241, 234, 0.16);
-            --story-line-soft: rgba(244, 241, 234, 0.08);
+                /* Editorial separators */
+                --story-line: rgba(244, 241, 234, 0.16);
+                --story-line-soft: rgba(244, 241, 234, 0.08);
 
-            /* Background image treatment */
-            --story-overlay: rgba(12, 14, 13, 0.40);
-            --story-overlay-bottom: rgba(12, 14, 13, 0.72);
+                /* Background image treatment */
+                --story-overlay: rgba(12, 14, 13, 0.40);
+                --story-overlay-bottom: rgba(12, 14, 13, 0.72);
 
-            /* Layout */
-            --story-side-padding: clamp(20px, 5vw, 44px);
-            --story-content-width: min(100%, 680px);
+                /* Layout */
+                --story-side-padding: clamp(20px, 5vw, 44px);
+                --story-content-width: min(100%, 680px);
 
-            /* Motion */
-            --story-ease: cubic-bezier(0.22, 1, 0.36, 1);
+                /* Motion */
+                --story-ease: cubic-bezier(0.22, 1, 0.36, 1);
+            }
 
-            /* Premium Inner World Variables */
-            --premium-bg: #0a0c0d;
-            --premium-text-ink: rgba(244, 241, 234, 0.92);
-            --premium-text-soft: rgba(244, 241, 234, 0.65);
-            --premium-accent: rgba(210, 194, 172, 0.25);
-        }
+            * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
 
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
+            body, html {
 
-        body, html {
-            font-family:
-            'Vazirmatn',
-            "Apple Color Emoji",
-            "Segoe UI Emoji",
-            sans-serif;
+                font-family:
+                'Vazirmatn',
+                "Apple Color Emoji",
+                "Segoe UI Emoji",
+                sans-serif;
 
-            background:
-            radial-gradient(
-                circle at 50% 15%,
-                rgba(157,179,155,0.06),
-                transparent 35%
-            ),
-            var(--bg-dark);
 
-            color:var(--text-ivory);
-            margin:0;
-            padding:0;
-            width:100%;
-            height:100%;
-            overflow:hidden;
-            overscroll-behavior:none;
-            position:fixed;
-            user-select:none;
-        }
+                background:
+                radial-gradient(
+                    circle at 50% 15%,
+                    rgba(157,179,155,0.06),
+                    transparent 35%
+                ),
+                var(--bg-dark);
 
-        /* 🌟 Ethereal Breathing Background */
-        .mesh-bg {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            z-index: 1;
-            pointer-events: none;
-            background: var(--bg-dark);
-            filter: blur(80px);
-            -webkit-filter: blur(80px);
-        }
 
-        .blob {
-            position: absolute; border-radius: 50%;
-            animation: drift 15s infinite alternate cubic-bezier(0.4, 0, 0.2, 1);
-            transition: background 1.5s ease;
-        }
+                color:var(--text-ivory);
 
-        .blob-1 { width: 350px; height: 350px; background: var(--blob-1); top: -10%; left: -10%; animation-delay: 0s; }
-        .blob-2 { width: 400px; height: 400px; background: var(--blob-2); bottom: -20%; right: -10%; animation-delay: -5s; }
-        .blob-3 { width: 300px; height: 300px; background: var(--blob-3); top: 40%; left: 40%; animation-delay: -10s; }
 
-        @keyframes drift {
-            0% { transform: translate(0, 0) scale(1); }
-            33% { transform: translate(15vw, 10vh) scale(1.1); }
-            66% { transform: translate(-10vw, 20vh) scale(0.9); }
-            100% { transform: translate(5vw, -10vh) scale(1.05); }
-        }
+                margin:0;
+                padding:0;
 
-        /* 🚀 Screens */
-        #access-denied {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            z-index: 500; display: none;
-            flex-direction: column; align-items: center; justify-content: center;
-            padding: 30px; text-align: center; background: var(--bg-dark);
-        }
 
-        #intro-screen {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            z-index: 600; display: flex;
-            flex-direction: column; align-items: center; justify-content: center;
-            padding: 30px; text-align: center;
-            background: radial-gradient(circle at center, var(--bg-center) 0%, var(--bg-dark) 100%);
-        }
+                width:100%;
+                height:100%;
 
-        /* Mind Ripple Animation for Intro */
-        .mind-ripple {
-            position: relative; width: 60px; height: 60px; margin-bottom: 30px;
-        }
-        .mind-ripple::before, .mind-ripple::after {
-            content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-            border-radius: 50%; border: 2px solid var(--accent-sage);
-            animation: ripple-out 3s infinite cubic-bezier(0.21, 0.53, 0.56, 0.8);
-        }
-        .mind-ripple::after { animation-delay: 1.5s; }
-        @keyframes ripple-out {
-            0% { transform: scale(0.5); opacity: 1; }
-            100% { transform: scale(2); opacity: 0; }
-        }
 
-        .intro-h1 {
-            font-size: 28px; font-weight: 500; margin-bottom: 15px;
-            color: var(--text-ivory); letter-spacing: 1px;
-            text-shadow: 0 4px 15px rgba(253, 251, 247, 0.1);
-        }
-        .intro-p {
-            color: var(--text-muted); font-size: 15px; margin-bottom: 50px;
-            max-width: 280px; font-weight: 300; line-height: 1.8;
-        }
+                overflow:hidden;
 
-        .btn-start {
-            background: var(--accent-sage); color: var(--bg-dark);
-            border: none; padding: 16px 50px; font-size: 15px; font-weight: 600;
-            border-radius: 50px; font-family: 'Vazirmatn'; cursor: pointer;
-            transition: all 0.3s ease; box-shadow: 0 4px 20px rgba(157, 179, 155, 0.3);
-            letter-spacing: 0.5px;
-        }
-        .btn-start:active { transform: scale(0.95); box-shadow: 0 2px 10px rgba(157, 179, 155, 0.2); }
-        .btn-start:disabled {
-            background: transparent; color: var(--text-muted); border: 1px solid var(--text-muted);
-            box-shadow: none; opacity: 0.5; cursor: not-allowed;
-        }
 
-        /* 📱 Main App Layout */
-        .app-layout {
-            width: 100%;
-            max-width: 480px;
-            height: 100%;
-            margin: 0 auto;
-            display: none;
-            flex-direction: column;
-            padding: 20px 25px;
-            box-sizing: border-box;
-            opacity: 0;
-            transform: translateY(10px);
-            transition:
-                opacity 0.8s ease,
-                transform 0.8s ease;
-            position: relative;
-            z-index: 10;
-            isolation: isolate;
-        }
+                overscroll-behavior:none;
 
-        .app-layout::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            bottom: 0;
-            left: 50%;
-            width: 100vw;
-            transform: translateX(-50%);
-            pointer-events: none;
-            z-index: -2;
-            background-image: url("little.webp");
-            background-size: cover;
-            background-position: center center;
-            background-repeat: no-repeat;
-            filter: brightness(0.82) saturate(0.82);
-            -webkit-filter: brightness(0.82) saturate(0.82);
-        }
+
+                position:fixed;
+
+
+                user-select:none;
+            }
+
+            /* 🌟 Ethereal Breathing Background */
+
+            .mesh-bg {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                overflow: hidden;
+                z-index: 1;
+                pointer-events: none;
+                background: var(--bg-dark);
+                filter: blur(80px);
+                -webkit-filter: blur(80px);
+            }
+
+            .blob {
+                position: absolute; border-radius: 50%;
+                animation: drift 15s infinite alternate cubic-bezier(0.4, 0, 0.2, 1);
+                transition: background 1.5s ease;
+            }
+
+            .blob-1 { width: 350px; height: 350px; background: var(--blob-1); top: -10%; left: -10%; animation-delay: 0s; }
+            .blob-2 { width: 400px; height: 400px; background: var(--blob-2); bottom: -20%; right: -10%; animation-delay: -5s; }
+            .blob-3 { width: 300px; height: 300px; background: var(--blob-3); top: 40%; left: 40%; animation-delay: -10s; }
+
+            @keyframes drift {
+                0% { transform: translate(0, 0) scale(1); }
+                33% { transform: translate(15vw, 10vh) scale(1.1); }
+                66% { transform: translate(-10vw, 20vh) scale(0.9); }
+                100% { transform: translate(5vw, -10vh) scale(1.05); }
+            }
+
+            /* 🚀 Screens */
+            #access-denied {
+                position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+                z-index: 500; display: none;
+                flex-direction: column; align-items: center; justify-content: center;
+                padding: 30px; text-align: center; background: var(--bg-dark);
+            }
+
+            #intro-screen {
+                position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+                z-index: 600; display: flex;
+                flex-direction: column; align-items: center; justify-content: center;
+                padding: 30px; text-align: center;
+                background: radial-gradient(circle at center, var(--bg-center) 0%, var(--bg-dark) 100%);
+            }
+
+            /* Mind Ripple Animation for Intro */
+            .mind-ripple {
+                position: relative; width: 60px; height: 60px; margin-bottom: 30px;
+            }
+            .mind-ripple::before, .mind-ripple::after {
+                content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+                border-radius: 50%; border: 2px solid var(--accent-sage);
+                animation: ripple-out 3s infinite cubic-bezier(0.21, 0.53, 0.56, 0.8);
+            }
+            .mind-ripple::after { animation-delay: 1.5s; }
+            @keyframes ripple-out {
+                0% { transform: scale(0.5); opacity: 1; }
+                100% { transform: scale(2); opacity: 0; }
+            }
+
+            .intro-h1 {
+                font-size: 28px; font-weight: 500; margin-bottom: 15px;
+                color: var(--text-ivory); letter-spacing: 1px;
+                text-shadow: 0 4px 15px rgba(253, 251, 247, 0.1);
+            }
+            .intro-p {
+                color: var(--text-muted); font-size: 15px; margin-bottom: 50px;
+                max-width: 280px; font-weight: 300; line-height: 1.8;
+            }
+
+            .btn-start {
+                background: var(--accent-sage); color: var(--bg-dark);
+                border: none; padding: 16px 50px; font-size: 15px; font-weight: 600;
+                border-radius: 50px; font-family: 'Vazirmatn'; cursor: pointer;
+                transition: all 0.3s ease; box-shadow: 0 4px 20px rgba(157, 179, 155, 0.3);
+                letter-spacing: 0.5px;
+            }
+            .btn-start:active { transform: scale(0.95); box-shadow: 0 2px 10px rgba(157, 179, 155, 0.2); }
+            .btn-start:disabled {
+                background: transparent; color: var(--text-muted); border: 1px solid var(--text-muted);
+                box-shadow: none; opacity: 0.5; cursor: not-allowed;
+            }
+
+            /* 📱 Main App Layout */
+
+            .app-layout {
+                width: 100%;
+                max-width: 480px;
+                height: 100%;
+
+                margin: 0 auto;
+
+                display: none;
+                flex-direction: column;
+
+                padding: 20px 25px;
+
+                box-sizing: border-box;
+
+                opacity: 0;
+                transform: translateY(10px);
+
+                transition:
+                    opacity 0.8s ease,
+                    transform 0.8s ease;
+
+                position: relative;
+                z-index: 10;
+
+                isolation: isolate;
+            }
+
+            .app-layout::before {
+                content: "";
+
+                position: absolute;
+
+                top: 0;
+                bottom: 0;
+
+                left: 50%;
+
+                width: 100vw;
+
+                transform: translateX(-50%);
+
+                pointer-events: none;
+
+                z-index: -2;
+
+                background-image: url("little.webp");
+
+                background-size: cover;
+                background-position: center center;
+                background-repeat: no-repeat;
+
+                filter:
+                    brightness(0.82)
+                    saturate(0.82);
+
+                -webkit-filter:
+                    brightness(0.82)
+                    saturate(0.82);
+            }
+
 
 /* =========================================================
    ATMOSPHERIC TRANSITION
    Image → interaction environment
    ========================================================= */
-        .app-layout::after {
-            content: "";
-            position: absolute;
-            top: 0;
-            bottom: 0;
-            left: 50%;
-            width: 100vw;
-            transform: translateX(-50%);
-            pointer-events: none;
-            z-index: -1;
-            background:
-                linear-gradient(
-                    to bottom,
-                    rgba(15, 17, 18, 0.16) 0%,
-                    rgba(15, 17, 18, 0.02) 24%,
-                    rgba(15, 17, 18, 0.08) 46%,
-                    rgba(15, 17, 18, 0.42) 66%,
-                    rgba(15, 17, 18, 0.82) 82%,
-                    rgba(15, 17, 18, 0.97) 100%
-                ),
-                radial-gradient(
-                    ellipse at 50% 35%,
-                    transparent 38%,
-                    rgba(0, 0, 0, 0.12) 72%,
-                    rgba(0, 0, 0, 0.28) 100%
-                );
-        }
+            .app-layout::after {
+                content: "";
 
-        .progress-container {
-            width: 100%;
-            height: 44px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-top: 20px;
-            margin-bottom: 15px;
-            padding-left: 76px;
-            padding-right: 20px;
-            box-sizing: border-box;
-            position: relative;
-            z-index: 30;
-            direction: rtl;
-        }
-        .q-counter {
-            color: rgba(255, 255, 255, 0.95);
-            font-size: 14px;
-            font-weight: 500;
-            letter-spacing: 0.5px;
-            white-space: nowrap;
-            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
-            font-variant-numeric: persian-series-digits;
-        }
+                position: absolute;
 
-        .progress-track {
-            flex-grow: 1;
-            height: 3.5px;
-            margin-left: 15px;
-            margin-right: 0;
-            position: relative;
-            background: rgba(255, 255, 255, 0.15);
-            border-radius: 999px;
-            overflow: hidden;
-            backdrop-filter: blur(4px);
-            -webkit-backdrop-filter: blur(4px);
-        }
+                top: 0;
+                bottom: 0;
 
-        .progress-glow {
-            height: 100%;
-            background: var(--accent-sage);
-            width: 0%;
-            transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 0 8px var(--accent-glow);
-            border-radius: 4px;
-        }
+                left: 50%;
+
+                width: 100vw;
+
+                transform: translateX(-50%);
+
+                pointer-events: none;
+
+                z-index: -1;
+
+                background:
+                    linear-gradient(
+                        to bottom,
+                        rgba(15, 17, 18, 0.16) 0%,
+                        rgba(15, 17, 18, 0.02) 24%,
+                        rgba(15, 17, 18, 0.08) 46%,
+                        rgba(15, 17, 18, 0.42) 66%,
+                        rgba(15, 17, 18, 0.82) 82%,
+                        rgba(15, 17, 18, 0.97) 100%
+                    ),
+
+                    radial-gradient(
+                        ellipse at 50% 35%,
+                        transparent 38%,
+                        rgba(0, 0, 0, 0.12) 72%,
+                        rgba(0, 0, 0, 0.28) 100%
+                    );
+            }
 
 
-        #story-progress {
-            display:flex;
-            align-items:center;
-            justify-content:center;
-            width:60%;
-            margin:18px auto 28px;
-            gap:8px;
-            opacity:.75;
-        }
-        .neural-node {
-            width:8px;
-            height:8px;
-            border-radius:50%;
-            background: rgba(157,179,155,0.45);
-            border: 1px solid rgba(255,255,255,0.18);
-            box-shadow: 0 0 12px rgba(157,179,155,0.15);
-            transition: all .6s cubic-bezier(.4,0,.2,1);
-        }
+            .progress-container {
+                width: 100%;
+                height: 44px;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                margin-top: 20px;
+                margin-bottom: 15px;
+                padding-left: 76px;
+                padding-right: 20px;
+                box-sizing: border-box;
+                position: relative;
+                z-index: 30;
+                direction: rtl; /* حل مشکل گیج‌کننده بودن راست‌چین/چپ‌چین */
+            }
+            .q-counter {
+                color: rgba(255, 255, 255, 0.95); /* روشن‌تر برای خوانایی کامل */
+                font-size: 14px; /* یک پیکسل بزرگتر */
+                font-weight: 500;
+                letter-spacing: 0.5px;
+                white-space: nowrap;
+                text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+                font-variant-numeric: persian-series-digits;
+            }
 
-        .neural-node.active {
-            background: #D1D5DB;
-            transform: scale(1.1);
-            box-shadow: 0 0 0 3px rgba(209, 213, 219, 0.1);
-        }
+            /* Track بدون تغییر ماند چون ساختارش با RTL سازگار شد */
+            .progress-track {
+                flex-grow: 1;
+                height: 3.5px;
+                margin-left: 15px; /* به دلیل rtl، جای margin عوض می‌شود */
+                margin-right: 0;
+                position: relative;
+                background: rgba(255, 255, 255, 0.15);
+                border-radius: 999px;
+                overflow: hidden;
+                backdrop-filter: blur(4px);
+                -webkit-backdrop-filter: blur(4px);
+            }
 
-        .neural-link {
-            flex-grow:1;
-            height:1px;
-            background: rgba(255, 255, 255,0.08);
-            transition: all .6s ease;
-        }
+            .progress-glow {
+                height: 100%;
+                background: var(--accent-sage);
+                width: 0%;
+                transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+                box-shadow: 0 0 8px var(--accent-glow);
+                border-radius: 4px;
+            }
 
-        .neural-link.active {
-            background: #5D6367;
-        }
+
+            #story-progress {
+
+                display:flex;
+
+                align-items:center;
+
+                justify-content:center;
+
+
+                width:60%;
+
+
+                margin:
+                18px auto 28px;
+
+
+                gap:8px;
+
+
+                opacity:.75;
+            }
+
+            .neural-node {
+
+                width:8px;
+
+                height:8px;
+
+                border-radius:50%;
+
+
+                background:
+                    rgba(157,179,155,0.45);
+
+
+                border:
+                    1px solid rgba(255,255,255,0.18);
+
+
+                box-shadow:
+                    0 0 12px rgba(157,179,155,0.15);
+
+
+                transition:
+                    all .6s cubic-bezier(.4,0,.2,1);
+            }
+
+            .neural-node.active {
+                background: #D1D5DB;
+                transform: scale(1.1);
+                box-shadow: 0 0 0 3px rgba(209, 213, 219, 0.1);
+            }
+
+            .neural-link {
+
+                flex-grow:1;
+
+                height:1px;
+
+
+                background:
+                    rgba(255,255,255,0.08);
+
+
+                transition:
+                    all .6s ease;
+            }
+
+            .neural-link.active {
+                background: #5D6367;
+            }
 
            /* 🎵 Ambient Music Toggle */
             .music-toggle {
@@ -328,6 +410,7 @@
                 width: 44px;
                 height: 44px;
                 border-radius: 50%;
+                /* پس‌زمینه رو کمی واضح‌تر کردم تا حس دکمه بودن بده */
                 background: rgba(20, 22, 25, 0.6);
                 border: 1px solid rgba(255, 255, 255, 0.15);
                 color: var(--text-muted);
@@ -347,6 +430,7 @@
                 background: rgba(20, 22, 25, 0.9);
             }
 
+            /* سایز آیکون رو بزرگتر کردم (از 18 به 22) تا با دایره 44 پیکسلی تناسب احمقانه نداشته باشه */
             .music-toggle svg {
                 width: 22px;
                 height: 22px;
@@ -368,7 +452,7 @@
                 justify-content: center;
                 min-height: 0;
                 z-index: 10;
-                padding: 0 20px;
+                padding: 0 20px; /* فضای تنفس برای کارت شیشه‌ای */
                 box-sizing: border-box;
             }
 
@@ -376,22 +460,31 @@
                 width: 100%;
                 max-width: 420px;
                 min-height: 150px;
+
                 display: flex;
                 flex-direction: column;
                 align-items: center;
                 justify-content: center;
+
                 padding: 28px 22px;
                 box-sizing: border-box;
+
                 position: absolute;
                 z-index: 20;
+
                 background: rgba(255, 255, 255, 0.02);
+
                 backdrop-filter: blur(2.5px) saturate(110%);
                 -webkit-backdrop-filter: blur(4px) saturate(110%);
+
                 border: 1px solid rgba(255, 255, 255, 0.10);
                 border-radius: 24px;
-                box-shadow: 0 18px 45px rgba(0, 0, 0, 0.15);
+
+                box-shadow:
+                    0 18px 45px rgba(0, 0, 0, 0.15);
             }
 
+            /* متن سوال روی شیشه */
             .q-text-content {
                 max-width: 100%;
                 font-size: clamp(17px, 4.2vw, 20px);
@@ -400,6 +493,7 @@
                 color: #FFFFFF;
                 text-align: center;
                 text-wrap: balance;
+                /* سایه متن برای وضوح بیشتر بدون کثیف کردن صفحه */
                 text-shadow: 0 2px 12px rgba(0, 0, 0, 0.7);
                 position: relative;
                 z-index: 21;
@@ -440,14 +534,16 @@
                 align-items: center;
                 position: relative;
                 z-index: 1;
-                direction: rtl;
+                direction: rtl; /* حیاتی: برای اینکه دکمه ۱ (راست) بشه موافق و ۵ (چپ) بشه مخالف */
             }
 
+            /* 🔴 ENHANCED CIRCLES (Affordance Fix) */
             .circle-btn {
                 width: 32px;
                 height: 32px;
-                border: 1.5px solid rgba(255, 255, 255, 0.3);
+                border: 1.5px solid rgba(255, 255, 255, 0.3); /* بوردر واضح‌تر */
                 border-radius: 50%;
+                /* پس‌زمینه نیمه‌توپر تا حس دکمه بودن بده، نه صرفا طرح گرافیکی */
                 background: rgba(255, 255, 255, 0.08);
                 cursor: pointer;
                 position: relative;
@@ -470,7 +566,7 @@
                 position: absolute;
                 top: 50%;
                 left: 50%;
-                width: 12px;
+                width: 12px; /* کمی بزرگتر برای وضوح */
                 height: 12px;
                 border-radius: 50%;
                 background: var(--accent-sage, #9DB39B);
@@ -480,6 +576,7 @@
                 opacity: 0;
             }
 
+            /* کلاس selected رو اضافه کردم تا از تو JS هندلش کنی */
             .circle-btn:active,
             .circle-btn.selected {
                 transform: scale(0.9);
@@ -493,23 +590,26 @@
                 opacity: 1;
             }
 
+            /* 🔴 فاجعه خوانایی اینجا فیکس شد */
             .labels-row {
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
                 margin-top: 18px;
-                direction: rtl;
+                direction: rtl; /* هم‌گام با دایره‌ها */
             }
 
             .labels-row span {
                 display: inline-block;
                 white-space: nowrap;
+                /* رنگ قبلی یک فاجعه Accessibility بود، این جایگزینش شد: */
                 color: rgba(255, 255, 255, 0.95);
-                font-size: 13px;
-                font-weight: 600;
+                font-size: 13px; /* کمی بزرگتر */
+                font-weight: 600; /* ضخیم‌تر برای خوانایی */
                 letter-spacing: 0;
-                text-shadow: 0 2px 6px rgba(0, 0, 0, 0.8);
+                text-shadow: 0 2px 6px rgba(0, 0, 0, 0.8); /* سایه برای جدا شدن از بک‌گراند */
             }
+            /* 🌟 Pure Fade Animation */
             .fade-out { animation: simpleFadeOut 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
             .fade-in { animation: simpleFadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
 
@@ -522,6 +622,7 @@
                 100% { opacity: 1; transform: translateY(0) scale(1); }
             }
 
+            /* 🧠 Loading Overlay */
             #loading-overlay {
                 position: fixed;
                 top: 0;
@@ -529,7 +630,7 @@
                 width: 100%;
                 height: 100%;
                 z-index: 2000;
-                background: rgba(13, 13, 14, 0.92);
+                background: rgba(13, 13, 14, 0.92); /* تیره‌تر و عمیق‌تر */
                 backdrop-filter: blur(20px);
                 -webkit-backdrop-filter: blur(20px);
                 display: flex;
@@ -544,10 +645,374 @@
                 height: 48px;
                 border: 1px solid rgba(255, 255, 255, 0.03);
                 border-top-color: var(--accent-sage);
-                border-right-color: var(--accent-warm);
+                border-right-color: var(--accent-warm); /* ترکیب دو رنگ لوکس در چرخش */
                 border-radius: 50%;
                 animation: spin 1.2s cubic-bezier(0.6, 0.2, 0.4, 0.8) infinite;
                 box-shadow: 0 0 20px rgba(157, 179, 155, 0.05);
+            }
+
+            .dual-orb {
+                background: radial-gradient(circle at 30% 30%, rgba(194, 168, 120, 0.15) 0%, transparent 60%),
+                            radial-gradient(circle at 70% 70%, rgba(157, 179, 155, 0.1) 0%, transparent 60%) !important;
+                opacity: 0.8;
+            }
+
+            dual-orb {
+                background: radial-gradient(circle at 30% 30%, rgba(194, 168, 120, 0.15) 0%, transparent 60%),
+                            radial-gradient(circle at 70% 70%, rgba(157, 179, 155, 0.1) 0%, transparent 60%) !important;
+                opacity: 0.8;
+            }
+
+            .comparison-glow {
+                background: radial-gradient(circle at 50% 20%, rgba(210, 194, 172, 0.08) 0%, transparent 65%) !important;
+            }
+
+            .glass-card.comparison-card {
+                background: linear-gradient(180deg, rgba(23, 24, 23, 0.45) 0%, rgba(23, 24, 23, 0.75) 100%);
+                backdrop-filter: blur(16px);
+                -webkit-backdrop-filter: blur(16px);
+                border: 1px solid rgba(244, 241, 234, 0.07);
+                border-radius: 20px;
+                box-shadow: 0 12px 35px rgba(0, 0, 0, 0.35);
+            }
+
+            .text-highlight.comparison-highlight {
+                color: var(--story-white);
+                background: rgba(210, 194, 172, 0.12);
+                border-bottom: 1px solid rgba(210, 194, 172, 0.45);
+                padding: 1px 6px;
+                border-radius: 4px;
+                font-weight: 600;
+            }
+
+            .soul-quote.comparison-quote {
+                border-right: 2px solid rgba(210, 194, 172, 0.6);
+                background: linear-gradient(90deg, rgba(210, 194, 172, 0.06) 0%, transparent 100%);
+                padding: 18px 22px;
+                border-radius: 6px;
+                font-style: italic;
+                color: var(--story-text);
+                line-height: 2.1;
+                margin: 20px 0;
+            }
+
+            .relationship-signature {
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+                padding: 4px 14px;
+                background: rgba(210, 194, 172, 0.08);
+                border: 1px solid rgba(210, 194, 172, 0.2);
+                border-radius: 999px;
+                font-size: 11px;
+                letter-spacing: 0.08em;
+                color: var(--accent-warm);
+                margin-bottom: 16px;
+            }
+
+
+            /* 📖 Story Mode UI - Premium Experience */
+            #result-container {
+                position: fixed;
+                inset: 0;
+                z-index: 1000;
+
+                display: none;
+                flex-direction: column;
+
+                width: 100%;
+                height: 100%;
+
+                overflow: hidden;
+
+                padding:
+                    max(20px, env(safe-area-inset-top))
+                    var(--story-side-padding)
+                    max(20px, env(safe-area-inset-bottom));
+
+                color: var(--story-text);
+
+                isolation: isolate;
+
+                background: var(--story-ink);
+            }
+            .story-background {
+                position: fixed;
+                inset: 0;
+                z-index: -1;
+
+                /* رنگ پایه و اصلی بدنه اپلیکیشن (تاریک) */
+                background-color: #121214;
+            }
+
+            .story-background-image {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 110%; /* Slightly wider for panning */
+                height: 110%; /* Slightly taller for panning */
+
+                background-image: url("analysis_image.webp");
+                background-size: cover;
+                background-position: center center;
+
+                /* فیلترهای نوری */
+                filter: saturate(0.85) brightness(0.7) contrast(1.05);
+
+                /* 🔥 جادوی اصلی: محو کردن نرمِ پایین عکس توی بک‌گراند */
+                -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 45%, rgba(0,0,0,0) 100%);
+                mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 45%, rgba(0,0,0,0) 100%);
+
+                /* Cinematic movement */
+                animation: cinematicPan 45s ease-in-out infinite alternate;
+                transition: opacity 1.5s ease;
+            }
+
+            @keyframes cinematicPan {
+                0% { transform: scale(1.0) translate(0, 0); }
+                100% { transform: scale(1.1) translate(-2%, -2%); }
+            }
+
+            .story-background-overlay {
+                position: absolute;
+                inset: 0;
+                background: radial-gradient(circle at center, transparent 30%, rgba(18, 18, 20, 0.4) 100%);
+                pointer-events: none;
+                z-index: 0;
+            }
+
+            .story-background-vignette {
+                position: absolute;
+                inset: 0;
+
+                background:
+                    linear-gradient(
+                        to bottom,
+                        rgba(10, 12, 11, 0.15) 0%,
+                        rgba(10, 12, 11, 0.05) 30%,
+                        rgba(10, 12, 11, 0.25) 60%,
+                        rgba(10, 12, 11, 0.85) 100%
+                    );
+
+                pointer-events: none;
+                z-index: 1;
+            }
+
+            .story-progress-bar {
+                position: relative;
+                z-index: 20;
+
+                display: flex;
+                align-items: center;
+
+                width: 100%;
+                height: 1.5px;
+
+                gap: 5px;
+
+                margin:
+                    8px 0
+                    clamp(32px, 7vh, 56px);
+            }
+
+           .story-tick {
+                position: relative;
+
+                flex: 1;
+                height: 1px;
+
+                overflow: hidden;
+
+                background: rgba(244, 241, 234, 0.18);
+
+                border-radius: 999px;
+            }
+
+
+            .story-tick-fill {
+                width: 0;
+                height: 100%;
+
+                background: var(--story-white);
+
+                opacity: 0.85;
+
+                box-shadow: none;
+
+                transition:
+                    width 0.55s var(--story-ease);
+            }
+
+            .story-tick.active .story-tick-fill {
+                width: 100%;
+            }
+
+            .story-title-rule {
+                width: 34px;
+                height: 1px;
+
+                margin: 24px auto 28px;
+
+                background: var(--story-line);
+
+                opacity: 0.9;
+            }
+
+            .slide-container {
+
+                position:relative;
+
+                flex:1;
+
+
+                width:100%;
+
+
+                overflow:hidden;
+
+
+                display:flex;
+
+                justify-content:center;
+            }
+
+            .slide {
+                position: absolute;
+
+                width: 100%;
+                max-height: 100%;
+
+                padding:
+                    0
+                    0
+                    clamp(110px, 16vh, 150px);
+
+                overflow-y: auto;
+
+                opacity: 0;
+
+                transform: translateY(14px);
+
+                transition:
+                    opacity 0.55s ease,
+                    transform 0.7s var(--story-ease);
+
+                pointer-events: none;
+
+                scrollbar-width: none;
+
+                scroll-behavior: smooth;
+
+                overscroll-behavior: contain;
+            }
+
+            .slide::-webkit-scrollbar {
+                display: none;
+            }
+
+            .slide.active {
+                opacity: 1;
+
+                transform: translateY(0);
+
+                pointer-events: auto;
+            }
+
+            .slide.passed {
+                opacity: 0;
+
+                transform: translateY(-10px);
+            }
+
+            .slide h2 {
+                color: var(--accent-warm); /* عناوین با طلایی شامپاینی */
+                font-size: 20px;
+                font-weight: 500;
+                margin-bottom: 25px;
+                line-height: 1.5;
+                letter-spacing: 1px;
+                text-shadow: 0 4px 20px rgba(212, 175, 55, 0.15);
+            }
+
+            .slide p {
+                color: rgba(253, 251, 247, 0.85); /* کمی نرم‌تر از سفید خالص */
+                font-size: 15px;
+                font-weight: 300;
+                line-height: 2; /* فاصله‌گذاری اتمسفریک بین خطوط */
+                text-align: justify;
+                text-shadow: none; /* حذف سایه‌های کثیف‌کننده متن طولانی */
+                margin-bottom: 15px;
+            }
+
+           /* 🔘 Floating Continue Button */
+            .continue-btn-wrapper {
+                position: absolute;
+
+                bottom:
+                    max(22px, env(safe-area-inset-bottom));
+
+                left: 0;
+
+                width: 100%;
+
+                display: flex;
+                justify-content: center;
+
+                z-index: 20;
+
+                pointer-events: none;
+            }
+
+            .continue-btn {
+                display: inline-flex;
+                align-items: center;
+
+                gap: 10px;
+
+                min-height: 44px;
+
+                padding: 10px 22px;
+
+                background:
+                    rgba(17, 19, 17, 0.58);
+
+                color: var(--story-white);
+
+                border:
+                    1px solid rgba(244, 241, 234, 0.16);
+
+                border-radius: 9px;
+
+                box-shadow:
+                    0 8px 28px rgba(0, 0, 0, 0.22);
+
+                backdrop-filter: blur(12px);
+                -webkit-backdrop-filter: blur(12px);
+
+                font-family: 'Vazirmatn', sans-serif;
+                font-size: 14px;
+                font-weight: 500;
+
+                cursor: pointer;
+
+                transition:
+                    background-color 0.25s ease,
+                    border-color 0.25s ease;
+            }
+
+            .continue-btn:active {
+                transform: none;
+
+                background: rgba(166, 179, 159, 0.18);
+
+                box-shadow:
+                    0 8px 24px rgba(0, 0, 0, 0.20);
+            }
+
+            .continue-btn svg {
+                width: 16px;
+                height: 16px;
+                fill: currentColor;
             }
 
             /* Network Error UI */
@@ -576,9 +1041,820 @@
                 animation: pulse 2.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
             }
 
-        /* =========================================================
-           PREMIUM INNER WORLD PAGE - DARK EDITORIAL EXPERIENCE
-           ========================================================= */
+            /* Back Button for Story Mode */
+            .back-story-btn {
+                position: absolute;
+
+                top:
+                    max(20px, env(safe-area-inset-top));
+
+                left: var(--story-side-padding);
+
+                z-index: 101;
+
+                display: none;
+                align-items: center;
+                justify-content: center;
+
+                width: 38px;
+                height: 38px;
+
+                padding: 0;
+
+                background: rgba(17, 19, 17, 0.38);
+
+                border:
+                    1px solid rgba(244, 241, 234, 0.12);
+
+                border-radius: 8px;
+
+                color: var(--story-text-soft);
+
+                backdrop-filter: blur(10px);
+                -webkit-backdrop-filter: blur(10px);
+
+                cursor: pointer;
+
+                transition:
+                    background-color 0.25s ease,
+                    color 0.25s ease;
+            }
+
+            .back-story-btn:active {
+                transform: none;
+
+                color: var(--story-white);
+
+                background: rgba(244, 241, 234, 0.08);
+            }
+
+            .back-story-btn svg {
+                width: 20px;
+                height: 20px;
+                fill: currentColor;
+            }
+
+            @keyframes spin {
+                to { transform: rotate(360deg); }
+            }
+
+            .glass-card {
+                position: relative;
+                width: 100%;
+
+                /* متن‌ها رو هل می‌دیم پایین تا دقیقاً از جایی شروع بشن که عکس داره تاریک میشه */
+                padding: 42vh 24px 100px 24px;
+
+                /* نابود کردن تمام ویژگی‌های باکسی و شیشه‌ای قبلی */
+                background: transparent;
+                border: none;
+                border-radius: 0;
+                box-shadow: none;
+                backdrop-filter: none;
+                -webkit-backdrop-filter: none;
+
+                z-index: 2;
+            }
+
+            .glass-card-content {
+                /* اینم فقط برای نظم دادن به آیتم‌های داخلیه */
+                position: relative;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                width: 100%;
+            }
+
+
+
+            /* Paragraph Focus Animation */
+            .paragraph-target {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+
+            .blur-reveal {
+                animation:
+                    storyContentReveal
+                    0.65s
+                    var(--story-ease)
+                    forwards;
+            }
+
+            @keyframes storyContentReveal {
+                from {
+                    opacity: 0;
+                    transform: translateY(8px);
+                }
+
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+
+            @media (prefers-reduced-motion: reduce) {
+                .slide,
+                .blur-reveal,
+                .story-whisper-container,
+                .story-tick-fill {
+                    animation: none !important;
+                    transition: none !important;
+                }
+
+                .paragraph-target {
+                    opacity: 1;
+                    transform: none;
+                }
+            }
+
+            /* 🔮 Sacred Geometry Loaders */
+
+
+            /* ---- Navigation Pill ---- */
+            .smart-nav-wrapper {
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                width: 100%;
+
+                /* هم‌رنگ با بک‌گراند پنل محتوا */
+                background: #1a1a1c;
+
+                /* یک هاله نوری در بالای دکمه‌ها تا حس جدا شدن از متن اسکرول‌شونده را بدهد */
+                box-shadow: 0 -10px 30px rgba(26, 26, 28, 0.95);
+
+                padding: 15px 20px 25px 20px; /* پدینگ برای دکمه‌ها */
+                z-index: 10; /* بالاترین لایه تا همیشه در دسترس باشد */
+
+                display: flex;
+                justify-content: center; /* اگر ساختار داخلی دکمه‌هایت فلکس است این کمک می‌کند */
+            }
+
+
+            .nav-pill {
+                display: flex;
+                align-items: center;
+
+                padding: 0;
+
+                background: rgba(17, 19, 17, 0.52);
+
+                border: 1px solid rgba(244, 241, 234, 0.14);
+
+                border-radius: 10px;
+
+                box-shadow:
+                    0 8px 28px rgba(0, 0, 0, 0.22);
+
+                backdrop-filter: blur(12px);
+                -webkit-backdrop-filter: blur(12px);
+
+                pointer-events: auto;
+            }
+
+            .nav-btn {
+                min-height: 42px;
+
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+
+                padding: 10px 18px;
+
+                background: transparent;
+
+                border: 0;
+
+                color: var(--story-text-soft);
+
+                font-family: 'Vazirmatn', sans-serif;
+                font-size: 13px;
+                font-weight: 500;
+
+                cursor: pointer;
+
+                transition:
+                color 0.25s ease,
+                background-color 0.25s ease;
+                border-radius: 8px;
+
+            }
+
+            .nav-btn svg {
+                width: 16px;
+                height: 16px;
+                fill: currentColor;
+            }
+            .nav-btn:active {
+                background: rgba(244, 241, 234, 0.07);
+            }
+
+            .prev-btn {
+                color: var(--story-text-faint);
+            }
+
+            .prev-btn:active {
+                background: rgba(255, 255, 255, 0.03);
+                color: var(--text-ivory);
+            }
+
+            .next-btn {
+                gap: 8px;
+
+                color: var(--story-white);
+
+                background: rgba(166, 179, 159, 0.14);
+
+                border-right:
+                    1px solid rgba(166, 179, 159, 0.24);
+
+                font-weight: 600;
+            }
+
+            .next-btn:active {
+                transform: none;
+
+                color: var(--story-white);
+
+                background: rgba(166, 179, 159, 0.22);
+            }
+
+            .nav-divider {
+                width: 1px;
+                height: 20px;
+
+                margin: 0;
+
+                background: var(--story-line-soft);
+            }
+
+            /* ---- Typography Upgrades ---- */
+            .glass-card h2.typewriter-target {
+                margin: 0;
+
+                max-width: 640px;
+
+                color: var(--story-white);
+
+                font-size: clamp(28px, 7.5vw, 42px);
+
+                line-height: 1.35;
+
+                font-weight: 700;
+
+                letter-spacing: -0.03em;
+
+                text-align: center;
+
+                background: none;
+
+                -webkit-text-fill-color: initial;
+
+                text-shadow: 0 4px 20px rgba(0,0,0,0.4);
+            }
+
+            .glass-card p.paragraph-target {
+                font-size: clamp(15.5px, 4vw, 17.5px);
+                line-height: 2.2;
+                color: rgba(244, 241, 234, 0.82);
+                letter-spacing: 0.4px;
+                text-shadow: none;
+                margin-top: 10px;
+                font-weight: 300;
+            }
+
+            .story-content-wrapper b,
+            .story-content-wrapper strong,
+            .text-highlight {
+                color: var(--story-white);
+                font-weight: 600;
+                background: none;
+                -webkit-background-clip: initial;
+                -webkit-text-fill-color: initial;
+                filter: none;
+                padding: 0;
+            }
+
+            .text-highlight.comparison-highlight {
+                color: var(--story-white);
+                background: rgba(210, 194, 172, 0.15);
+                border-bottom: 1.5px solid rgba(210, 194, 172, 0.5);
+                padding: 0 4px;
+                border-radius: 4px;
+                font-weight: 600;
+            }
+
+            /* 📊 Chart Background Pulse */
+            .chart-pulse-bg {
+                position: absolute;
+
+                top: 50%;
+                left: 50%;
+
+                transform: translate(-50%, -50%);
+
+                width: 220px;
+                height: 220px;
+
+                background:
+                    radial-gradient(
+                        circle,
+                        rgba(157,179,155,0.12) 0%,
+                        rgba(157,179,155,0.04) 35%,
+                        transparent 70%
+                    );
+
+                opacity: 0.45;
+
+                filter: blur(35px);
+
+                animation:
+                    pulse-chart 7s ease-in-out infinite alternate;
+
+                z-index:0;
+
+                pointer-events:none;
+            }
+
+            @keyframes pulse-chart {
+                0% { transform: translate(-50%, -50%) scale(0.9); opacity: 0.05; }
+                100% { transform: translate(-50%, -50%) scale(1.1); opacity: 0.15; }
+            }
+
+            .text-highlight {
+                color: var(--accent-sage);
+
+                font-weight: 600;
+
+                display: inline;
+
+                letter-spacing: 0;
+            }
+
+
+
+
+
+            .emoji-preserve {
+                -webkit-text-fill-color: initial !important;
+                color: initial !important;
+                background: none !important;
+                text-shadow: none !important;
+                font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif !important;
+            }
+
+
+            .story-chapter {
+                margin: 0 0 18px;
+
+                color: var(--story-text-soft);
+
+                font-size: 11px;
+                line-height: 1.4;
+
+                font-weight: 500;
+
+                letter-spacing: 0.14em;
+
+                text-align: center;
+
+                text-transform: uppercase;
+            }
+
+            .story-divider {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 14px;
+                color: var(--accent-sage);
+                margin-bottom: 20px;
+                opacity: 0.5;
+            }
+
+            .story-divider span {
+                width: 40px; /* خطوط کوتاه‌تر و مینیمال‌تر */
+                height: 1px;
+                background: linear-gradient(90deg, transparent, rgba(157, 179, 155, 0.4), transparent);
+            }
+
+            .story-whisper-container {
+                width: min(100%, 540px);
+
+                margin:
+                    0 auto
+                    clamp(28px, 5vh, 44px);
+
+                text-align: center;
+            }
+
+            .story-whisper {
+                color: var(--story-text-soft);
+
+                font-size: 14px;
+                line-height: 2;
+
+                font-style: normal;
+                font-weight: 400;
+
+                letter-spacing: 0;
+
+                text-wrap: balance;
+            }
+
+            @keyframes fadeWhisper {
+                from { opacity: 0; transform: translateY(10px); }
+                to { opacity: 1; transform: none; }
+            }
+
+            .story-content-wrapper {
+                width: 100%;
+                margin-top: 20px; /* فاصله دادن از تیتر بالا */
+                padding: 0;
+                position: relative;
+                z-index: 2;
+                text-align: right;
+            }
+
+            .story-content-wrapper::-webkit-scrollbar {
+                width: 2px; /* اسکرول‌بار مایکرو */
+            }
+            .story-content-wrapper::-webkit-scrollbar-track {
+                background: transparent;
+            }
+            .story-content-wrapper::-webkit-scrollbar-thumb {
+                background: rgba(255, 255, 255, 0.1);
+                border-radius: 2px;
+            }
+
+            .story-content-wrapper ul.soul-list {
+                margin: 20px 0;
+                padding: 0 20px 0 0;
+                list-style: none;
+                border-right: 2px solid rgba(255, 255, 255, 0.1); /* یک خط راهنمای ظریف در کنار لیست */
+            }
+
+            .story-content-wrapper ul.soul-list li {
+                position: relative;
+
+                margin-bottom: 16px;
+                padding-right: 18px;
+
+                color: var(--story-text);
+
+                font-size: inherit;
+                line-height: 2;
+            }
+
+            .story-content-wrapper ul.soul-list li::before {
+                content: "";
+                position: absolute;
+                top: 14px; /* تنظیم دقیق محل بولت */
+                right: 0;
+                width: 6px;
+                height: 6px;
+                border-radius: 50%;
+                background: var(--accent-sage); /* رنگ سبز/تاکیدی شما */
+                box-shadow: 0 0 8px var(--accent-sage); /* درخشش ملایم بولت‌پوینت‌ها */
+            }
+
+            .story-content-wrapper p {
+                max-width: 640px;
+                margin: 0 0 24px;
+
+                /* رنگ متن روی شیشه تاریک باید سفید با شفافیت بالا باشد تا چشم را نزند */
+                color: rgba(255, 255, 255, 0.9);
+
+                font-size: clamp(15px, 3vw, 17px);
+                line-height: 2.1; /* فاصله خطوط (Leading) بیشتر، خوانایی متن‌های طولانی را راحت‌تر می‌کند */
+                font-weight: 300; /* وزن سبک‌تر برای انتقال حس آرامش */
+                text-align: right;
+
+                /* یک سایه بسیار نرم زیر خود متن برای تضمین خوانایی در صورت روشن بودن پس‌زمینه عکس */
+                text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+            }
+
+            .story-content-wrapper p:last-child {
+                margin-bottom: 0;
+            }
+            .story-content-wrapper > *:first-child {
+                margin-top: 0 !important;
+            }
+
+            .soul-quote {
+
+                position:relative;
+
+                margin:0 0 25px 0;
+
+                padding:20px 22px;
+
+                background:
+                    rgba(255,255,255,0.025);
+
+
+                border-right:
+                    1px solid rgba(157,179,155,0.7);
+
+
+                border-radius:16px;
+
+
+                color:
+                    var(--text-ivory);
+
+
+                font-style:italic;
+
+                font-size:14px;
+
+                line-height:2.2;
+
+
+                box-shadow:
+                    inset 0 0 25px rgba(0,0,0,.08);
+
+
+                letter-spacing:.3px;
+            }
+
+            .soul-quote::before {
+                content: '“';
+                position: absolute;
+                top: -5px;
+                right: 15px;
+                font-size: 40px;
+                color: var(--accent-sage);
+                opacity: 0.15; /* محوتر */
+                font-family: Georgia, serif;
+            }
+
+            .soul-list {
+                list-style: none;
+                padding: 0;
+                margin: 20px 0;
+            }
+
+            .soul-list li {
+                position: relative;
+                padding-right: 20px;
+                margin-bottom: 15px;
+                font-size: 14px;
+                line-height: 2.1;
+                color: rgba(253, 251, 247, 0.85);
+                font-weight: 300;
+            }
+
+            .soul-list li::before {
+                content: ''; /* تغییر بولت پوینت به خط تیره مایکرو */
+                position: absolute;
+                right: 0;
+                top: 12px;
+                width: 8px;
+                height: 1px;
+                background: var(--accent-sage);
+            }
+
+            .text-highlight::after {
+
+                content:"";
+
+                position:absolute;
+
+                left:0;
+                bottom:-2px;
+
+                width:100%;
+                height:1px;
+
+                background:
+                    rgba(157,179,155,0.35);
+
+                box-shadow:none;
+
+                opacity:.8;
+            }
+
+            .text-whisper {
+                font-style: italic;
+                color: rgba(253, 251, 247, 0.5);
+                font-weight: 300;
+                letter-spacing: 0.5px;
+            }
+
+
+            .card-ambient-glow {
+                position: absolute;
+                top: 0; left: 0; width: 100%; height: 100%;
+                background: radial-gradient(circle at 50% 0%, rgba(157, 179, 155, 0.08) 0%, transparent 60%);
+                pointer-events: none;
+                z-index: 1;
+            }
+
+            /* 🏆 Climax Card (Final Result) */
+            .climax-card {
+                background: rgba(15, 14, 12, 0.85) !important; /* تناژ تاریک طلایی/برنز */
+                border: 1px solid rgba(212, 175, 55, 0.15) !important;
+                box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8), inset 0 0 40px rgba(212, 175, 55, 0.03) !important;
+            }
+
+            .climax-glow {
+                background: radial-gradient(circle at 50% 0%, rgba(212, 175, 55, 0.1) 0%, transparent 70%) !important;
+            }
+
+            .climax-portal {
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                background: radial-gradient(circle, rgba(212, 175, 55, 0.4) 0%, transparent 70%);
+                box-shadow: 0 0 20px rgba(212, 175, 55, 0.2);
+            }
+
+            .climax-ring-1 {
+                border-color: rgba(212, 175, 55, 0.3) !important;
+            }
+
+            .climax-ring-2 {
+                transform: scale(1.15) rotate(45deg);
+                border-color: rgba(212, 175, 55, 0.1) !important;
+            }
+
+            .climax-chapter {
+                color: var(--accent-warm) !important;
+                letter-spacing: 3px;
+                font-weight: 500;
+            }
+
+            .climax-title {
+                font-size: 24px !important;
+                font-weight: 500 !important;
+                background: linear-gradient(135deg, var(--text-ivory) 0%, var(--accent-warm) 100%);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                text-shadow: 0 4px 15px rgba(212, 175, 55, 0.15);
+                letter-spacing: 1px;
+            }
+
+            .climax-intro {
+                font-size: 14px;
+                line-height: 2;
+                color: rgba(253, 251, 247, 0.85);
+                text-align: justify;
+                margin-bottom: 25px;
+                font-weight: 300;
+            }
+
+            .climax-features-grid {
+                display: grid;
+                grid-template-columns: 1fr;
+                gap: 15px;
+                margin: 25px 0;
+            }
+
+            .climax-feature-box {
+                background: rgba(255, 255, 255, 0.02);
+                border: 1px solid rgba(212, 175, 55, 0.08);
+                border-radius: 6px; /* خطوط دقیق‌تر */
+                padding: 16px 20px;
+                transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            }
+
+            .climax-feature-box:hover {
+                background: rgba(212, 175, 55, 0.04);
+                border-color: rgba(212, 175, 55, 0.2);
+            }
+
+            .feature-head {
+                color: var(--accent-warm);
+                font-size: 13px;
+                font-weight: 500;
+                margin-bottom: 8px;
+                letter-spacing: 0.5px;
+            }
+
+            .climax-feature-box p {
+                color: rgba(253, 251, 247, 0.7);
+                font-size: 13px;
+                line-height: 1.8;
+                margin: 0;
+                font-weight: 300;
+            }
+
+            .climax-outro {
+                font-size: 13px;
+                color: rgba(253, 251, 247, 0.6);
+                text-align: center;
+                margin: 30px 0;
+                line-height: 1.9;
+                font-style: italic;
+            }
+
+            /* دکمه اکشن نهایی (مینیمال، قدرتمند و تاریک) */
+            .climax-action-area {
+                display: flex;
+                justify-content: center;
+                margin-top: 20px;
+            }
+
+            .climax-cta-button {
+                width: 100%;
+                padding: 15px 24px;
+                background: rgba(212, 175, 55, 0.08);
+                border: 1px solid rgba(212, 175, 55, 0.3);
+                border-radius: 4px; /* بدون گردی اغراق‌آمیز */
+                color: var(--accent-warm);
+                font-weight: 500;
+                font-size: 14px;
+                font-family: 'Vazirmatn', sans-serif;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 12px;
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+                transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+                letter-spacing: 1px;
+                backdrop-filter: blur(5px);
+            }
+
+            .climax-cta-button:active {
+                transform: scale(0.98);
+                background: var(--accent-warm);
+                color: var(--bg-dark);
+                box-shadow: 0 0 20px rgba(212, 175, 55, 0.2);
+            }
+
+            .cta-arrow {
+                font-size: 16px;
+                transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            }
+
+            .climax-cta-button:hover .cta-arrow {
+                transform: translateX(-6px); /* حرکت ظریف فلش */
+            }
+
+            /* پروگرس نود ویژه برای اسلاید آخر */
+            .climax-node {
+                background: var(--accent-warm) !important;
+                border-color: var(--accent-warm) !important;
+                box-shadow: 0 0 12px rgba(212, 175, 55, 0.4) !important;
+            }
+
+           .headspace-hero-wrapper {
+                position: relative;
+                width: 100%;
+                height: 200px;
+                margin-bottom: 0;
+                overflow: hidden;
+                isolation: isolate;
+
+                -webkit-mask-image: linear-gradient(
+                    to bottom,
+                    #000 0%,
+                    #000 55%,
+                    rgba(0, 0, 0, 0.9) 70%,
+                    transparent 100%
+                );
+
+                mask-image: linear-gradient(
+                    to bottom,
+                    #000 0%,
+                    #000 55%,
+                    rgba(0, 0, 0, 0.9) 70%,
+                    transparent 100%
+                );
+            }
+
+            .headspace-hero-wrapper img {
+                width: 100%;
+                height: 100%;
+                display: block;
+                object-fit: cover;
+                object-position: center center;
+                transform: scale(1.02);
+            }
+
+            .space-vignette-overlay {
+                position: absolute;
+                inset: 0;
+                z-index: 1;
+                pointer-events: none;
+
+                background:
+                    linear-gradient(
+                        to bottom,
+                        rgba(0, 0, 0, 0.02) 35%,
+                        rgba(0, 0, 0, 0.12) 65%,
+                        rgba(0, 0, 0, 0.35) 100%
+                    ),
+                    radial-gradient(
+                        ellipse at center,
+                        transparent 45%,
+                        rgba(0, 0, 0, 0.18) 100%
+                    );
+            }
+
+/* Premium Inner World Page - Dark Editorial Psychological Experience */
             #premium-inner-world {
                 position: fixed;
                 inset: 0;
@@ -589,16 +1865,16 @@
                 height: 100%;
                 overflow: hidden;
                 padding: 0;
-                background: var(--premium-bg);
+                background: var(--story-ink);
                 isolation: isolate;
             }
 
-            /* Background layers - properly stacked */
             .premium-background {
                 position: fixed;
                 inset: 0;
-                z-index: -2;
-                background: var(--premium-bg);
+                z-index: -1;
+                background-color: #0a0c0d;
+                opacity: 0.95;
             }
 
             .premium-bg-image {
@@ -610,9 +1886,9 @@
                 background-size: cover;
                 background-position: center;
                 background-repeat: no-repeat;
-                filter: saturate(0.35) brightness(0.45) contrast(1.15);
-                opacity: 0.35;
-                z-index: -1;
+                filter: saturate(0.7) brightness(0.6) contrast(1.02);
+                opacity: 0.85;
+                transition: opacity 1.5s ease;
             }
 
             .premium-bg-overlay {
@@ -622,13 +1898,12 @@
                     to bottom,
                     rgba(12, 14, 13, 0.3) 0%,
                     rgba(12, 14, 13, 0.15) 40%,
-                    rgba(12, 14, 13, 0.5) 100%
+                    rgba(12, 14, 13, 0.6) 100%
                 );
                 pointer-events: none;
                 z-index: 1;
             }
 
-            /* Content wrapper - allows scrolling when needed */
             .premium-content-wrapper {
                 position: relative;
                 z-index: 10;
@@ -637,57 +1912,52 @@
                 flex-direction: column;
                 align-items: center;
                 justify-content: flex-start;
-                padding: clamp(32px, 8vw, 64px) clamp(24px, 6vw, 52px);
+                padding: clamp(24px, 6vw, 48px) clamp(20px, 5vw, 44px);
                 max-width: 100%;
-                overflow-y: auto;
-                overflow-x: hidden;
-                -webkit-overflow-scrolling: touch;
+                overflow: hidden;
             }
 
-            /* Chapter marker - subtle editorial styling */
             .premium-chapter {
                 color: var(--accent-warm);
-                font-size: clamp(11px, 2.5vw, 13px);
-                font-weight: 400;
-                letter-spacing: 0.4em;
+                font-size: 12px;
+                font-weight: 500;
+                letter-spacing: 0.2em;
                 text-transform: uppercase;
                 text-align: center;
-                margin-bottom: clamp(20px, 4vh, 36px);
-                opacity: 0.8;
+                margin-bottom: clamp(16px, 3vh, 28px);
+                opacity: 0.85;
                 line-height: 1.3;
             }
 
-            /* Main title - large and prominent */
             .premium-title {
-                font-size: clamp(32px, 8vw, 48px);
+                font-size: clamp(28px, 7vw, 42px);
                 font-weight: 700;
                 color: var(--story-white);
                 text-align: center;
-                line-height: 1.2;
+                line-height: 1.25;
                 letter-spacing: -0.02em;
-                margin: 0 auto 40px;
-                max-width: 80%;
+                text-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+                margin: 0 auto 32px;
+                max-width: 85%;
                 position: relative;
                 z-index: 2;
             }
 
             .premium-title-line {
-                width: 48px;
+                width: 42px;
                 height: 1px;
                 background: var(--accent-warm);
-                opacity: 0.3;
-                margin: 32px auto 40px;
+                opacity: 0.35;
+                margin: 28px auto 32px;
             }
 
-            /* Sections - properly styled with scroll support */
             .premium-section {
                 width: 100%;
-                max-width: 600px;
+                max-width: 580px;
                 margin: 0 auto;
                 opacity: 0;
-                transform: translateY(24px);
-                transition: opacity 0.8s var(--story-ease), transform 0.8s var(--story-ease);
-                z-index: 10;
+                transform: translateY(20px);
+                transition: opacity 0.6s var(--story-ease), transform 0.6s var(--story-ease);
             }
 
             .premium-section.active {
@@ -696,28 +1966,27 @@
             }
 
             .premium-section-header {
-                font-size: clamp(16px, 3.8vw, 20px);
+                font-size: clamp(18px, 4vw, 22px);
                 font-weight: 600;
                 color: var(--story-white);
                 text-align: center;
-                margin-bottom: 20px;
-                letter-spacing: 0.4px;
+                margin-bottom: 18px;
+                letter-spacing: 0.5px;
             }
 
-            .premium-text, .premium-content {
-                font-size: clamp(15px, 3.7vw, 16.5px);
-                line-height: 1.95;
-                color: var(--premium-text-ink);
+            .premium-text {
+                font-size: clamp(15px, 3.8vw, 17px);
+                line-height: 1.85;
+                color: var(--story-text);
                 font-weight: 300;
                 text-align: right;
                 margin: 0;
                 direction: rtl;
             }
 
-            /* Whisper section - decorative divider */
             .premium-whisper-container {
-                margin: 48px auto 32px;
-                max-width: 560px;
+                margin: 28px auto;
+                max-width: 520px;
                 text-align: center;
             }
 
@@ -725,67 +1994,96 @@
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                gap: 16px;
-                margin-bottom: 16px;
+                gap: 12px;
+                margin-bottom: 14px;
             }
 
             .premium-whisper-line {
-                width: 42px;
+                width: 36px;
                 height: 1px;
-                background: linear-gradient(90deg, transparent, var(--premium-accent), transparent);
+                background: linear-gradient(90deg, transparent, rgba(210, 194, 172, 0.45), transparent);
             }
 
             .premium-whisper-text {
-                font-size: clamp(12px, 2.8vw, 14px);
-                color: var(--premium-text-soft);
+                font-size: 13px;
+                color: var(--story-text-soft);
                 font-weight: 300;
                 font-style: italic;
                 line-height: 1.6;
-                letter-spacing: 0.4px;
+                letter-spacing: 0.3px;
             }
 
-            /* Highlight style for enriched text */
+            .premium-content {
+                font-size: clamp(15.5px, 3.7vw, 16.5px);
+                line-height: 1.9;
+                color: var(--story-text);
+                font-weight: 300;
+                text-align: right;
+                margin: 0;
+            }
+
             .premium-highlight {
                 color: var(--accent-warm);
                 font-weight: 600;
-                background: rgba(210, 194, 172, 0.12);
-                padding: 0 3px;
-                border-radius: 3px;
+                background: none;
+                -webkit-text-fill-color: initial;
+                padding: 0 2px;
             }
 
-            /* List styling */
             .premium-list {
-                margin: 24px 0;
-                padding: 0 28px;
+                margin: 22px 0;
+                padding: 0 22px;
                 list-style: none;
                 direction: rtl;
             }
 
             .premium-list li {
-                margin-bottom: 16px;
+                margin-bottom: 14px;
                 font-size: inherit;
-                line-height: 1.85;
-                color: var(--premium-text-ink);
+                line-height: 1.8;
+                color: var(--story-text);
                 position: relative;
-                padding-right: 24px;
+                padding-right: 20px;
             }
 
             .premium-list li::before {
-                content: """;
+                content: "";
                 position: absolute;
                 right: 0;
                 top: 50%;
                 transform: translateY(-50%);
-                width: 6px;
+                width: 8px;
                 height: 1px;
                 background: var(--accent-warm);
-                opacity: 0.35;
+                opacity: 0.4;
             }
 
-            /* Navigation wrapper at bottom */
+            .premium-quote {
+                margin: 26px 0;
+                padding: 20px 22px;
+                background: rgba(255, 255, 255, 0.03);
+                border-right: 1px solid rgba(210, 194, 172, 0.25);
+                border-radius: 12px;
+                font-style: italic;
+                color: var(--story-text-soft);
+                font-size: 14px;
+                line-height: 1.9;
+            }
+
+            .premium-quote::before {
+                content: "“";
+                position: absolute;
+                top: -8px;
+                right: 14px;
+                font-size: 36px;
+                color: var(--accent-warm);
+                opacity: 0.12;
+                font-family: Georgia, serif;
+            }
+
             .premium-nav-wrapper {
                 position: absolute;
-                bottom: clamp(24px, 6vw, 42px);
+                bottom: clamp(20px, 5vw, 36px);
                 left: 0;
                 width: 100%;
                 display: flex;
@@ -797,70 +2095,72 @@
             .premium-nav-pill {
                 display: flex;
                 align-items: center;
-                gap: 16px;
-                background: rgba(17, 19, 17, 0.5);
-                border: 1px solid rgba(244, 241, 234, 0.08);
-                border-radius: 10px;
-                padding: 14px 28px;
-                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+                gap: 14px;
+                background: rgba(17, 19, 17, 0.55);
+                border: 1px solid rgba(244, 241, 234, 0.12);
+                border-radius: 12px;
+                padding: 12px 24px;
+                backdrop-filter: blur(12px);
+                -webkit-backdrop-filter: blur(12px);
+                box-shadow: 0 6px 24px rgba(0, 0, 0, 0.28);
             }
 
             .premium-nav-btn {
                 font-family: 'Vazirmatn', sans-serif;
-                font-size: clamp(12px, 2.5vw, 14px);
+                font-size: 13px;
                 font-weight: 500;
-                color: var(--premium-text-soft);
+                color: var(--story-text-soft);
                 background: transparent;
                 border: none;
-                border-radius: 6px;
+                border-radius: 8px;
                 cursor: pointer;
-                padding: 10px 16px;
-                transition: all 0.25s ease;
+                padding: 8px 14px;
+                transition: all 0.3s ease;
                 letter-spacing: 0.3px;
             }
 
             .premium-nav-btn:hover {
-                background: rgba(244, 241, 234, 0.06);
+                background: rgba(244, 241, 234, 0.08);
                 color: var(--story-white);
             }
 
             .premium-nav-btn:active {
-                transform: scale(0.97);
+                transform: scale(0.96);
             }
 
             .premium-nav-divider {
                 width: 1px;
-                height: 20px;
+                height: 18px;
                 background: var(--story-line);
-                opacity: 0.5;
+                opacity: 0.6;
             }
 
             .premium-close-btn {
                 position: absolute;
-                top: clamp(18px, 4.5vw, 32px);
-                right: clamp(18px, 4.5vw, 32px);
-                width: 32px;
-                height: 32px;
+                top: clamp(16px, 4vw, 28px);
+                right: clamp(16px, 4vw, 28px);
+                width: 36px;
+                height: 36px;
                 border-radius: 50%;
-                background: rgba(17, 19, 17, 0.4);
-                border: 1px solid rgba(244, 241, 234, 0.12);
-                color: var(--premium-text-soft);
+                background: rgba(17, 19, 17, 0.45);
+                border: 1px solid rgba(244, 241, 234, 0.15);
+                color: var(--story-text-soft);
                 display: flex;
                 align-items: center;
                 justify-content: center;
                 cursor: pointer;
                 z-index: 11;
-                transition: all 0.25s ease;
+                transition: all 0.3s ease;
             }
 
             .premium-close-btn:hover {
-                background: rgba(244, 241, 234, 0.18);
+                background: rgba(244, 241, 234, 0.2);
                 color: var(--story-white);
             }
 
             .premium-close-btn svg {
-                width: 16px;
-                height: 16px;
+                width: 18px;
+                height: 18px;
                 fill: currentColor;
             }
 
@@ -871,27 +2171,6 @@
                     transition: none !important;
                 }
             }
-
-            @media (max-width: 480px) {
-                .premium-content-wrapper {
-                    padding: clamp(24px, 6vw, 48px) clamp(16px, 4vw, 32px);
-                }
-            }
-
-        /* Scrollbar styling for content wrapper */
-        .premium-content-wrapper::-webkit-scrollbar {
-            width: 6px;
-        }
-        .premium-content-wrapper::-webkit-scrollbar-track {
-            background: transparent;
-        }
-        .premium-content-wrapper::-webkit-scrollbar-thumb {
-            background: rgba(244, 241, 234, 0.15);
-            border-radius: 3px;
-        }
-        .premium-content-wrapper::-webkit-scrollbar-thumb:hover {
-            background: rgba(244, 241, 234, 0.3);
-        }
 
         </style>
     <body>
@@ -1037,7 +2316,7 @@
             </div>
         </div>
 
-        <!-- Beautiful Network Error -->
+<!-- Beautiful Network Error -->
         <div class="network-error-ui" id="network-error">
             <svg viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.36 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM17 13l-5 5-5-5h3V9h4v4h3z"/></svg>
             <h3 style="color: var(--text-ivory); font-weight: 400; margin-bottom: 10px;">ارتباط با سرور کُند است</h3>
@@ -1489,18 +2768,6 @@
                 }
             }
 
-            // Helper function to convert markdown-like content to HTML
-            function formatTextWithMarkdown(text) {
-                if (!text) return '';
-
-                return text
-                    .replace(/\*\*(.*?)\*\*/g, '<span class="premium-highlight">$1</span>')
-                    .replace(/\n\n/g, '</p><p>')
-                    .replace(/^/g, '<p>')
-                    .replace(/$/g, '</p>')
-                    .replace(/<p><\/p>/g, '');
-            }
-
             function renderInnerWorldUI(analysis) {
                 // Hide all other screens
                 document.getElementById('app').style.display = 'none';
@@ -1520,16 +2787,15 @@
 
                 // Update sections with real data
                 const sections = [
-                    { id: 'premium-section-0', textId: 'premium-text-0', key: 'section_1_text' },
-                    { id: 'premium-section-1', textId: 'premium-text-1', key: 'section_2_text' },
-                    { id: 'premium-section-2', textId: 'premium-content-2', key: 'section_3_text' }
+                    { id: 'premium-section-0', textId: 'premium-text-0', key: 'section_1_text', default: '...' },
+                    { id: 'premium-section-1', textId: 'premium-text-1', key: 'section_2_text', default: '...' },
+                    { id: 'premium-section-2', textId: 'premium-content-2', key: 'section_3_text', default: '...' }
                 ];
 
                 sections.forEach(section => {
                     const textEl = document.getElementById(section.textId);
-                    if (textEl && analysis[section.key]) {
-                        // Use innerHTML to render formatted text with highlights
-                        textEl.innerHTML = formatTextWithMarkdown(analysis[section.key]);
+                    if (textEl) {
+                        textEl.textContent = analysis[section.key] || section.default;
                     }
                 });
 
@@ -1708,7 +2974,6 @@
             }
 
 
-
             function renderComparisonResultUI(resultText) {
                 document.getElementById('app').style.display = 'none';
                 document.getElementById('intro-screen').style.display = 'none';
@@ -1783,7 +3048,7 @@
                         let processedText = safeContent.replace(/\*\*(.*?)\*\*/g, '<span class="text-highlight comparison-highlight">$1</span>');
 
                         let normalizedText = processedText
-                            .replace(/(?:^|\n)(>[^ \n]*)/g, '\n\n$1\n\n')
+                            .replace(/(?:^|\n)(>[^\n]*)/g, '\n\n$1\n\n')
                             .replace(/\n\n\n+/g, '\n\n');
 
                         let paragraphs = normalizedText.split(/\n\n+/);
@@ -1793,7 +3058,7 @@
 
                             if (para.startsWith('>')) {
                                 let cleanQuote = para.replace(/^>\s*/mg, '').trim();
-                                return `<div class="comparison-quote comparison-quote">${cleanQuote.replace(/\n/g, '<br>')}</div>`;
+                                return `<div class="soul-quote comparison-quote">${cleanQuote.replace(/\n/g, '<br>')}</div>`;
                             }
 
                             if (para.includes('\n- ') || para.startsWith('- ') || para.includes('\n* ') || para.startsWith('* ')) {
@@ -1804,7 +3069,7 @@
                                 lines.forEach(line => {
                                     line = line.trim();
                                     if (line.startsWith('- ') || line.startsWith('* ')) {
-                                        listHtml += `<li><span style="position:absolute; right:-15px; color:var(--comparison-accent); ">•</span>${line.substring(2)}</li>`;
+                                        listHtml += `<li><span style="position:absolute; right:-15px; color:var(--comparison-accent);">•</span>${line.substring(2)}</li>`;
                                     } else if (line) {
                                         textBeforeList += `<p>${line.replace(/\n/g, '<br>')}</p>`;
                                     }
@@ -1818,13 +3083,13 @@
 
                         const meta = getComparisonSlideMeta(cleanTitle);
                         const chapterBlock = meta.chapter ? `
-                            <div class="comparison-chapter" style="color: var(--accent-warm); font-weight: 500; letter-spacing: 2px; font-size: 11px; margin-bottom: 8px; text-transform: uppercase;">
+                            <div class="story-chapter comparison-chapter" style="color: var(--accent-warm); font-weight: 500; letter-spacing: 2px; font-size: 11px; margin-bottom: 8px; text-transform: uppercase;">
                                 ${meta.chapter}
                             </div>
                         ` : "";
 
                         const whisperBlock = meta.whisper ? `
-                            <div class="story-whisper-container" style="margin: 18px 0;">
+                            <div class="story-whisper-container" style="margin: 18px 0 24px 0;">
                                 <div class="story-divider" style="display: flex; align-items: center; justify-content: center; gap: 8px; opacity: 0.45;">
                                     <span style="height: 1px; width: 36px; background: linear-gradient(90deg, transparent, var(--accent-warm));"></span>
                                     <span style="color: var(--accent-warm); font-size: 11px;">✦</span>
@@ -1898,7 +3163,7 @@
                                 </div>
                             </div>
                         </div>
-                        `;
+                    `;
                     }
 
                     slidesWrapper.appendChild(slideDiv);
@@ -2037,6 +3302,7 @@
             }
 
 
+
             function renderResultUI(data) {
                 document.getElementById('app').style.display = 'none';
                 document.getElementById('intro-screen').style.display = 'none';
@@ -2121,7 +3387,7 @@
                                 </div>
                             </div>
                         </div>
-                        ` ;
+                    `;
                     }
                     else if(slide.isChart) {
                         const userType = slide.chartData.myers_type || "";
@@ -2147,7 +3413,7 @@
                                     </div>
                                 </div>
                             </div>
-                        ` ;
+                        `;
                     }
                     else {
                         const cleanTitle = slide.title.replace(/^\d+\.\s*/, '').replace(/<\/?[^>]+(>|$)/g, "").replace(/\*/g, '');
@@ -2160,8 +3426,9 @@
                         let processedText = safeContent.replace(/\*\*(.*?)\*\*/g, '<span class="text-highlight">$1</span>');
 
                         // ۲. جداسازی هوشمند خطوط نقل‌قول پیش از تفکیک پاراگراف‌ها (برای جلوگیری از سقوط دیو داخل p)
+                        // این رگکس مطمئن می‌شود اطراف خطوط > حتماً فضای خالی بلاک وجود دارد
                         let normalizedText = processedText
-                            .replace(/(?:^|\n)(>[^ \n]*)/g, '\n\n$1\n\n')
+                            .replace(/(?:^|\n)(>[^\n]*)/g, '\n\n$1\n\n')
                             .replace(/\n\n\n+/g, '\n\n');
 
                         // ۳. شکستن متن به بلاک‌های مستقل
@@ -2171,11 +3438,13 @@
                             para = para.trim();
                             if (!para) return '';
 
+                            // الف) اگر بلاک با > شروع شده، آن را به باکس نقل‌قول (Soul Quote) تبدیل کن
                             if (para.startsWith('>')) {
                                 let cleanQuote = para.replace(/^>\s*/mg, '').trim();
                                 return `<div class="soul-quote">${cleanQuote.replace(/\n/g, '<br>')}</div>`;
                             }
 
+                            // ب) اگر شامل بولت‌پوینت بود، به لیست تبدیلش کن
                             if (para.includes('\n- ') || para.startsWith('- ') || para.includes('\n* ') || para.startsWith('* ')) {
                                 let lines = para.split('\n');
                                 let listHtml = '<ul class="soul-list">';
@@ -2193,6 +3462,7 @@
                                 return textBeforeList + listHtml;
                             }
 
+                            // ج) پاراگراف معمولی با مدیریت اینترهای داخلی
                             return `<p>${para.replace(/\n/g, '<br>')}</p>`;
                         }).join('');
 
@@ -2215,12 +3485,11 @@
                             </div>
                         ` : "";
 
-
                        slideDiv.innerHTML = `
                         <div class="glass-card" style="padding: 25px;">
                             <div class="card-ambient-glow"></div>
 
-                            <div class="glass-card-content">
+                            <div class="glass-card-content"> <!-- باز شد -->
                                 ${chapterBlock}
 
                                 <h2 class="typewriter-target" data-text="${cleanTitle}"
@@ -2234,7 +3503,7 @@
                                 <div class="story-content-wrapper paragraph-target" style="line-height: 1.8; font-size: 15px; color: rgba(255,255,255,0.85); font-weight: 300;">
                                     ${formattedContent}
                                 </div>
-                            </div>
+                            </div> <!-- 👈 اینجا باید بسته بشه! -->
                         </div>
                         `;
                     }
@@ -2311,6 +3580,8 @@
                                 drawSakinorvaChart('sakinorva-canvas', slideData.chartData);
                             }, 200);
                         } else {
+                            // اگر اسلاید آخر (جهان درون شما) باشد و تیتر ثابت بخواهیم، نیازی به تایپ‌رایتر نیست
+                            // اما برای حفظ ساختار قبلی شما این بخش را دست نزدیم تا مابقی اسلایدها درست کار کنند
                             const titleEl = slide.querySelector('.typewriter-target');
                             const pEl = slide.querySelector('.paragraph-target');
 
@@ -2336,8 +3607,9 @@
                 const nextText = document.getElementById('next-btn-text');
                 const nextIcon = document.querySelector('.next-btn svg');
                 const navDivider = document.querySelector('.nav-divider');
-                const navWrapper = document.querySelector('.smart-nav-wrapper');
+                const navWrapper = document.querySelector('.smart-nav-wrapper'); // انتخاب کل نوار نویگیشن
 
+                // مدیریت دکمه بازگشت به اسلاید قبلی
                 if (currentSlideIndex > 0) {
                     if (btnPrev) btnPrev.style.display = 'flex';
                     if (navDivider) navDivider.style.display = 'block';
@@ -2346,21 +3618,24 @@
                     if (navDivider) navDivider.style.display = 'none';
                 }
 
+                // منطق جدید برای دکمه «ادامه / جهان درون شما» و مخفی کردن در اسلاید آخر
                 if (currentSlideIndex === parsedSlides.length - 1) {
+                    // ۱. اسلاید آخر: کل نوار دکمه‌ها مخفی شود تا تداخلی با دکمه طلایی ایجاد نکند
                     if (navWrapper) navWrapper.style.display = 'none';
 
                 } else if (currentSlideIndex === parsedSlides.length - 2) {
+                    // ۲. اسلاید یکی مانده به آخر: تغییر متن به سمت اسلاید هیجان‌انگیز
                     if (navWrapper) navWrapper.style.display = 'flex';
                     if (nextText) nextText.innerText = "جهان درون شما 🌗";
-                    if (nextIcon) nextIcon.style.display = "none";
+                    if (nextIcon) nextIcon.style.display = "none"; // مخفی کردن آیکون فلش برای تمیزی بیشتر
 
                 } else {
+                    // ۳. اسلایدهای عادی: نمایش حالت پیش‌فرض
                     if (navWrapper) navWrapper.style.display = 'flex';
                     if (nextText) nextText.innerText = "ادامه";
                     if (nextIcon) nextIcon.style.display = "block";
                 }
             }
-
 
 
             function drawSakinorvaChart(canvasId, rawData) {
@@ -2380,6 +3655,7 @@
                 const values = Object.values(data);
                 const numElements = labels.length;
 
+                // تنظیم رزولوشن صفحه (Retina/DPR)
                 const dpr = window.devicePixelRatio || 1;
                 const rect = canvas.parentElement.getBoundingClientRect();
                 canvas.width = rect.width * dpr;
@@ -2394,24 +3670,25 @@
 
                 ctx.clearRect(0, 0, width, height);
 
+                // رنگ اکسنت پروژه
                 const accentColor = getComputedStyle(document.documentElement).getPropertyValue('--accent-sage').trim() || '#9DB39B';
 
-                // =========================================
+                // ==========================================
                 // ۱. دایره‌های راهنما (کاملاً محو و نازک)
-                // =========================================
+                // ==========================================
                 const levels = 4;
-                ctx.lineWidth = 0.8;
+                ctx.lineWidth = 0.8; // بسیار ظریف
                 for (let i = 1; i <= levels; i++) {
                     const radius = maxRadius * (i / levels);
                     ctx.beginPath();
                     ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
-                    ctx.strokeStyle = 'rgba(255, 255, 255, 0.04)';
+                    ctx.strokeStyle = 'rgba(255, 255, 255, 0.04)'; // تقریبا نامرئی
                     ctx.stroke();
                 }
 
-                // =========================================
+                // ==========================================
                 // ۲. محاسبه مختصات نقاط
-                // =========================================
+                // ==========================================
                 const maxValue = 50;
                 const points = [];
                 for (let i = 0; i < numElements; i++) {
@@ -2437,9 +3714,9 @@
                     });
                 }
 
-                // =========================================
+                // ==========================================
                 // ۳. رسم مساحت داخلی (Fill با آپاسیتی بسیار کم)
-                // =========================================
+                // ==========================================
                 ctx.beginPath();
                 ctx.moveTo(midpoints[0].x, midpoints[0].y);
                 for (let i = 0; i < numElements; i++) {
@@ -2448,15 +3725,16 @@
                 }
                 ctx.closePath();
                 ctx.fillStyle = accentColor;
-                ctx.globalAlpha = 0.04;
+                ctx.globalAlpha = 0.04; // بسیار لایت و ملایم
                 ctx.fill();
                 ctx.globalAlpha = 1.0;
 
-                // =========================================
+                // ==========================================
                 // ۴. رسم خط منحنی ارگانیک با انتهای فید شده (Fade Layer)
-                // =========================================
-                ctx.lineWidth = 1.8;
+                // ==========================================
+                ctx.lineWidth = 1.8; // طبق استاندارد درخواستی شما
 
+                // الف) رسم بخش اصلی منحنی (از کارکرد اول تا کارکرد ماقبل آخر)
                 ctx.beginPath();
                 ctx.moveTo(midpoints[0].x, midpoints[0].y);
                 for (let i = 0; i < numElements - 1; i++) {
@@ -2466,33 +3744,36 @@
                 ctx.strokeStyle = accentColor;
                 ctx.stroke();
 
+                // ب) رسم آخرین سگمنت به صورت فید شده (حس عدم انسداد و زنده بودن نقشه)
                 ctx.beginPath();
                 ctx.moveTo(midpoints[numElements - 1].x, midpoints[numElements - 1].y);
                 ctx.quadraticCurveTo(points[0].x, points[0].y, midpoints[0].x, midpoints[0].y);
                 ctx.strokeStyle = accentColor;
-                ctx.globalAlpha = 0.25;
+                ctx.globalAlpha = 0.25; // فید ملایم به سمت نقطه‌ی آغازین
                 ctx.stroke();
                 ctx.globalAlpha = 1.0;
 
-                // =========================================
+                // ==========================================
                 // ۵. رسم نودها (حلقه اکسنت + نقطه داخلی سفید)
-                // =========================================
+                // ==========================================
                 points.forEach(p => {
+                    // حلقه‌ی بیرونی
                     ctx.beginPath();
                     ctx.arc(p.x, p.y, 4.5, 0, Math.PI * 2);
                     ctx.strokeStyle = accentColor;
                     ctx.lineWidth = 1.2;
                     ctx.stroke();
 
+                    // نقطه‌ی مرکزی
                     ctx.beginPath();
                     ctx.arc(p.x, p.y, 1.5, 0, Math.PI * 2);
                     ctx.fillStyle = '#FFFFFF';
                     ctx.fill();
                 });
 
-                // =========================================
+                // ==========================================
                 // ۶. لِیبل‌ها و مقادیر عددی (مینیمال و مینیاتوری)
-                // =========================================
+                // ==========================================
                 points.forEach((p) => {
                     const labelRadius = maxRadius + 26;
                     const lx = centerX + labelRadius * Math.cos(p.angle);
@@ -2501,26 +3782,31 @@
                     ctx.textAlign = 'center';
                     ctx.textBaseline = 'middle';
 
+                    // عنوان کارکرد (مثل Ni)
                     ctx.fillStyle = 'rgba(255, 255, 255, 0.65)';
                     ctx.font = '500 11px system-ui, -apple-system, sans-serif';
                     ctx.fillText(p.label, lx, ly - 7);
 
+                    // امتیاز دقیق کارکرد (مثل 33.4)
                     ctx.fillStyle = 'rgba(255, 255, 255, 0.35)';
                     ctx.font = '400 10px system-ui, -apple-system, sans-serif';
+                    // نمایش امتیاز به صورت دسی‌مال تک‌رقمی جهت حس آرکایو و دقیق بودن
                     const displayVal = p.val.toFixed(1);
                     ctx.fillText(displayVal, lx, ly + 7);
                 });
 
-                // =========================================
+                // ==========================================
                 // ۷. هسته مرکزی قطب‌نما (Serif Style)
-                // =========================================
+                // ==========================================
                 if (rawData.myers_type) {
+                    // دایره‌ی بسیار نازک مرکزی
                     ctx.beginPath();
                     ctx.arc(centerX, centerY, 34, 0, Math.PI * 2);
                     ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
                     ctx.lineWidth = 0.8;
                     ctx.stroke();
 
+                    // نگاشت تیپ‌ها به آرکتایپ‌های کلاسیک و اصیل (کتابی)
                     const archetypes = {
                         'INTJ': 'Architect', 'INFJ': 'Observer', 'INTP': 'Logician', 'INFP': 'Visionary',
                         'ENTJ': 'Commander', 'ENFJ': 'Catalyst', 'ENTP': 'Innovator', 'ENFP': 'Idealist',
@@ -2529,11 +3815,13 @@
                     };
                     const subtitle = archetypes[rawData.myers_type.toUpperCase()] || 'Reflection';
 
+                    // رسم متن تیپ شخصیتی اصلی
                     ctx.fillStyle = 'rgba(255, 255, 255, 0.85)';
                     ctx.font = '400 16px Georgia, Garamond, "Times New Roman", serif';
                     ctx.letterSpacing = "1.5px";
                     ctx.fillText(rawData.myers_type.toUpperCase(), centerX, centerY - 5);
 
+                    // رسم زیرعنوان مفهومی (مثل Observer)
                     ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
                     ctx.font = 'italic 10px Georgia, Garamond, "Times New Roman", serif';
                     ctx.letterSpacing = "0.5px";
@@ -2553,7 +3841,6 @@
             }
 
 
-
             window.prevSlide = function() {
                 if (tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
 
@@ -2563,27 +3850,31 @@
                 }
             }
 
-
             // Premium Inner World Functions
-            let currentPremiumSection = 0;
-
             function openPremiumPage(sectionIndex = 0) {
                 const premiumPage = document.getElementById('premium-inner-world');
+                const titleEl = document.getElementById('premium-title');
+                const sections = [
+                    { header: 'سؤال اول', text: '...' },
+                    { header: 'سؤال دوم', text: '...' }
+                ];
+
                 if (premiumPage) {
                     premiumPage.style.display = 'flex';
 
+                    // Update navigation buttons
                     const prevBtn = document.getElementById('premium-prev-btn');
                     const nextBtn = document.getElementById('premium-next-btn');
                     currentPremiumSection = sectionIndex;
 
                     if (sectionIndex === 0) {
                         if (prevBtn) prevBtn.disabled = true;
-                    } else if (sectionIndex >= 2) {
+                        if (nextBtn) nextBtn.disabled = false;
+                    } else if (sectionIndex >= sections.length - 1) {
                         if (nextBtn) nextBtn.disabled = true;
-                    } else {
-                        if (prevBtn) prevBtn.disabled = false;
                     }
 
+                    // Update section visibility
                     const allSections = document.querySelectorAll('.premium-section');
                     allSections.forEach((section, idx) => {
                         section.classList.toggle('active', idx === sectionIndex);
@@ -2596,8 +3887,9 @@
                 if (premiumPage) {
                     premiumPage.style.display = 'none';
                 }
-                document.getElementById('app').style.display = 'flex';
             }
+
+            let currentPremiumSection = 0;
 
             function prevPremiumSection() {
                 if (currentPremiumSection > 0) {
@@ -2607,7 +3899,7 @@
             }
 
             function nextPremiumSection() {
-                const maxSections = 3; // Number of sections in premium page (0, 1, 2)
+                const maxSections = 3; // Number of sections in premium page
                 if (currentPremiumSection < maxSections - 1) {
                     currentPremiumSection++;
                     updatePremiumSections();
@@ -2626,9 +3918,10 @@
                 if (prevBtn) prevBtn.disabled = currentPremiumSection === 0;
                 if (nextBtn) nextBtn.disabled = currentPremiumSection >= 2;
 
+                // Add haptic feedback
                 if (tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
             }
 
         </script>
     </body>
-</html>
+    </html>
