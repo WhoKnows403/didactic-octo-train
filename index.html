@@ -1854,8 +1854,325 @@
                     );
             }
 
+/* Premium Inner World Page - Dark Editorial Psychological Experience */
+            #premium-inner-world {
+                position: fixed;
+                inset: 0;
+                z-index: 1000;
+                display: none;
+                flex-direction: column;
+                width: 100%;
+                height: 100%;
+                overflow: hidden;
+                padding: 0;
+                background: var(--story-ink);
+                isolation: isolate;
+            }
+
+            .premium-background {
+                position: fixed;
+                inset: 0;
+                z-index: -1;
+                background-color: #0a0c0d;
+                opacity: 0.95;
+            }
+
+            .premium-bg-image {
+                position: absolute;
+                inset: 0;
+                width: 100%;
+                height: 100%;
+                background-image: url("inner_world.webp");
+                background-size: cover;
+                background-position: center;
+                background-repeat: no-repeat;
+                filter: saturate(0.7) brightness(0.6) contrast(1.02);
+                opacity: 0.85;
+                transition: opacity 1.5s ease;
+            }
+
+            .premium-bg-overlay {
+                position: absolute;
+                inset: 0;
+                background: linear-gradient(
+                    to bottom,
+                    rgba(12, 14, 13, 0.3) 0%,
+                    rgba(12, 14, 13, 0.15) 40%,
+                    rgba(12, 14, 13, 0.6) 100%
+                );
+                pointer-events: none;
+                z-index: 1;
+            }
+
+            .premium-content-wrapper {
+                position: relative;
+                z-index: 10;
+                flex: 1;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: flex-start;
+                padding: clamp(24px, 6vw, 48px) clamp(20px, 5vw, 44px);
+                max-width: 100%;
+                overflow: hidden;
+            }
+
+            .premium-chapter {
+                color: var(--accent-warm);
+                font-size: 12px;
+                font-weight: 500;
+                letter-spacing: 0.2em;
+                text-transform: uppercase;
+                text-align: center;
+                margin-bottom: clamp(16px, 3vh, 28px);
+                opacity: 0.85;
+                line-height: 1.3;
+            }
+
+            .premium-title {
+                font-size: clamp(28px, 7vw, 42px);
+                font-weight: 700;
+                color: var(--story-white);
+                text-align: center;
+                line-height: 1.25;
+                letter-spacing: -0.02em;
+                text-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+                margin: 0 auto 32px;
+                max-width: 85%;
+                position: relative;
+                z-index: 2;
+            }
+
+            .premium-title-line {
+                width: 42px;
+                height: 1px;
+                background: var(--accent-warm);
+                opacity: 0.35;
+                margin: 28px auto 32px;
+            }
+
+            .premium-section {
+                width: 100%;
+                max-width: 580px;
+                margin: 0 auto;
+                opacity: 0;
+                transform: translateY(20px);
+                transition: opacity 0.6s var(--story-ease), transform 0.6s var(--story-ease);
+            }
+
+            .premium-section.active {
+                opacity: 1;
+                transform: translateY(0);
+            }
+
+            .premium-section-header {
+                font-size: clamp(18px, 4vw, 22px);
+                font-weight: 600;
+                color: var(--story-white);
+                text-align: center;
+                margin-bottom: 18px;
+                letter-spacing: 0.5px;
+            }
+
+            .premium-text {
+                font-size: clamp(15px, 3.8vw, 17px);
+                line-height: 1.85;
+                color: var(--story-text);
+                font-weight: 300;
+                text-align: right;
+                margin: 0;
+                direction: rtl;
+            }
+
+            .premium-whisper-container {
+                margin: 28px auto;
+                max-width: 520px;
+                text-align: center;
+            }
+
+            .premium-whisper-divider {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 12px;
+                margin-bottom: 14px;
+            }
+
+            .premium-whisper-line {
+                width: 36px;
+                height: 1px;
+                background: linear-gradient(90deg, transparent, rgba(210, 194, 172, 0.45), transparent);
+            }
+
+            .premium-whisper-text {
+                font-size: 13px;
+                color: var(--story-text-soft);
+                font-weight: 300;
+                font-style: italic;
+                line-height: 1.6;
+                letter-spacing: 0.3px;
+            }
+
+            .premium-content {
+                font-size: clamp(15.5px, 3.7vw, 16.5px);
+                line-height: 1.9;
+                color: var(--story-text);
+                font-weight: 300;
+                text-align: right;
+                margin: 0;
+            }
+
+            .premium-highlight {
+                color: var(--accent-warm);
+                font-weight: 600;
+                background: none;
+                -webkit-text-fill-color: initial;
+                padding: 0 2px;
+            }
+
+            .premium-list {
+                margin: 22px 0;
+                padding: 0 22px;
+                list-style: none;
+                direction: rtl;
+            }
+
+            .premium-list li {
+                margin-bottom: 14px;
+                font-size: inherit;
+                line-height: 1.8;
+                color: var(--story-text);
+                position: relative;
+                padding-right: 20px;
+            }
+
+            .premium-list li::before {
+                content: "";
+                position: absolute;
+                right: 0;
+                top: 50%;
+                transform: translateY(-50%);
+                width: 8px;
+                height: 1px;
+                background: var(--accent-warm);
+                opacity: 0.4;
+            }
+
+            .premium-quote {
+                margin: 26px 0;
+                padding: 20px 22px;
+                background: rgba(255, 255, 255, 0.03);
+                border-right: 1px solid rgba(210, 194, 172, 0.25);
+                border-radius: 12px;
+                font-style: italic;
+                color: var(--story-text-soft);
+                font-size: 14px;
+                line-height: 1.9;
+            }
+
+            .premium-quote::before {
+                content: "“";
+                position: absolute;
+                top: -8px;
+                right: 14px;
+                font-size: 36px;
+                color: var(--accent-warm);
+                opacity: 0.12;
+                font-family: Georgia, serif;
+            }
+
+            .premium-nav-wrapper {
+                position: absolute;
+                bottom: clamp(20px, 5vw, 36px);
+                left: 0;
+                width: 100%;
+                display: flex;
+                justify-content: center;
+                padding: 0 clamp(20px, 5vw, 44px);
+                z-index: 10;
+            }
+
+            .premium-nav-pill {
+                display: flex;
+                align-items: center;
+                gap: 14px;
+                background: rgba(17, 19, 17, 0.55);
+                border: 1px solid rgba(244, 241, 234, 0.12);
+                border-radius: 12px;
+                padding: 12px 24px;
+                backdrop-filter: blur(12px);
+                -webkit-backdrop-filter: blur(12px);
+                box-shadow: 0 6px 24px rgba(0, 0, 0, 0.28);
+            }
+
+            .premium-nav-btn {
+                font-family: 'Vazirmatn', sans-serif;
+                font-size: 13px;
+                font-weight: 500;
+                color: var(--story-text-soft);
+                background: transparent;
+                border: none;
+                border-radius: 8px;
+                cursor: pointer;
+                padding: 8px 14px;
+                transition: all 0.3s ease;
+                letter-spacing: 0.3px;
+            }
+
+            .premium-nav-btn:hover {
+                background: rgba(244, 241, 234, 0.08);
+                color: var(--story-white);
+            }
+
+            .premium-nav-btn:active {
+                transform: scale(0.96);
+            }
+
+            .premium-nav-divider {
+                width: 1px;
+                height: 18px;
+                background: var(--story-line);
+                opacity: 0.6;
+            }
+
+            .premium-close-btn {
+                position: absolute;
+                top: clamp(16px, 4vw, 28px);
+                right: clamp(16px, 4vw, 28px);
+                width: 36px;
+                height: 36px;
+                border-radius: 50%;
+                background: rgba(17, 19, 17, 0.45);
+                border: 1px solid rgba(244, 241, 234, 0.15);
+                color: var(--story-text-soft);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+                z-index: 11;
+                transition: all 0.3s ease;
+            }
+
+            .premium-close-btn:hover {
+                background: rgba(244, 241, 234, 0.2);
+                color: var(--story-white);
+            }
+
+            .premium-close-btn svg {
+                width: 18px;
+                height: 18px;
+                fill: currentColor;
+            }
+
+            @media (prefers-reduced-motion: reduce) {
+                .premium-section,
+                .premium-bg-image {
+                    animation: none !important;
+                    transition: none !important;
+                }
+            }
+
         </style>
-    </head>
     <body>
 
         <!-- Ambient glowing breathing background -->
@@ -1922,28 +2239,84 @@
 
         <!-- Story Mode Result Container -->
         <div id="result-container">
+
             <div class="story-background" aria-hidden="true">
                 <div class="story-background-image"></div>
                 <div class="story-background-vignette"></div>
             </div>
-        <div class="smart-nav-wrapper">
-            <div class="nav-pill">
-                <button class="nav-btn prev-btn" id="btn-prev" onclick="prevSlide()">
-                    <svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
-                </button>
-                <div class="nav-divider"></div>
-                <button class="nav-btn next-btn" id="btn-next" onclick="nextSlide()">
-                    <span id="next-btn-text">ادامه</span>
-                    <svg viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
-                </button>
+
+            <div class="smart-nav-wrapper">
+                <div class="nav-pill">
+                    <button class="nav-btn prev-btn" id="btn-prev" onclick="prevSlide()">
+                        <svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+                    </button>
+                    <div class="nav-divider"></div>
+                    <button class="nav-btn next-btn" id="btn-next" onclick="nextSlide()">
+                        <span id="next-btn-text">ادامه</span>
+                        <svg viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+                    </button>
+                </div>
             </div>
-        </div>
             <div class="story-progress-bar" id="story-progress"></div>
             <div class="slide-container" id="slides-wrapper"></div>
-
         </div>
 
-        <!-- Beautiful Network Error -->
+        <!-- Premium Inner World Page -->
+        <div id="premium-inner-world">
+            <div class="premium-background">
+                <div class="premium-bg-image"></div>
+                <div class="premium-bg-overlay"></div>
+            </div>
+
+            <button class="premium-close-btn" onclick="closePremiumPage()">
+                <svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+            </button>
+
+            <div class="premium-content-wrapper" id="premium-content">
+                <div class="premium-chapter">پروفشنال</div>
+
+                <h2 class="premium-title" id="premium-title">تحلیل‌تان در دسترس است</h2>
+
+                <div class="premium-title-line"></div>
+
+                <div class="premium-section active" id="premium-section-0">
+                    <div class="premium-section-header">بخش اول</div>
+                    <p class="premium-text" id="premium-text-0"></p>
+                </div>
+
+                <div class="premium-section" id="premium-section-1">
+                    <div class="premium-section-header">بخش دوم</div>
+                    <p class="premium-text" id="premium-text-1"></p>
+                </div>
+
+                <div class="premium-whisper-container">
+                    <div class="premium-whisper-divider">
+                        <span class="premium-whisper-line"></span>
+                        <span class="premium-whisper-text">✦</span>
+                        <span class="premium-whisper-line"></span>
+                    </div>
+                    <p class="premium-whisper-text">تحلیل عمیق‌تر الگوهای پنهانِ خود</p>
+                </div>
+
+                <div class="premium-section" id="premium-section-2">
+                    <p class="premium-content" id="premium-content-2"></p>
+                </div>
+
+                <div class="premium-nav-wrapper">
+                    <div class="premium-nav-pill">
+                        <button class="premium-nav-btn" id="premium-prev-btn" onclick="prevPremiumSection()">
+                            قبلی
+                        </button>
+                        <div class="premium-nav-divider"></div>
+                        <button class="premium-nav-btn" id="premium-next-btn" onclick="nextPremiumSection()">
+                            ادامه
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+<!-- Beautiful Network Error -->
         <div class="network-error-ui" id="network-error">
             <svg viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.36 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM17 13l-5 5-5-5h3V9h4v4h3z"/></svg>
             <h3 style="color: var(--text-ivory); font-weight: 400; margin-bottom: 10px;">ارتباط با سرور کُند است</h3>
@@ -3372,6 +3745,77 @@
                 }
             }
 
+            // Premium Inner World Functions
+            function openPremiumPage(sectionIndex = 0) {
+                const premiumPage = document.getElementById('premium-inner-world');
+                const titleEl = document.getElementById('premium-title');
+                const sections = [
+                    { header: 'سؤال اول', text: '...' },
+                    { header: 'سؤال دوم', text: '...' }
+                ];
+
+                if (premiumPage) {
+                    premiumPage.style.display = 'flex';
+
+                    // Update navigation buttons
+                    const prevBtn = document.getElementById('premium-prev-btn');
+                    const nextBtn = document.getElementById('premium-next-btn');
+                    currentPremiumSection = sectionIndex;
+
+                    if (sectionIndex === 0) {
+                        if (prevBtn) prevBtn.disabled = true;
+                        if (nextBtn) nextBtn.disabled = false;
+                    } else if (sectionIndex >= sections.length - 1) {
+                        if (nextBtn) nextBtn.disabled = true;
+                    }
+
+                    // Update section visibility
+                    const allSections = document.querySelectorAll('.premium-section');
+                    allSections.forEach((section, idx) => {
+                        section.classList.toggle('active', idx === sectionIndex);
+                    });
+                }
+            }
+
+            function closePremiumPage() {
+                const premiumPage = document.getElementById('premium-inner-world');
+                if (premiumPage) {
+                    premiumPage.style.display = 'none';
+                }
+            }
+
+            let currentPremiumSection = 0;
+
+            function prevPremiumSection() {
+                if (currentPremiumSection > 0) {
+                    currentPremiumSection--;
+                    updatePremiumSections();
+                }
+            }
+
+            function nextPremiumSection() {
+                const maxSections = 3; // Number of sections in premium page
+                if (currentPremiumSection < maxSections - 1) {
+                    currentPremiumSection++;
+                    updatePremiumSections();
+                }
+            }
+
+            function updatePremiumSections() {
+                const allSections = document.querySelectorAll('.premium-section');
+                allSections.forEach((section, idx) => {
+                    section.classList.toggle('active', idx === currentPremiumSection);
+                });
+
+                const prevBtn = document.getElementById('premium-prev-btn');
+                const nextBtn = document.getElementById('premium-next-btn');
+
+                if (prevBtn) prevBtn.disabled = currentPremiumSection === 0;
+                if (nextBtn) nextBtn.disabled = currentPremiumSection >= 2;
+
+                // Add haptic feedback
+                if (tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
+            }
 
         </script>
     </body>
