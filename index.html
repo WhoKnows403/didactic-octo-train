@@ -1859,17 +1859,16 @@
         Personal Study Room / Living Psychological Book
         ========================================================= */
         #premium-inner-world {
-            --premium-bg: #131412;
-            --premium-paper: #F2EFE9;
-            --premium-soft: #D5D1C7;
+            --premium-bg: #181916;
+            --premium-paper: #EEEAE1;
+            --premium-soft: #C8C4BA;
             --premium-muted: #8E8C84;
-            --premium-brass: #C0B08E;
-            --premium-brass-soft: rgba(192, 176, 142, 0.14);
-            --premium-brass-line: rgba(192, 176, 142, 0.38);
-            --premium-sage: #8A9882;
-            --premium-sage-soft: rgba(138, 152, 130, 0.12);
-            --premium-line: rgba(242, 239, 233, 0.08);
-            --premium-page-ease: cubic-bezier(0.25, 1, 0.35, 1);
+
+            --premium-brass: #B6A47E;
+            --premium-sage: #7E8A76;
+
+            --premium-line: rgba(238, 234, 225, 0.10);
+            --premium-brass-line: rgba(182, 164, 126, 0.38);
 
             position: fixed;
             inset: 0;
@@ -1882,26 +1881,21 @@
 
             overflow: hidden;
 
-            background:
-                radial-gradient(
-                    ellipse at 50% 12%,
-                    rgba(192, 176, 142, 0.035) 0%,
-                    transparent 60%
-                ),
-                var(--premium-bg);
-
-            color:
-                var(--premium-paper);
+            background: var(--premium-bg);
+            color: var(--premium-paper);
 
             isolation: isolate;
-
             direction: rtl;
 
             font-family: 'Vazirmatn', sans-serif;
+
             -webkit-font-smoothing: antialiased;
+            text-rendering: optimizeLegibility;
 
             user-select: none;
         }
+
+
 
 
         .premium-atmosphere {
@@ -1914,6 +1908,27 @@
 
             pointer-events: none;
         }
+
+
+        .premium-atmosphere-image {
+            position: absolute;
+            inset: -3%;
+
+            background-image: url("inner_world.webp");
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+
+            opacity: 0.10;
+
+            filter:
+                saturate(0.25)
+                brightness(0.55)
+                contrast(0.95);
+
+            transform: scale(1.02);
+        }
+
 
         .premium-header,
         .premium-slides-wrapper {
@@ -1935,11 +1950,11 @@
             background-position: center;
             background-repeat: no-repeat;
 
-            opacity: 0.28;
+            opacity: 0.34;
 
             filter:
-                saturate(0.42)
-                brightness(0.68)
+                saturate(0.48)
+                brightness(0.72)
                 contrast(0.96);
 
             transform: scale(1.02);
@@ -1954,10 +1969,10 @@
             background:
                 linear-gradient(
                     to bottom,
-                    rgba(19, 20, 18, 0.35) 0%,
-                    rgba(19, 20, 18, 0.08) 28%,
-                    rgba(19, 20, 18, 0.32) 68%,
-                    rgba(19, 20, 18, 0.88) 100%
+                    rgba(24, 25, 22, 0.22) 0%,
+                    rgba(24, 25, 22, 0.04) 28%,
+                    rgba(24, 25, 22, 0.18) 68%,
+                    rgba(24, 25, 22, 0.82) 100%
                 );
 
             pointer-events: none;
@@ -1972,8 +1987,8 @@
             margin: 0 auto;
 
             padding:
-                max(20px, env(safe-area-inset-top))
-                24px
+                max(24px, env(safe-area-inset-top))
+                28px
                 0;
 
             box-sizing: border-box;
@@ -1982,7 +1997,6 @@
 
             flex-shrink: 0;
         }
-
 
         .premium-header-meta {
             display: flex;
@@ -1994,7 +2008,7 @@
 
             color: var(--premium-muted);
 
-            font-size: 9.5px;
+            font-size: 9px;
             font-weight: 500;
 
             letter-spacing: 0.16em;
@@ -2013,7 +2027,7 @@
         .premium-story-progress {
             width: min(190px, 42vw);
 
-            margin: 12px auto 0;
+            margin: 14px auto 0;
 
             display: flex;
 
@@ -2025,12 +2039,10 @@
         .premium-progress-mark {
             flex: 1;
 
-            height: 1.5px;
+            height: 1px;
 
             background:
-                rgba(242, 239, 233, 0.12);
-
-            border-radius: 999px;
+                rgba(238, 234, 225, 0.12);
 
             transition:
                 background-color 420ms ease,
@@ -2039,18 +2051,19 @@
 
         .premium-progress-mark.is-active {
             background: var(--premium-brass);
-            opacity: 0.95;
-            box-shadow: 0 0 6px rgba(192, 176, 142, 0.3);
+            opacity: 0.9;
         }
 
         .premium-progress-mark.is-passed {
             background:
-                rgba(242, 239, 233, 0.35);
+                rgba(238, 234, 225, 0.32);
         }
 
 
         .premium-slides-wrapper {
             position: relative;
+
+            z-index: 10;
 
             flex: 1;
             min-height: 0;
@@ -2060,15 +2073,8 @@
             margin: 0 auto;
 
             overflow: hidden;
-
-            box-sizing: border-box;
         }
 
-
-        /* =========================================================
-           EDITORIAL READING EXPERIENCE — PAGE TRANSITIONS & SHEET
-           Subtle RTL page-turn with depth, layered translation & soft shadow
-           ========================================================= */
         .premium-slide {
             position: absolute;
             inset: 0;
@@ -2076,37 +2082,35 @@
             width: 100%;
             height: 100%;
 
-            padding:
-                clamp(28px, 5vh, 48px)
-                clamp(20px, 5.5vw, 44px)
-                calc(92px + max(16px, env(safe-area-inset-bottom)));
-
             box-sizing: border-box;
 
+            padding:
+                clamp(34px, 6vh, 72px)
+                clamp(24px, 7vw, 54px)
+                calc(
+                    116px +
+                    env(safe-area-inset-bottom)
+                );
+
             overflow-y: auto;
-            -webkit-overflow-scrolling: touch;
 
             scrollbar-width: none;
 
             opacity: 0;
 
-            /* Default entrance from RTL forward stream (enters from left in RTL) */
             transform:
-                translateX(-18px)
+                translateX(0)
                 scale(0.985);
 
             pointer-events: none;
-
             visibility: hidden;
 
             z-index: 0;
 
             transition:
-                opacity 380ms var(--premium-page-ease),
-                transform 380ms var(--premium-page-ease),
-                visibility 380ms;
-
-            will-change: transform, opacity;
+                opacity 360ms cubic-bezier(0.22, 1, 0.36, 1),
+                transform 460ms cubic-bezier(0.22, 1, 0.36, 1),
+                visibility 0s linear 460ms;
         }
 
 
@@ -2122,334 +2126,290 @@
                 scale(1);
 
             pointer-events: auto;
-
             visibility: visible;
 
             z-index: 2;
+
+            transition:
+                opacity 420ms cubic-bezier(0.22, 1, 0.36, 1),
+                transform 480ms cubic-bezier(0.22, 1, 0.36, 1),
+                visibility 0s;
         }
 
-        /* Past page departs toward the right in RTL with subtle depth fold */
+
         .premium-slide.is-before {
             opacity: 0;
 
             transform:
-                translateX(22px)
-                scale(0.98);
+                translateX(26px)
+                scale(0.985);
 
             pointer-events: none;
-
             visibility: hidden;
+
             z-index: 1;
         }
 
-        /* Upcoming page waits on the left in RTL */
         .premium-slide.is-after {
             opacity: 0;
 
             transform:
-                translateX(-22px)
-                scale(0.98);
+                translateX(-26px)
+                scale(0.985);
 
             pointer-events: none;
-
             visibility: hidden;
+
             z-index: 1;
         }
 
-
-        /* Editorial Article Container — acts as a curated reading page */
         .premium-editorial-article {
-            width: min(100%, 580px);
-            margin: 0 auto;
-            display: flex;
-            flex-direction: column;
-            align-items: stretch;
-            text-align: right;
-            position: relative;
+            width: min(100%, 640px);
+
+            margin-inline: auto;
+
+            padding-bottom: 12px;
         }
 
-        /* Chapter Opening Layout — centered entry */
-        .premium-editorial-header {
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-            margin-bottom: 24px;
-        }
 
         .premium-slide-chapter {
-            margin-bottom: 12px;
+            margin: 0 0 22px;
 
             color: var(--premium-brass);
 
-            font-size: 10px;
-
+            font-size: 9px;
             font-weight: 500;
 
             line-height: 1.5;
 
-            letter-spacing: 0.22em;
+            letter-spacing: 0.18em;
 
             text-align: center;
-
             text-transform: uppercase;
 
-            opacity: 0.9;
+            opacity: 0.82;
         }
+
 
         .premium-slide-title {
             width: min(100%, 540px);
 
-            margin-inline: auto;
-            margin-top: 0;
-            margin-bottom: 0;
+            margin:
+                0 auto;
 
-            color:
-                var(--premium-paper);
+            color: var(--premium-paper);
 
             font-size:
                 clamp(
-                    22px,
-                    5.2vw,
-                    30px
+                    28px,
+                    6.8vw,
+                    40px
                 );
 
             font-weight: 600;
 
             line-height: 1.55;
 
-            letter-spacing: -0.015em;
+            letter-spacing: -0.025em;
 
             text-align: center;
-            text-wrap: balance;
 
-            text-shadow: 0 2px 14px rgba(0, 0, 0, 0.4);
+            text-wrap: balance;
         }
 
-        .premium-slide-subtitle {
-            max-width: 440px;
 
-            margin: 12px auto 0;
+
+        .premium-slide-subtitle {
+            width: min(100%, 470px);
+
+            margin:
+                18px auto 0;
 
             color: var(--premium-muted);
 
             font-size: 13px;
+            font-weight: 400;
 
-            font-weight: 300;
-
-            line-height: 1.9;
+            line-height: 2;
 
             text-align: center;
-            text-wrap: balance;
         }
 
-        /* Editorial Rule — restrained ornamental divider */
+
         .premium-slide-rule {
-            width: 28px;
+            width: 42px;
             height: 1px;
 
             margin:
-                24px auto 0;
+                34px auto
+                38px;
 
             background:
                 var(--premium-brass-line);
-
-            opacity: 0.85;
         }
 
-        /* Editorial Lead Paragraph — visual anchor bridging opening to long-form reading */
-        .premium-editorial-lead {
-            margin: 0 0 28px;
 
-            color: var(--premium-paper);
+        .premium-slide-body {
+            width: min(100%, 550px);
 
-            font-size: clamp(17px, 4.3vw, 19.5px);
+            margin-inline: auto;
 
-            font-weight: 500;
+            color: var(--premium-soft);
 
-            line-height: 2.15;
+            font-size:
+                clamp(
+                    15.5px,
+                    3.8vw,
+                    17px
+                );
+
+            font-weight: 400;
+
+            line-height: 2.22;
 
             letter-spacing: 0;
 
             text-align: right;
-            text-wrap: pretty;
-
-            padding-bottom: 20px;
-            border-bottom: 1px solid var(--premium-line);
         }
 
-        /* Reading Column Body — prose layout optimized for comfortable RTL study */
-        .premium-slide-body {
-            width: 100%;
-            margin-top: 0;
 
-            color:
-                var(--premium-soft);
+        .premium-slide-body .premium-editorial-lead {
+            margin:
+                0 0 34px;
+
+            color: var(--premium-paper);
 
             font-size:
                 clamp(
-                    15px,
-                    3.8vw,
-                    16.5px
+                    17px,
+                    4.2vw,
+                    19px
                 );
 
-            font-weight: 300;
+            font-weight: 500;
 
-            line-height: 2.25;
-
-            letter-spacing: 0.1px;
+            line-height: 2.05;
 
             text-align: right;
         }
 
         .premium-slide-body p {
             margin:
-                0 0 24px;
+                0 0 26px;
 
-            color:
-                var(--premium-soft);
+            color: var(--premium-soft);
 
-            line-height: 2.25;
-            text-wrap: pretty;
+            line-height: 2.22;
         }
 
         .premium-slide-body p:last-child {
             margin-bottom: 0;
         }
 
-        /* Marginal Note / Marginalia — quiet editorial annotation */
         .premium-marginal-note {
-            margin: 28px 0;
-            padding: 14px 18px;
-            background: var(--premium-sage-soft);
-            border-right: 2px solid var(--premium-sage);
-            border-radius: 4px 0 0 4px;
-            color: var(--premium-soft);
-            font-size: 13.5px;
-            line-height: 2.05;
-            font-weight: 300;
-        }
+            position: relative;
 
-        .premium-marginal-label {
-            display: block;
-            color: var(--premium-sage);
-            font-size: 11px;
-            font-weight: 600;
-            letter-spacing: 0.08em;
-            margin-bottom: 4px;
-            text-transform: uppercase;
-        }
-
-        /* Important Passage / Editorial Pullquote */
-        .premium-important-passage {
-            margin: 32px 0;
-            padding: 16px 20px 16px 12px;
-            border-right: 2px solid var(--premium-brass);
-            background: linear-gradient(90deg, transparent 0%, rgba(192, 176, 142, 0.05) 100%);
-            color: var(--premium-paper);
-            font-size: clamp(15.5px, 3.9vw, 17px);
-            font-weight: 400;
-            line-height: 2.2;
-            border-radius: 2px;
-        }
-
-        .premium-inline-quote,
-        .premium-slide-quote {
             margin:
-                28px 0;
+                34px 0;
 
             padding:
-                10px 18px 10px 0;
+                4px 18px 4px 0;
 
             border-right:
-                1.5px solid
-                var(--premium-brass-line);
+                1px solid
+                rgba(126, 138, 118, 0.55);
+
+            color:
+                var(--premium-sage);
+
+            font-size: 11px;
+            font-weight: 500;
+
+            line-height: 1.9;
+
+            text-align: right;
+
+            opacity: 0.88;
+        }
+
+        .premium-marginal-note::before {
+            content: "";
+
+            display: block;
+
+            margin-bottom: 5px;
+
+            color: var(--premium-brass);
+
+            font-size: 8px;
+
+            letter-spacing: 0.12em;
+
+            opacity: 0.75;
+        }
+
+
+        .premium-important-passage {
+            position: relative;
+
+            margin:
+                38px 0;
+
+            padding:
+                4px 22px 4px 0;
+
+            border-right:
+                1px solid
+                rgba(182, 164, 126, 0.48);
 
             color:
                 var(--premium-paper);
 
-            font-size: 15px;
+            font-size:
+                clamp(
+                    16px,
+                    4vw,
+                    18px
+                );
 
-            font-style: normal;
+            font-weight: 500;
+
+            line-height: 2.15;
+
+            text-align: right;
+        }
+
+
+        .premium-inline-quote {
+            margin:
+                38px 0;
+
+            padding:
+                5px 22px 5px 0;
+
+            border-right:
+                1px solid
+                rgba(182, 164, 126, 0.52);
+
+            color:
+                var(--premium-paper);
+
+            font-size:
+                clamp(
+                    16px,
+                    4vw,
+                    18px
+                );
+
+            font-weight: 400;
 
             line-height: 2.15;
 
             opacity: 0.92;
         }
 
-        /* Refined Typography Enhancements */
-        .premium-slide-body strong,
-        .premium-editorial-lead strong,
-        .premium-slide-title strong {
-            color:
-                var(--premium-paper);
 
-            font-weight: 600;
-        }
 
-        .premium-slide-body em,
-        .premium-editorial-lead em {
-            color:
-                var(--premium-brass);
-
-            font-style: normal;
-        }
-
-        /* Staggered entrance rhythm when a page enters */
-        .premium-slide-chapter,
-        .premium-slide-title,
-        .premium-slide-subtitle,
-        .premium-slide-rule,
-        .premium-editorial-lead,
-        .premium-slide-body {
-            opacity: 0;
-
-            transform:
-                translateY(6px);
-
-            transition:
-                opacity 440ms ease,
-                transform 440ms var(--premium-page-ease);
-        }
-
-        .premium-slide.is-active .premium-slide-chapter {
-            opacity: 0.9;
-            transform: translateY(0);
-            transition-delay: 50ms;
-        }
-
-        .premium-slide.is-active .premium-slide-title {
-            opacity: 1;
-            transform: translateY(0);
-            transition-delay: 100ms;
-        }
-
-        .premium-slide.is-active .premium-slide-subtitle {
-            opacity: 1;
-            transform: translateY(0);
-            transition-delay: 150ms;
-        }
-
-        .premium-slide.is-active .premium-slide-rule {
-            opacity: 0.85;
-            transform: translateY(0);
-            transition-delay: 180ms;
-        }
-
-        .premium-slide.is-active .premium-editorial-lead {
-            opacity: 1;
-            transform: translateY(0);
-            transition-delay: 220ms;
-        }
-
-        .premium-slide.is-active .premium-slide-body {
-            opacity: 1;
-            transform: translateY(0);
-            transition-delay: 260ms;
-        }
-
-        /* Fixed Navigation Layer — Protected from overlap */
         .premium-navigation {
             position: fixed;
 
@@ -2467,19 +2427,19 @@
             gap: 22px;
 
             padding:
-                20px
+                16px
                 24px
                 max(
-                    18px,
+                    20px,
                     env(safe-area-inset-bottom)
                 );
 
             background:
                 linear-gradient(
                     to top,
-                    rgba(19, 20, 18, 0.96) 0%,
-                    rgba(19, 20, 18, 0.75) 55%,
-                    transparent 100%
+                    rgba(24, 25, 22, 0.76),
+                    rgba(24, 25, 22, 0.28) 58%,
+                    transparent
                 );
 
             pointer-events: none;
@@ -2495,7 +2455,6 @@
             display: inline-flex;
 
             align-items: center;
-
             justify-content: center;
 
             gap: 8px;
@@ -2511,7 +2470,6 @@
                 sans-serif;
 
             font-size: 12px;
-
             font-weight: 500;
 
             cursor: pointer;
@@ -2527,11 +2485,9 @@
         .premium-nav-index {
             min-width: 38px;
 
-            color:
-                var(--premium-muted);
+            color: var(--premium-muted);
 
             font-size: 9px;
-
             font-weight: 500;
 
             letter-spacing: 0.14em;
@@ -2540,6 +2496,7 @@
 
             pointer-events: none;
         }
+
 
         .premium-nav-button:hover {
             color:
@@ -2564,52 +2521,152 @@
             opacity: 0.8;
         }
 
+
+        .premium-slide-chapter,
+        .premium-slide-title,
+        .premium-slide-subtitle,
+        .premium-slide-rule,
+        .premium-slide-body {
+            opacity: 0;
+
+            transform:
+                translateY(8px);
+
+            transition:
+                opacity 420ms ease,
+                transform 560ms cubic-bezier(
+                    0.22,
+                    1,
+                    0.36,
+                    1
+                );
+        }
+
+        .premium-slide.is-active .premium-slide-chapter {
+            opacity: 1;
+
+            transform: translateY(0);
+
+            transition-delay: 30ms;
+        }
+
+
+        .premium-slide.is-active .premium-slide-title {
+            opacity: 1;
+
+            transform: translateY(0);
+
+            transition-delay: 110ms;
+        }
+
+
+        .premium-slide.is-active .premium-slide-subtitle {
+            opacity: 1;
+
+            transform: translateY(0);
+
+            transition-delay: 160ms;
+        }
+
+
+
+        .premium-slide.is-active .premium-slide-rule {
+            opacity: 1;
+
+            transform: translateY(0);
+
+            transition-delay: 200ms;
+        }
+
+        .premium-slide.is-active .premium-slide-body {
+            opacity: 1;
+
+            transform: translateY(0);
+
+            transition-delay: 240ms;
+        }
+
+
+        .premium-slide-body strong {
+            color: var(--premium-paper);
+
+            font-weight: 600;
+        }
+
+        .premium-slide-body em {
+            color: var(--premium-brass);
+
+            font-style: normal;
+        }
+
         @media (max-width: 600px) {
+
+            .premium-header {
+                padding-inline: 22px;
+            }
+
             .premium-slide {
                 padding:
-                    clamp(20px, 4vh, 36px)
-                    clamp(16px, 4.5vw, 24px)
-                    calc(88px + max(16px, env(safe-area-inset-bottom)));
+                    30px
+                    22px
+                    calc(
+                        112px +
+                        env(safe-area-inset-bottom)
+                    );
             }
 
             .premium-editorial-article {
                 width: 100%;
             }
 
+            .premium-slide-title {
+                width: min(100%, 500px);
+
+                font-size: 28px;
+
+                line-height: 1.58;
+            }
+
             .premium-slide-body {
-                font-size: 15px;
+                width: min(100%, 550px);
+
+                font-size: 15.5px;
+
                 line-height: 2.18;
             }
 
-            .premium-editorial-lead {
-                font-size: 16.5px;
+            .premium-slide-body .premium-editorial-lead {
+                font-size: 17px;
+
                 line-height: 2.05;
-                margin-bottom: 22px;
-                padding-bottom: 16px;
             }
 
-            .premium-slide-title {
-                font-size: 22px;
-                line-height: 1.5;
+            .premium-navigation {
+                gap: 12px;
+
+                padding-inline: 16px;
+            }
+
+            .premium-nav-button {
+                min-width: 84px;
             }
         }
 
+
+
         @media (prefers-reduced-motion: reduce) {
+
             .premium-slide,
-            .premium-progress-mark,
-            .premium-nav-button,
             .premium-slide-chapter,
             .premium-slide-title,
             .premium-slide-subtitle,
             .premium-slide-rule,
-            .premium-editorial-lead,
-            .premium-slide-body {
+            .premium-slide-body,
+            .premium-progress-mark,
+            .premium-nav-button {
                 transition: none !important;
-                transform: none !important;
             }
         }
-
-
 
         </style>
     <body>
@@ -3565,8 +3622,16 @@
 
 
             function cleanEmoji(text) {
-                if (!text) return '';
-                return text.replace(/[\u{1F300}-\u{1F9FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\u{1F1E6}-\u{1F1FF}\u{1F600}-\u{1F64F}\u{1F680}-\u{1F6FF}\u{1F900}-\u{1F9FF}\u{1FA70}-\u{1FAFF}]/gu, '').trim();
+                if (!text) {
+                    return '';
+                }
+
+                return text
+                    .replace(
+                        /[\u{1F300}-\u{1F9FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\u{1F1E6}-\u{1F1FF}\u{1F600}-\u{1F64F}\u{1F680}-\u{1F6FF}\u{1F900}-\u{1F9FF}\u{1FA70}-\u{1FAFF}]/gu,
+                        ''
+                    )
+                    .trim();
             }
 
             function formatPremiumTitle(title) {
@@ -3574,10 +3639,9 @@
                     return '';
                 }
 
-                // Remove decorative emojis from chapter titles as required by editorial guidelines
-                let cleaned = cleanEmoji(title);
+                const cleanedTitle = cleanEmoji(title);
 
-                let safeTitle = escapeHTML(cleaned);
+                let safeTitle = escapeHTML(cleanedTitle);
 
                 safeTitle = safeTitle.replace(
                     /&lt;b&gt;(.*?)&lt;\/b&gt;/g,
@@ -3594,61 +3658,85 @@
 
 
             function buildPremiumSlideHTML(slide, index) {
-                const isOpening = slide.type === 'opening';
+                const isOpening =
+                    slide.type === 'opening';
 
-                const chapterHTML = slide.chapter
-                    ? `
-                        <div class="premium-slide-chapter">
-                            ${escapeHTML(cleanEmoji(slide.chapter))}
-                        </div>
-                    `
-                    : '';
+                const chapterHTML =
+                    slide.chapter
+                        ? `
+                            <div class="premium-slide-chapter">
+                                ${escapeHTML(slide.chapter)}
+                            </div>
+                        `
+                        : '';
 
-                const titleHTML = slide.title
-                    ? `
-                        <h1 class="premium-slide-title">
-                            ${formatPremiumTitle(slide.title)}
-                        </h1>
-                    `
-                    : '';
+                const titleHTML =
+                    slide.title
+                        ? `
+                            <h1 class="premium-slide-title">
+                                ${formatPremiumTitle(slide.title)}
+                            </h1>
+                        `
+                        : '';
 
-                const subtitleHTML = slide.subtitle
-                    ? `
-                        <p class="premium-slide-subtitle">
-                            ${escapeHTML(cleanEmoji(slide.subtitle))}
-                        </p>
-                    `
-                    : '';
+                const subtitleHTML =
+                    slide.subtitle
+                        ? `
+                            <p class="premium-slide-subtitle">
+                                ${escapeHTML(slide.subtitle)}
+                            </p>
+                        `
+                        : '';
 
                 const ruleHTML = `
-                    <div class="premium-slide-rule" aria-hidden="true"></div>
-                `;
-
-                const contentHTML = slide.content
-                    ? formatPremiumContent(slide.content)
-                    : '';
-
-                const quoteHTML = slide.quote
-                    ? `
-                        <blockquote class="premium-slide-quote">
-                            ${formatPremiumContent(slide.quote)}
-                        </blockquote>
-                    `
-                    : '';
-
-                return `
-                    <div class="premium-editorial-article ${isOpening ? 'premium-opening' : ''}">
-                        <div class="premium-editorial-header">
-                            ${chapterHTML}
-                            ${titleHTML}
-                            ${subtitleHTML}
-                            ${ruleHTML}
-                        </div>
-                        ${contentHTML}
-                        ${quoteHTML}
+                    <div
+                        class="premium-slide-rule"
+                        aria-hidden="true">
                     </div>
                 `;
+
+                const contentHTML =
+                    slide.content
+                        ? `
+                            <div class="premium-slide-body">
+                                ${formatPremiumContent(slide.content)}
+                            </div>
+                        `
+                        : '';
+
+                const quoteHTML =
+                    slide.quote
+                        ? `
+                            <blockquote class="premium-inline-quote">
+                                ${formatPremiumContent(slide.quote)}
+                            </blockquote>
+                        `
+                        : '';
+
+                return `
+                    <article
+                        class="
+                            premium-editorial-article
+                            ${isOpening ? 'premium-opening' : ''}
+                        "
+                        data-slide-index="${index}">
+
+                        ${chapterHTML}
+
+                        ${titleHTML}
+
+                        ${subtitleHTML}
+
+                        ${ruleHTML}
+
+                        ${contentHTML}
+
+                        ${quoteHTML}
+
+                    </article>
+                `;
             }
+
 
 
             function formatPremiumContent(text) {
@@ -3658,9 +3746,6 @@
 
                 let safeText = escapeHTML(text);
 
-                /*
-                * Markdown bold
-                */
                 safeText = safeText.replace(
                     /&lt;b&gt;(.*?)&lt;\/b&gt;/g,
                     '<strong>$1</strong>'
@@ -3671,110 +3756,111 @@
                     '<strong>$1</strong>'
                 );
 
-                /*
-                * Markdown italic / brass emphasis
-                */
-                safeText = safeText.replace(
-                    /\*(.*?)\*/g,
-                    '<em>$1</em>'
-                );
-
                 const lines = safeText.split('\n');
-                let rawParagraphs = [];
-                let currentPara = [];
-
-                lines.forEach(line => {
-                    const trimmed = line.trim();
-                    if (!trimmed) {
-                        if (currentPara.length) {
-                            rawParagraphs.push(currentPara);
-                            currentPara = [];
-                        }
-                    } else if (trimmed.startsWith('&gt;') || trimmed.startsWith('>')) {
-                        if (currentPara.length) {
-                            rawParagraphs.push(currentPara);
-                            currentPara = [];
-                        }
-                        const quoteText = trimmed.replace(/^(&gt;|>)\s?/, '');
-                        rawParagraphs.push({ type: 'quote', text: quoteText });
-                    } else {
-                        currentPara.push(trimmed);
-                    }
-                });
-
-                if (currentPara.length) {
-                    rawParagraphs.push(currentPara);
-                }
 
                 let html = '';
-                let bodyParas = [];
-                let leadRendered = false;
+                let paragraph = [];
+                let hasLead = false;
 
-                function flushBodyParas() {
-                    if (!bodyParas.length) return;
-                    html += `<div class="premium-slide-body">`;
-                    bodyParas.forEach(pText => {
-                        html += `<p>${pText}</p>`;
-                    });
-                    html += `</div>`;
-                    bodyParas = [];
-                }
+                function flushParagraph() {
 
-                rawParagraphs.forEach((item, pIndex) => {
-                    if (item.type === 'quote') {
-                        flushBodyParas();
-                        html += `<blockquote class="premium-inline-quote">${item.text}</blockquote>`;
+                    if (!paragraph.length) {
                         return;
                     }
 
-                    const paraContent = item.join('<br>');
+                    const content =
+                        paragraph.join('<br>');
 
-                    // Check for Marginal Note format
-                    const isMarginalNote =
-                        paraContent.includes('این قسمت مهمه') ||
-                        paraContent.includes('نکته مهم:') ||
-                        paraContent.includes('نکته کلیدی:') ||
-                        paraContent.includes('توجه:') ||
-                        paraContent.startsWith('«یادداشت') ||
-                        paraContent.startsWith('یادداشت:');
+                    if (!hasLead) {
 
-                    // Check for Important Passage
-                    const isImportantPassage =
-                        !isMarginalNote && (
-                            paraContent.startsWith('«') && paraContent.endsWith('»') && paraContent.length > 50
-                        );
+                        html += `
+                            <p class="premium-editorial-lead">
+                                ${content}
+                            </p>
+                        `;
 
-                    if (!leadRendered && pIndex === 0 && !isMarginalNote && !isImportantPassage) {
-                        leadRendered = true;
-                        html += `<div class="premium-editorial-lead">${paraContent}</div>`;
-                    } else if (isMarginalNote) {
-                        flushBodyParas();
-                        let cleanMarginal = paraContent
-                            .replace(/^«?این قسمت مهمه»?\s*[:：\-—]?\s*/, '')
-                            .replace(/^«?نکته مهم»?\s*[:：\-—]?\s*/, '')
-                            .replace(/^«?یادداشت»?\s*[:：\-—]?\s*/, '');
+                        hasLead = true;
+
+                    } else {
+
+                        html += `
+                            <p>
+                                ${content}
+                            </p>
+                        `;
+                    }
+
+                    paragraph = [];
+                }
+
+                lines.forEach(line => {
+
+                    const trimmed = line.trim();
+
+                    if (!trimmed) {
+                        flushParagraph();
+                        return;
+                    }
+
+                    /*
+                    * Explicit editorial marginal note.
+                    *
+                    * Supported syntax:
+                    *
+                    * [NOTE] متن یادداشت
+                    *
+                    * This is optional and does not alter normal content.
+                    */
+                    if (
+                        trimmed.startsWith('[NOTE]')
+                    ) {
+
+                        flushParagraph();
+
+                        const noteText =
+                            trimmed
+                                .replace(/^\[NOTE\]\s*/i, '');
+
                         html += `
                             <aside class="premium-marginal-note">
-                                <span class="premium-marginal-label">یادداشت حاشیه</span>
-                                <div>${cleanMarginal || paraContent}</div>
+                                ${noteText}
                             </aside>
                         `;
-                    } else if (isImportantPassage) {
-                        flushBodyParas();
-                        html += `
-                            <div class="premium-important-passage">
-                                ${paraContent}
-                            </div>
-                        `;
-                    } else {
-                        bodyParas.push(paraContent);
+
+                        return;
                     }
+
+                    /*
+                    * Block quote / important passage.
+                    */
+                    if (trimmed.startsWith('>')) {
+
+                        flushParagraph();
+
+                        const quote =
+                            trimmed.replace(
+                                /^>\s?/,
+                                ''
+                            );
+
+                        html += `
+                            <blockquote class="premium-important-passage">
+                                ${quote}
+                            </blockquote>
+                        `;
+
+                        return;
+                    }
+
+                    paragraph.push(trimmed);
                 });
 
-                flushBodyParas();
+                flushParagraph();
 
                 return html;
             }
+
+
 
             function escapeHTML(value) {
 
@@ -4939,33 +5025,58 @@
             ========================================================= */
 
             function nextPremiumSlide() {
-                const lastIndex = premiumSlides.length - 1;
+                const lastIndex =
+                    premiumSlides.length - 1;
 
-                if (currentPremiumSlideIndex >= lastIndex) {
-                    if (tg && typeof tg.close === 'function') {
+                if (
+                    currentPremiumSlideIndex >= lastIndex
+                ) {
+
+                    if (
+                        tg &&
+                        typeof tg.close === 'function'
+                    ) {
                         tg.close();
                     }
+
                     return;
                 }
 
+                premiumTransitionDirection = 'next';
+
                 currentPremiumSlideIndex++;
+
                 updatePremiumUI();
 
-                if (tg && tg.HapticFeedback) {
-                    tg.HapticFeedback.impactOccurred('light');
+                if (
+                    tg &&
+                    tg.HapticFeedback
+                ) {
+                    tg.HapticFeedback
+                        .impactOccurred('light');
                 }
             }
 
+
             function prevPremiumSlide() {
-                if (currentPremiumSlideIndex <= 0) {
+                if (
+                    currentPremiumSlideIndex <= 0
+                ) {
                     return;
                 }
 
+                premiumTransitionDirection = 'prev';
+
                 currentPremiumSlideIndex--;
+
                 updatePremiumUI();
 
-                if (tg && tg.HapticFeedback) {
-                    tg.HapticFeedback.impactOccurred('light');
+                if (
+                    tg &&
+                    tg.HapticFeedback
+                ) {
+                    tg.HapticFeedback
+                        .impactOccurred('light');
                 }
             }
 
@@ -4974,26 +5085,37 @@
             ========================================================= */
 
             function updatePremiumUI() {
-                const slides = document.querySelectorAll(
-                    '#premium-slides-wrapper .premium-slide'
-                );
+                const slides =
+                    document.querySelectorAll(
+                        '#premium-slides-wrapper .premium-slide'
+                    );
 
-                const total = premiumSlides.length;
 
-                slides.forEach((slide, index) => {
-                    const isActive = index === currentPremiumSlideIndex;
-                    const isBefore = index < currentPremiumSlideIndex;
-                    const isAfter = index > currentPremiumSlideIndex;
+                const total =
+                    premiumSlides.length;
 
-                    slide.classList.toggle('is-active', isActive);
-                    slide.classList.toggle('is-before', isBefore);
-                    slide.classList.toggle('is-after', isAfter);
 
-                    // Reset scroll position on active slide so the reader starts at the top of the new page
-                    if (isActive) {
-                        slide.scrollTop = 0;
+                slides.forEach(
+                    (slide, index) => {
+
+                        slide.classList.toggle(
+                            'is-active',
+                            index === currentPremiumSlideIndex
+                        );
+
+
+                        slide.classList.toggle(
+                            'is-before',
+                            index < currentPremiumSlideIndex
+                        );
+
+
+                        slide.classList.toggle(
+                            'is-after',
+                            index > currentPremiumSlideIndex
+                        );
                     }
-                });
+                );
 
                 /*
                 * Counter
