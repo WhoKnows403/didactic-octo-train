@@ -2512,6 +2512,20 @@
                 transition: none !important;
             }
         }
+        #premium-inner-world .premium-slide.is-active {
+            opacity: 1 !important;
+            visibility: visible !important;
+            transform: translateY(0) !important;
+            pointer-events: auto !important;
+        }
+
+        #premium-inner-world .premium-slide.is-before,
+        #premium-inner-world .premium-slide.is-after {
+            opacity: 0 !important;
+            visibility: hidden !important;
+            pointer-events: none !important;
+        }
+
 
         </style>
     <body>
@@ -4965,15 +4979,17 @@
                         );
                     }
                 );
-                const debug = Array.from(slides).map((slide, index) => ({
-                    index,
-                    className: slide.className,
-                    opacity: getComputedStyle(slide).opacity,
-                    visibility: getComputedStyle(slide).visibility,
-                    zIndex: getComputedStyle(slide).zIndex
-                }));
+                setTimeout(() => {
+                    const debug = Array.from(slides).map((slide, index) => ({
+                        index,
+                        className: slide.className,
+                        opacity: getComputedStyle(slide).opacity,
+                        visibility: getComputedStyle(slide).visibility,
+                        zIndex: getComputedStyle(slide).zIndex
+                    }));
 
-                alert(JSON.stringify(debug, null, 2));
+                    alert(JSON.stringify(debug, null, 2));
+                }, 1000);
 
 
                 /*
