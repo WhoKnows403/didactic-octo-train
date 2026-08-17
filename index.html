@@ -1901,43 +1901,35 @@
         }
 
         .premium-atmosphere-image {
-
             position: absolute;
-
             inset: -4%;
 
-            background-image:
-                url("inner_world.webp");
-
+            background-image: url("inner_world.webp");
             background-size: cover;
-
             background-position: center;
-
             background-repeat: no-repeat;
 
-            opacity: 0.16;
+            opacity: 0.34;
 
             filter:
-                saturate(0.28)
-                brightness(0.42)
+                saturate(0.55)
+                brightness(0.72)
                 contrast(1.02);
 
             transform: scale(1.02);
         }
 
         .premium-atmosphere-vignette {
-
             position: absolute;
-
             inset: 0;
 
             background:
                 linear-gradient(
                     to bottom,
-                    rgba(13, 15, 14, 0.42) 0%,
-                    rgba(13, 15, 14, 0.10) 35%,
-                    rgba(13, 15, 14, 0.54) 72%,
-                    rgba(13, 15, 14, 0.94) 100%
+                    rgba(13, 15, 14, 0.18) 0%,
+                    rgba(13, 15, 14, 0.04) 35%,
+                    rgba(13, 15, 14, 0.28) 72%,
+                    rgba(13, 15, 14, 0.72) 100%
                 );
 
             pointer-events: none;
@@ -2071,23 +2063,6 @@
         }
 
 
-        .premium-progress-tick {
-            flex: 1;
-            height: 2px;
-            background: rgba(242, 239, 233, 0.14);
-            border-radius: 1px;
-            transition: background-color 0.4s ease, opacity 0.4s ease;
-        }
-
-        .premium-progress-tick.active {
-            background: #C8B89A;
-            opacity: 0.9;
-        }
-
-        .premium-progress-tick.passed {
-            background: rgba(242, 239, 233, 0.35);
-        }
-
         /* Slide Container */
         .premium-slides-container {
             position: relative;
@@ -2100,7 +2075,7 @@
             justify-content: center;
         }
 
-       .premium-slide {
+        .premium-slide {
             position: absolute;
             inset: 0;
 
