@@ -1843,121 +1843,82 @@
         PREMIUM INNER WORLD — DARK EDITORIAL PSYCHOLOGICAL EXPERIENCE
         Personal Study Room / Living Psychological Book
         ========================================================= */
-        #premium-inner-world {
-            --iw-bg: #181916;
-            --iw-bg-soft: #1d1e1a;
-
-            --iw-paper: #eeeae1;
-            --iw-paper-soft: #d7d2c8;
-            --iw-ink-muted: #98958d;
-
-            --iw-brass: #b7a57d;
-            --iw-sage: #84907d;
-
-            --iw-rule: rgba(238, 234, 225, 0.11);
-            --iw-rule-soft: rgba(238, 234, 225, 0.055);
-
-            --iw-page-width: 700px;
-            --iw-reading-width: 620px;
-
-            position: relative;
-
-            display: flex;
+            #premium-inner-world {
+            position: fixed;
+            inset: 0;
+            z-index: 9999; /* بالاترین سطح ممکن برای جلوگیری از تداخل */
+            display: none; /* مخفی‌سازی مطلق در حالت پایه */
             flex-direction: column;
-
             width: 100%;
-            height: 100%;
-            min-height: 100dvh;
-
+            height: 100dvh;
             overflow: hidden;
-
             box-sizing: border-box;
-
-            color: var(--iw-paper);
-
-            background:
-                radial-gradient(
-                    ellipse 70% 55% at 50% 16%,
-                    rgba(183, 165, 125, 0.045),
-                    transparent 70%
-                ),
-                var(--iw-bg);
-
+            background: #0f100e; /* تاریکی مطلق و عمیق‌تر */
+            color: #E8E3D5; /* رنگ استخوانی/کاغذی پخته برای چشم */
             isolation: isolate;
-        }
+            }
 
-        .premium-atmosphere {
-            position: absolute;
-            inset: 0;
+            #premium-inner-world.is-active {
+                display: flex !important;
+                animation: fadeInWorld 800ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+            }
 
-            z-index: -3;
+            #premium-inner-world::after {
+                content: "";
 
-            overflow: hidden;
+                position: absolute;
+                inset: 0;
 
-            pointer-events: none;
-        }
+                z-index: 20;
 
-        .premium-atmosphere-image {
-            position: absolute;
-            inset: -4%;
+                pointer-events: none;
 
-            background-image: url("inner_world.webp");
+                opacity: 0.025;
 
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
+                background-image:
+                    repeating-linear-gradient(
+                        0deg,
+                        rgba(255,255,255,0.5) 0,
+                        rgba(255,255,255,0.5) 1px,
+                        transparent 1px,
+                        transparent 3px
+                    );
 
-            opacity: 0.26;
+                mix-blend-mode: soft-light;
+            }
 
-            filter:
-                saturate(0.38)
-                brightness(0.68)
-                contrast(0.97);
+            @keyframes fadeInWorld {
+                from { opacity: 0; }
+                to { opacity: 1; }
+            }
 
-            transform: scale(1.025);
+            .premium-atmosphere {
+                position: absolute;
+                inset: 0;
+                z-index: -1;
+                pointer-events: none;
+            }
 
-            will-change: transform;
-        }
+            .premium-atmosphere-image {
+                position: absolute;
+                inset: -2%;
+                background-image: url("inner_world.webp");
+                background-size: cover;
+                background-position: center;
+                opacity: 0.15;
+                filter: saturate(0.2) brightness(0.5) contrast(1.1);
+            }
 
-        .premium-atmosphere-vignette {
-            position: absolute;
-            inset: 0;
-
-            background:
-                linear-gradient(
-                    to bottom,
-                    rgba(24, 25, 22, 0.30) 0%,
-                    rgba(24, 25, 22, 0.05) 30%,
-                    rgba(24, 25, 22, 0.12) 62%,
-                    rgba(24, 25, 22, 0.88) 100%
+            .premium-atmosphere-vignette {
+                position: absolute;
+                inset: 0;
+                background: radial-gradient(
+                    circle at 50% 40%,
+                    transparent 20%,
+                    rgba(15, 16, 14, 0.95) 85%,
+                    #0f100e 100%
                 );
-
-            pointer-events: none;
-        }
-
-        #premium-inner-world::after {
-            content: "";
-
-            position: absolute;
-            inset: 0;
-
-            z-index: 20;
-
-            pointer-events: none;
-
-            opacity: 0.025;
-
-            background-image:
-                repeating-linear-gradient(
-                    0deg,
-                    rgba(255,255,255,0.5) 0,
-                    rgba(255,255,255,0.5) 1px,
-                    transparent 1px,
-                    transparent 3px
-                );
-
-            mix-blend-mode: soft-light;
-        }
+            }
 
 
         .premium-header,
@@ -1966,221 +1927,127 @@
             z-index: 10;
         }
 
-        .premium-navigation {
-            position: fixed;
-            z-index: 30;
-        }
 
-        .premium-header {
-            position: relative;
+            .premium-header {
+                position: relative;
+                z-index: 10;
+                flex: 0 0 auto;
+                width: min(100%, 700px);
+                margin: 0 auto;
+                padding: clamp(30px, 6vh, 50px) 24px 0;
+                text-align: center;
+            }
+
+            .premium-header-meta {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                color: rgba(232, 227, 213, 0.4);
+                font-size: 10px;
+                font-weight: 300;
+                letter-spacing: 0.25em;
+                text-transform: uppercase;
+            }
+
+            .premium-header-separator {
+                display: none;
+            }
+
+            .premium-story-progress {
+                display: flex;
+                gap: 4px;
+                width: 140px;
+                margin: 24px auto 0;
+            }
+
+            .premium-progress-mark {
+                flex: 1;
+                height: 2px;
+                background: rgba(232, 227, 213, 0.1);
+                border-radius: 2px;
+                transition: all 500ms ease;
+            }
+
+
+            .premium-progress-mark.is-active {
+                background: #C4B48F;
+                box-shadow: 0 0 8px rgba(196, 180, 143, 0.3);
+            }
+
+            .premium-progress-mark.is-passed {
+                background: rgba(232, 227, 213, 0.3);
+            }
+
+
+            .premium-slides-wrapper {
+                position: relative;
+                flex: 1 1 auto;
+                width: 100%;
+                margin: 0 auto;
+                overflow: hidden;
+            }
+
+            .premium-slide {
+                position: absolute;
+                inset: 0;
+                width: 100%;
+                height: 100%;
+                overflow-y: auto;
+                scrollbar-width: none;
+                opacity: 0;
+                visibility: hidden;
+                pointer-events: none;
+                transform: translateY(20px);
+                transition: opacity 700ms ease, transform 700ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+                z-index: 0;
+            }
+
+
+            .premium-slide::-webkit-scrollbar {
+                display: none;
+            }
+
+            .premium-slide.is-active {
+                opacity: 1;
+                visibility: visible;
+                pointer-events: auto;
+                transform: translateY(0);
+                z-index: 2;
+            }
+
+            .premium-slide.is-before {
+                opacity: 0;
+
+                visibility: hidden;
+
+                pointer-events: none;
+
+                transform:
+                    translateY(-10px);
+
+                z-index: 1;
+            }
+
+            .premium-slide.is-after {
+                opacity: 0;
 
-            z-index: 10;
+                visibility: hidden;
 
-            flex: 0 0 auto;
+                pointer-events: none;
 
-            width: min(100%, 760px);
+                transform:
+                    translateY(14px);
 
-            margin: 0 auto;
+                z-index: 1;
+            }
 
-            padding:
-                max(22px, env(safe-area-inset-top))
-                clamp(22px, 5vw, 38px)
-                0;
 
-            box-sizing: border-box;
-
-            text-align: center;
-        }
-
-        .premium-header-meta {
-            display: flex;
-
-            align-items: center;
-            justify-content: space-between;
-
-            width: 100%;
-
-            color: var(--iw-ink-muted);
-
-            font-size: 9px;
-            font-weight: 500;
-
-            line-height: 1;
-
-            letter-spacing: 0.14em;
-
-            text-transform: uppercase;
-
-            opacity: 0.78;
-        }
-
-        .premium-header-separator {
-            display: none;
-        }
-
-        .premium-story-progress {
-            display: flex;
-
-            align-items: center;
-
-            width: min(100%, 180px);
-
-            height: 8px;
-
-            margin: 18px auto 0;
-
-            gap: 5px;
-        }
-
-        .premium-progress-mark {
-            position: relative;
-
-            flex: 1;
-
-            height: 1px;
-
-            background:
-                rgba(238, 234, 225, 0.13);
-
-            transition:
-                background-color 420ms ease,
-                opacity 420ms ease,
-                transform 420ms ease;
-        }
-
-
-        .premium-progress-mark.is-active {
-            background: var(--iw-brass);
-
-            opacity: 0.95;
-
-            transform: scaleY(1.5);
-        }
-
-        .premium-progress-mark.is-passed {
-            background:
-                rgba(238, 234, 225, 0.34);
-
-            opacity: 0.9;
-        }
-
-
-        .premium-slides-wrapper {
-            position: relative;
-
-            flex: 1 1 auto;
-
-            min-height: 0;
-
-            width: min(100%, 820px);
-
-            height: 0;
-
-            margin: 0 auto;
-
-            overflow: hidden;
-        }
-
-        .premium-slide {
-            position: absolute;
-
-            inset: 0;
-
-            width: 100%;
-            height: 100%;
-
-            box-sizing: border-box;
-
-            overflow-y: auto;
-
-            scrollbar-width: none;
-
-            /*
-            * Safety:
-            * the first slide is explicitly made active by JS.
-            * This state remains visually inert until JS assigns state.
-            */
-            opacity: 0;
-
-            visibility: hidden;
-
-            pointer-events: none;
-
-            transform:
-                translateY(14px);
-
-            transition:
-                opacity 500ms cubic-bezier(.22,1,.36,1),
-                transform 600ms cubic-bezier(.22,1,.36,1);
-
-            z-index: 0;
-        }
-
-        .premium-slide::-webkit-scrollbar {
-            display: none;
-        }
-
-        .premium-slide.is-active {
-            opacity: 1;
-
-            visibility: visible;
-
-            pointer-events: auto;
-
-            transform:
-                translateY(0);
-
-            z-index: 2;
-        }
-
-        .premium-slide.is-before {
-            opacity: 0;
-
-            visibility: hidden;
-
-            pointer-events: none;
-
-            transform:
-                translateY(-10px);
-
-            z-index: 1;
-        }
-
-        .premium-slide.is-after {
-            opacity: 0;
-
-            visibility: hidden;
-
-            pointer-events: none;
-
-            transform:
-                translateY(14px);
-
-            z-index: 1;
-        }
-
-
-        .premium-editorial-page {
-            position: relative;
-
-            width: min(
-                calc(100% - 44px),
-                var(--iw-page-width)
-            );
-
-            min-height: 100%;
-
-            margin: 0 auto;
-
-            box-sizing: border-box;
-
-            padding:
-                clamp(42px, 8vh, 86px)
-                clamp(4px, 2vw, 16px)
-                138px;
-
-            opacity: 1;
-        }
+            .premium-editorial-page {
+                width: min(100%, 600px);
+                margin: 0 auto;
+                padding: clamp(60px, 10vh, 100px) 24px 140px;
+                box-sizing: border-box;
+            }
 
 
         .premium-slide .premium-editorial-page {
@@ -2240,70 +2107,35 @@
         }
 
 
-        .premium-editorial-kicker {
-            display: flex;
-
-            align-items: center;
-            justify-content: flex-start;
-
-            gap: 12px;
-
-            margin-bottom: 22px;
-
-            color: var(--iw-brass);
-
-            font-size: 9px;
-
-            font-weight: 500;
-
-            line-height: 1.4;
-
-            letter-spacing: 0.18em;
-
-            text-align: right;
-
-            text-transform: uppercase;
-
-            opacity: 0.86;
-        }
+            .premium-editorial-kicker {
+                color: #C4B48F;
+                font-size: 11px;
+                font-weight: 300;
+                letter-spacing: 0.2em;
+                margin-bottom: 16px;
+                display: flex;
+                align-items: center;
+                gap: 12px;
+            }
 
 
-        .premium-editorial-kicker::before {
-            content: "";
+            .premium-editorial-kicker::before {
+                content: "";
+                width: 30px;
+                height: 1px;
+                background: #C4B48F;
+                opacity: 0.5;
+            }
 
-            width: 24px;
-            height: 1px;
-
-            background:
-                rgba(183, 165, 125, 0.55);
-
-            flex: 0 0 auto;
-        }
-
-        .premium-editorial-title {
-            width: min(100%, 650px);
-
-            margin: 0 0 0 auto;
-
-            color: var(--iw-paper);
-
-            font-size:
-                clamp(
-                    30px,
-                    6vw,
-                    44px
-                );
-
-            font-weight: 600;
-
-            line-height: 1.48;
-
-            letter-spacing: -0.025em;
-
-            text-align: right;
-
-            text-wrap: balance;
-        }
+            .premium-editorial-title {
+                color: #FFFFFF;
+                font-size: clamp(28px, 6vw, 40px);
+                font-weight: 300;
+                line-height: 1.4;
+                letter-spacing: -0.02em;
+                text-align: right;
+                margin-bottom: 24px;
+            }
 
 
         .premium-editorial-article {
@@ -2406,19 +2238,14 @@
         }
 
 
-        .premium-reading-column p {
-            width: min(100%, 62ch);
-
-            margin:
-                0 0 28px auto;
-
-            color:
-                var(--iw-paper-soft);
-
-            line-height: 2.05;
-
-            text-align: right;
-        }
+            .premium-reading-column p {
+                color: rgba(232, 227, 213, 0.85);
+                font-size: clamp(15px, 3.5vw, 17px);
+                font-weight: 300;
+                line-height: 2.2;
+                text-align: right;
+                margin-bottom: 32px;
+            }
 
         .premium-reading-column p:last-child {
             margin-bottom: 0;
@@ -2586,63 +2413,27 @@
         }
 
 
-        .premium-featured-passage {
-            position: relative;
-
-            width: min(100%, 570px);
-
-            margin:
-                58px 0
-                24px auto;
-
-            padding:
-                28px 26px
-                28px 0;
-
-            border-top:
-                1px solid
-                var(--iw-rule);
-
-            border-bottom:
-                1px solid
-                var(--iw-rule);
-
-            color:
-                var(--iw-paper);
-
-            font-size:
-                clamp(
-                    17px,
-                    3.8vw,
-                    21px
-                );
-
-            font-weight: 500;
-
-            line-height: 1.95;
-
-            text-align: right;
-        }
+            .premium-featured-passage {
+                margin: 60px 0;
+                padding: 30px 24px 30px 0;
+                border-right: 2px solid rgba(196, 180, 143, 0.4); /* خط راهنما به جای باکس بسته */
+                color: #FFFFFF;
+                font-size: clamp(18px, 4vw, 22px);
+                font-weight: 300;
+                line-height: 1.8;
+                font-style: italic;
+            }
 
 
-        .premium-featured-passage::before {
-            content: "REFLECTION";
-
-            display: block;
-
-            margin-bottom: 16px;
-
-            color:
-                var(--iw-brass);
-
-            font-size: 8px;
-
-            font-weight: 500;
-
-            letter-spacing: 0.18em;
-
-            opacity: 0.78;
-        }
+            .premium-featured-passage::before {
+                content: "REFLECTION";
+                display: block;
+                margin-bottom: 12px;
+                color: #C4B48F;
+                font-size: 9px;
+                letter-spacing: 0.3em;
+                font-style: normal;
+            }
 
 
 
@@ -2673,88 +2464,36 @@
 
 
 
-        .premium-navigation {
-            position: fixed;
-
-            right: 0;
-            bottom: 0;
-            left: 0;
-
-            z-index: 30;
-
-            display: grid;
-
-            grid-template-columns:
-                minmax(110px, 1fr)
-                auto
-                minmax(110px, 1fr);
-
-            align-items: center;
-
-            width: min(100%, 820px);
-
-            margin: 0 auto;
-
-            padding:
-                18px
-                clamp(22px, 5vw, 38px)
-                max(
-                    20px,
-                    env(safe-area-inset-bottom)
-                );
-
-            box-sizing: border-box;
-
-            background:
-                linear-gradient(
-                    to top,
-                    rgba(24, 25, 22, 0.92),
-                    rgba(24, 25, 22, 0.62) 55%,
-                    transparent
-                );
-
-            pointer-events: none;
-        }
+            .premium-navigation {
+                position: absolute; /* تغییر طلایی: از fixed به absolute */
+                bottom: 0;
+                left: 0;
+                right: 0;
+                z-index: 30;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                width: min(100%, 700px);
+                margin: 0 auto;
+                padding: 24px;
+                background: linear-gradient(to top, #0f100e 60%, transparent); /* محو شدن در پس‌زمینه */
+            }
 
 
 
-        .premium-nav-button {
-            min-width: 0;
-
-            padding: 8px 0;
-
-            display: inline-flex;
-
-            align-items: center;
-
-            gap: 10px;
-
-            border: 0;
-
-            background: transparent;
-
-            color:
-                rgba(238, 234, 225, 0.68);
-
-            font-family:
-                'Vazirmatn',
-                sans-serif;
-
-            font-size: 11px;
-
-            font-weight: 500;
-
-            line-height: 1.5;
-
-            cursor: pointer;
-
-            pointer-events: auto;
-
-            transition:
-                color 220ms ease,
-                opacity 220ms ease,
-                transform 220ms ease;
-        }
+            .premium-nav-button {
+                background: transparent;
+                border: none;
+                color: rgba(232, 227, 213, 0.6);
+                font-size: 12px;
+                font-weight: 300;
+                letter-spacing: 0.1em;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                cursor: pointer;
+                transition: color 300ms ease;
+            }
 
 
         .premium-nav-button:active {
@@ -2781,19 +2520,14 @@
             opacity: 0.22;
             cursor: default;
         }
-
-
-        .premium-nav-arrow {
-            color:
-                var(--iw-brass);
-
-            font-size: 16px;
-
-            line-height: 1;
-
-            opacity: 0.82;
+        .premium-nav-button:hover, .premium-nav-button:active {
+            color: #C4B48F;
         }
 
+            .premium-nav-arrow {
+                font-size: 18px;
+                font-family: monospace;
+            }
 
 
         .premium-nav-index {
@@ -3087,26 +2821,20 @@
             Dark Editorial Psychological Experience
             ========================================================= -->
 
-        <div id="premium-inner-world" aria-hidden="true">
+        <div
+            id="premium-inner-world"
+            hidden
+            aria-hidden="true">
 
-            <!-- Atmospheric background.
-                It belongs to the environment, not the content layer. -->
             <div class="premium-atmosphere" aria-hidden="true">
                 <div class="premium-atmosphere-image"></div>
                 <div class="premium-atmosphere-vignette"></div>
             </div>
 
-
-            <!-- -----------------------------------------------------
-                Editorial Header
-                ----------------------------------------------------- -->
-
             <header class="premium-header">
-
                 <div class="premium-header-meta">
-                    <span id="premium-chapter-label">INNER WORLD</span>
-                    <span class="premium-header-separator">·</span>
-                    <span id="premium-chapter-counter">01 / 01</span>
+                    <span id="premium-section-label">دفتر درون</span>
+                    <span id="premium-page-number">۰۱</span>
                 </div>
 
                 <div
@@ -3114,13 +2842,7 @@
                     class="premium-story-progress"
                     aria-hidden="true">
                 </div>
-
             </header>
-
-
-            <!-- -----------------------------------------------------
-                Story / Slide Viewport
-                ----------------------------------------------------- -->
 
             <main
                 id="premium-slides-wrapper"
@@ -3128,14 +2850,9 @@
                 aria-live="polite">
             </main>
 
-
-            <!-- -----------------------------------------------------
-                Editorial Navigation
-                ----------------------------------------------------- -->
-
             <nav
                 class="premium-navigation"
-                aria-label="ناوبری تحلیل">
+                aria-label="ناوبری دفتر درون">
 
                 <button
                     id="premium-btn-prev"
@@ -3144,17 +2861,14 @@
                     onclick="prevPremiumSlide()">
 
                     <span class="premium-nav-arrow" aria-hidden="true">→</span>
-                    <span>فصل قبل</span>
-
+                    <span id="premium-prev-btn-text">قبلی</span>
                 </button>
-
 
                 <div
                     id="premium-nav-index"
                     class="premium-nav-index">
-                    01
+                    01 — 06
                 </div>
-
 
                 <button
                     id="premium-btn-next"
@@ -3162,13 +2876,11 @@
                     type="button"
                     onclick="nextPremiumSlide()">
 
-                    <span id="premium-next-btn-text">فصل بعد</span>
+                    <span id="premium-next-btn-text">ادامه</span>
                     <span class="premium-nav-arrow" aria-hidden="true">←</span>
-
                 </button>
 
             </nav>
-
         </div>
 
 <!-- Beautiful Network Error -->
@@ -3715,150 +3427,133 @@
             }
 
 
+            function showPremiumInnerWorld() {
+                const premiumPage = document.getElementById('premium-inner-world');
+                if (!premiumPage) return;
+
+                hideQuestionExperience();
+                hideResultExperience();
+                hideNetworkError();
+
+                premiumPage.hidden = false;
+                premiumPage.classList.add('is-active');
+                premiumPage.setAttribute('aria-hidden', 'false');
+
+                document.body.style.overflow = 'hidden';
+            }
+
+            function hidePremiumInnerWorld() {
+                const premiumPage = document.getElementById('premium-inner-world');
+                if (!premiumPage) return;
+
+                premiumPage.classList.remove('is-active');
+
+                // یک تاخیر کوچیک برای پخش انیمیشن خروج (اختیاری)
+                setTimeout(() => {
+                    premiumPage.hidden = true;
+                    premiumPage.style.display = 'none'; // محکم‌کاری نهایی
+                    premiumPage.setAttribute('aria-hidden', 'true');
+                }, 300);
+            }
+
+            function hideResultExperience() {
+                const introScreen = document.getElementById('intro-screen');
+                if (introScreen) {
+                    introScreen.hidden = true;
+                    introScreen.classList.remove('is-active');
+                    introScreen.setAttribute('aria-hidden', 'true');
+                }
+            }
+
+            function hideQuestionExperience() {
+                const app = document.getElementById('app');
+                if (app) {
+                    app.style.display = 'none'; // شلیک نهایی به صفحه سوالات
+                    app.classList.remove('is-active');
+                }
+            }
+
+            function hideNetworkError() {
+                const networkError = document.getElementById('network-error');
+                if (networkError) {
+                    networkError.hidden = true;
+                    networkError.classList.remove('is-active');
+                    networkError.setAttribute('aria-hidden', 'true');
+                }
+            }
+
+
             function renderInnerWorldUI(analysis) {
 
-                const app = document.getElementById('app');
-                const introScreen = document.getElementById('intro-screen');
-                const networkError = document.getElementById('network-error');
-                const premiumPage = document.getElementById('premium-inner-world');
-
+                /*
+                * 1. Hide previous experiences (State-based)
+                */
+                hideQuestionExperience();
+                hideResultExperience();
+                hideNetworkError();
 
                 /*
-                * Hide previous experience
+                * 2. Reset Premium
                 */
-
-                if (app) {
-                    app.style.display = 'none';
-                }
-
-                if (introScreen) {
-                    introScreen.style.display = 'none';
-                }
-
-                if (networkError) {
-                    networkError.style.display = 'none';
-                }
-
-
-                /*
-                * Reset Premium
-                */
-
                 premiumSlides = [];
                 currentPremiumSlideIndex = 0;
 
-
                 /*
-                * Convert backend data into editorial slides
+                * 3. Convert backend data into editorial slides
                 */
-
                 premiumSlides = parseMarkdownToSlides(analysis);
 
-                console.log(
-                    '[Inner World] Analysis type:',
-                    typeof analysis
-                );
-
-                console.log(
-                    '[Inner World] Analysis length:',
-                    analysis?.length
-                );
-
-                console.log(
-                    '[Inner World] Slides count:',
-                    premiumSlides.length
-                );
-
-                console.log(
-                    '[Inner World] Slides:',
-                    premiumSlides
-                );
-
                 /*
-                * Safety check
+                * 4. Safety check
                 */
-
                 if (!premiumSlides.length) {
-
                     console.error(
                         '[Inner World] No premium slides generated.',
                         analysis
                     );
-
-                    tg.showAlert(
-                        'محتوای تحلیل برای نمایش آماده نیست.'
-                    );
-
+                    tg.showAlert('محتوای تحلیل برای نمایش آماده نیست.');
                     return;
                 }
 
+                /*
+                * 5. Show Premium (State-based)
+                */
+                showPremiumInnerWorld();
 
                 /*
-                * Show Premium
+                * 6. Render DOM
                 */
-
-                if (premiumPage) {
-
-                    premiumPage.style.display = 'flex';
-
-                    premiumPage.setAttribute(
-                        'aria-hidden',
-                        'false'
-                    );
-                }
-
-
-                /*
-                * Render DOM
-                */
-
                 renderPremiumSlides();
-                const renderedSlides =
-                    document.querySelectorAll(
-                        '#premium-slides-wrapper .premium-slide'
-                    );
+                const renderedSlides = document.querySelectorAll('#premium-slides-wrapper .premium-slide');
 
                 if (!renderedSlides.length) {
-                    console.error(
-                        '[Inner World] Render produced no slides.'
-                    );
-
+                    console.error('[Inner World] Render produced no slides.');
                     return;
                 }
 
-                if (
-                    !document.querySelector(
-                        '#premium-slides-wrapper .premium-slide.is-active'
-                    )
-                ) {
-                    renderedSlides[0].classList.add(
-                        'is-active'
-                    );
+                if (!document.querySelector('#premium-slides-wrapper .premium-slide.is-active')) {
+                    renderedSlides[0].classList.add('is-active');
                 }
 
                 /*
-                * Render progress
+                * 7. Render progress
                 */
-
                 renderPremiumProgress();
 
-
                 /*
-                * Initial UI state
+                * 8. Initial UI state
                 */
-
                 updatePremiumUI();
 
-
                 /*
-                * Telegram MainButton should not compete
+                * 9. Telegram MainButton should not compete
                 * with the editorial navigation.
                 */
-
                 if (tg && tg.MainButton) {
                     tg.MainButton.hide();
                 }
             }
+
 
 
             function renderPremiumProgress() {
