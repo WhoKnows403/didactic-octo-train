@@ -2127,8 +2127,8 @@
             z-index: 1;
         }
 
-        .premium-editorial-page {
 
+        .premium-editorial-page {
             position: relative;
 
             width: min(
@@ -2143,12 +2143,35 @@
             box-sizing: border-box;
 
             padding:
-
                 clamp(42px, 7vh, 76px)
-
                 clamp(10px, 3vw, 22px)
-
                 128px;
+
+            opacity: 1;
+        }
+
+
+        .premium-slide .premium-editorial-page {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .premium-slide.is-active .premium-editorial-page {
+            animation: premiumPageEnter 560ms cubic-bezier(.22,1,.36,1);
+        }
+
+        @keyframes premiumPageEnter {
+
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+
         }
 
         .premium-page-margin {
@@ -2241,83 +2264,6 @@
             margin-inline: auto;
 
             padding-bottom: 12px;
-        }
-
-
-        .premium-slide-chapter {
-            margin: 0 0 22px;
-
-            color: var(--premium-brass);
-
-            font-size: 9px;
-            font-weight: 500;
-
-            line-height: 1.5;
-
-            letter-spacing: 0.18em;
-
-            text-align: center;
-            text-transform: uppercase;
-
-            opacity: 0.82;
-        }
-
-
-        .premium-slide-title {
-            width: min(100%, 540px);
-
-            margin:
-                0 auto;
-
-            color: var(--premium-paper);
-
-            font-size:
-                clamp(
-                    28px,
-                    6.8vw,
-                    40px
-                );
-
-            font-weight: 600;
-
-            line-height: 1.55;
-
-            letter-spacing: -0.025em;
-
-            text-align: center;
-
-            text-wrap: balance;
-        }
-
-
-
-        .premium-slide-subtitle {
-            width: min(100%, 470px);
-
-            margin:
-                18px auto 0;
-
-            color: var(--premium-muted);
-
-            font-size: 13px;
-            font-weight: 400;
-
-            line-height: 2;
-
-            text-align: center;
-        }
-
-
-        .premium-slide-rule {
-            width: 42px;
-            height: 1px;
-
-            margin:
-                34px auto
-                38px;
-
-            background:
-                var(--premium-brass-line);
         }
 
 
@@ -2650,98 +2596,7 @@
             user-select: none;
         }
 
-        .premium-editorial-page
-        .premium-editorial-kicker,
-        .premium-editorial-page
-        .premium-editorial-title,
-        .premium-editorial-page
-        .premium-editorial-lead,
-        .premium-editorial-page
-        .premium-editorial-rule,
-        .premium-editorial-page
-        .premium-reading-column,
-        .premium-editorial-page
-        .premium-featured-passage {
 
-            opacity: 0;
-
-            transform:
-                translateY(7px);
-
-            transition:
-
-                opacity 460ms ease,
-
-                transform 560ms
-                    cubic-bezier(.22,1,.36,1);
-        }
-
-
-        .premium-slide.is-active
-        .premium-editorial-kicker {
-
-            opacity: 1;
-
-            transform: none;
-
-            transition-delay: 50ms;
-        }
-
-
-        .premium-slide.is-active
-        .premium-editorial-title {
-
-            opacity: 1;
-
-            transform: none;
-
-            transition-delay: 110ms;
-        }
-
-
-        .premium-slide.is-active
-        .premium-editorial-lead {
-
-            opacity: 1;
-
-            transform: none;
-
-            transition-delay: 170ms;
-        }
-
-
-        .premium-slide.is-active
-        .premium-editorial-rule {
-
-            opacity: 1;
-
-            transform: none;
-
-            transition-delay: 210ms;
-        }
-
-
-        .premium-slide.is-active
-        .premium-reading-column {
-
-            opacity: 1;
-
-            transform: none;
-
-            transition-delay: 250ms;
-        }
-
-
-
-        .premium-slide.is-active
-        .premium-featured-passage {
-
-            opacity: 1;
-
-            transform: none;
-
-            transition-delay: 310ms;
-        }
 
         .premium-navigation {
             position: fixed;
@@ -2852,84 +2707,6 @@
                 var(--premium-brass);
 
             opacity: 0.8;
-        }
-
-
-        .premium-slide-chapter,
-        .premium-slide-title,
-        .premium-slide-subtitle,
-        .premium-slide-rule,
-        .premium-slide-body {
-            opacity: 0;
-
-            transform:
-                translateY(8px);
-
-            transition:
-                opacity 420ms ease,
-                transform 560ms cubic-bezier(
-                    0.22,
-                    1,
-                    0.36,
-                    1
-                );
-        }
-
-        .premium-slide.is-active .premium-slide-chapter {
-            opacity: 1;
-
-            transform: translateY(0);
-
-            transition-delay: 30ms;
-        }
-
-
-        .premium-slide.is-active .premium-slide-title {
-            opacity: 1;
-
-            transform: translateY(0);
-
-            transition-delay: 110ms;
-        }
-
-
-        .premium-slide.is-active .premium-slide-subtitle {
-            opacity: 1;
-
-            transform: translateY(0);
-
-            transition-delay: 160ms;
-        }
-
-
-
-        .premium-slide.is-active .premium-slide-rule {
-            opacity: 1;
-
-            transform: translateY(0);
-
-            transition-delay: 200ms;
-        }
-
-        .premium-slide.is-active .premium-slide-body {
-            opacity: 1;
-
-            transform: translateY(0);
-
-            transition-delay: 240ms;
-        }
-
-
-        .premium-slide-body strong {
-            color: var(--premium-paper);
-
-            font-weight: 600;
-        }
-
-        .premium-slide-body em {
-            color: var(--premium-brass);
-
-            font-style: normal;
         }
 
         @media (max-width: 600px) {
@@ -4112,8 +3889,7 @@
 
                 let html = '';
                 let paragraph = [];
-                let hasLead = false;
-
+                
                 function flushParagraph() {
 
                     if (!paragraph.length) {
@@ -4123,24 +3899,11 @@
                     const content =
                         paragraph.join('<br>');
 
-                    if (!hasLead) {
-
-                        html += `
-                            <p class="premium-editorial-lead">
-                                ${content}
-                            </p>
-                        `;
-
-                        hasLead = true;
-
-                    } else {
-
-                        html += `
-                            <p>
-                                ${content}
-                            </p>
-                        `;
-                    }
+                    html += `
+                        <p>
+                            ${content}
+                        </p>
+                    `;
 
                     paragraph = [];
                 }
