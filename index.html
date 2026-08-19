@@ -49,13 +49,44 @@
             * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
 
             body, html {
-                font-family: 'Vazirmatn', sans-serif;
-                background-color: #121110;
-                color: #E8E3D9;
-                margin: 0; padding: 0; width: 100%; height: 100%;
-                overflow: hidden; overscroll-behavior: none;
-                position: fixed; user-select: none;
-                background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E");
+
+                font-family:
+                'Vazirmatn',
+                "Apple Color Emoji",
+                "Segoe UI Emoji",
+                sans-serif;
+
+
+                background:
+                radial-gradient(
+                    circle at 50% 15%,
+                    rgba(157,179,155,0.06),
+                    transparent 35%
+                ),
+                var(--bg-dark);
+
+
+                color:var(--text-ivory);
+
+
+                margin:0;
+                padding:0;
+
+
+                width:100%;
+                height:100%;
+
+
+                overflow:hidden;
+
+
+                overscroll-behavior:none;
+
+
+                position:fixed;
+
+
+                user-select:none;
             }
 
             /* 🌟 Ethereal Breathing Background */
@@ -252,20 +283,27 @@
 
             .progress-container {
                 width: 100%;
-                height: 2px;
-                background: rgba(232, 227, 217, 0.1);
-                position: absolute;
-                top: 0; left: 0;
-                z-index: 100;
+                height: 44px;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                margin-top: 20px;
+                margin-bottom: 15px;
+                padding-left: 76px;
+                padding-right: 20px;
+                box-sizing: border-box;
+                position: relative;
+                z-index: 30;
+                direction: rtl; /* حل مشکل گیج‌کننده بودن راست‌چین/چپ‌چین */
             }
-
             .q-counter {
-                position: absolute;
-                top: 15px; right: 20px;
-                color: rgba(232, 227, 217, 0.5);
-                font-size: 12px;
-                letter-spacing: 2px;
-                font-weight: 300;
+                color: rgba(255, 255, 255, 0.95); /* روشن‌تر برای خوانایی کامل */
+                font-size: 14px; /* یک پیکسل بزرگتر */
+                font-weight: 500;
+                letter-spacing: 0.5px;
+                white-space: nowrap;
+                text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+                font-variant-numeric: persian-series-digits;
             }
 
             /* Track بدون تغییر ماند چون ساختارش با RTL سازگار شد */
@@ -284,10 +322,13 @@
 
             .progress-glow {
                 height: 100%;
-                background: #D2C2AC;
+                background: var(--accent-sage);
                 width: 0%;
-                transition: width 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+                transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+                box-shadow: 0 0 8px var(--accent-glow);
+                border-radius: 4px;
             }
+
 
             #story-progress {
 
@@ -311,7 +352,55 @@
                 opacity:.75;
             }
 
+            .neural-node {
 
+                width:8px;
+
+                height:8px;
+
+                border-radius:50%;
+
+
+                background:
+                    rgba(157,179,155,0.45);
+
+
+                border:
+                    1px solid rgba(255,255,255,0.18);
+
+
+                box-shadow:
+                    0 0 12px rgba(157,179,155,0.15);
+
+
+                transition:
+                    all .6s cubic-bezier(.4,0,.2,1);
+            }
+
+            .neural-node.active {
+                background: #D1D5DB;
+                transform: scale(1.1);
+                box-shadow: 0 0 0 3px rgba(209, 213, 219, 0.1);
+            }
+
+            .neural-link {
+
+                flex-grow:1;
+
+                height:1px;
+
+
+                background:
+                    rgba(255,255,255,0.08);
+
+
+                transition:
+                    all .6s ease;
+            }
+
+            .neural-link.active {
+                background: #5D6367;
+            }
 
            /* 🎵 Ambient Music Toggle */
             .music-toggle {
@@ -443,29 +532,33 @@
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
-                direction: rtl;
-                padding: 0 10px;
+                position: relative;
+                z-index: 1;
+                direction: rtl; /* حیاتی: برای اینکه دکمه ۱ (راست) بشه موافق و ۵ (چپ) بشه مخالف */
             }
 
             /* 🔴 ENHANCED CIRCLES (Affordance Fix) */
             .circle-btn {
-                width: 36px; height: 36px;
-                border: 1px solid rgba(232, 227, 217, 0.2);
+                width: 32px;
+                height: 32px;
+                border: 1.5px solid rgba(255, 255, 255, 0.3); /* بوردر واضح‌تر */
                 border-radius: 50%;
-                background: transparent;
+                /* پس‌زمینه نیمه‌توپر تا حس دکمه بودن بده، نه صرفا طرح گرافیکی */
+                background: rgba(255, 255, 255, 0.08);
                 cursor: pointer;
-                transition: all 0.3s ease;
-                outline: none;
+                position: relative;
+                transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+                padding: 0;
+                appearance: none;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+                outline: none !important;
+                backdrop-filter: blur(6px);
+                -webkit-backdrop-filter: blur(6px);
             }
 
             .circle-btn:hover {
-                border-color: rgba(232, 227, 217, 0.5);
-            }
-
-            .circle-btn.selected {
-                background: #D2C2AC;
-                border-color: #D2C2AC;
-                transform: scale(1.05);
+                background: rgba(255, 255, 255, 0.2);
+                border-color: rgba(255, 255, 255, 0.6);
             }
 
             .circle-btn::after {
@@ -506,78 +599,16 @@
                 direction: rtl; /* هم‌گام با دایره‌ها */
             }
 
-
-                        /* استایل‌های بخش نتایج تحلیل شخصیت */
-            .cognitive-analysis-wrapper {
-                display: flex;
-                flex-direction: column;
-                gap: 45px; /* فاصله زیاد بین هر بلوک برای تنفس متن */
-                padding: 30px 15px;
-                direction: rtl;
-            }
-
-            .cognitive-trait-block {
-                border-bottom: 1px solid rgba(232, 227, 217, 0.05); /* خط جداکننده بسیار محو */
-                padding-bottom: 35px;
-            }
-
-            .trait-header {
-                display: flex;
-                justify-content: space-between;
-                align-items: baseline;
-                margin-bottom: 12px;
-            }
-
-            .trait-title {
-                font-family: serif; /* ایجاد تضاد با فونت متن برای القای حس کلاسیک و روانکاوانه */
-                font-size: 20px;
-                font-weight: 500;
-                color: #D2C2AC; /* رنگ بژ/کرم به جای رنگ‌های نئونی */
-                margin: 0;
-                letter-spacing: -0.5px;
-            }
-
-            .trait-score {
-                font-family: monospace; /* نمایش اعداد با حس دیتای خام و ماشینی */
-                font-size: 16px;
-                color: rgba(232, 227, 217, 0.4);
-                letter-spacing: 1px;
-            }
-
-            .trait-bar-container {
-                width: 100%;
-                height: 1px; /* نوار پیشرفت به ضخامت یک مو */
-                background: rgba(232, 227, 217, 0.08);
-                margin-bottom: 18px;
-                position: relative;
-                overflow: hidden;
-            }
-
-            .trait-bar-fill {
-                height: 100%;
-                background: #D2C2AC;
-                position: absolute;
-                right: 0; /* شروع از راست به چپ */
-                top: 0;
-                transition: width 1.2s cubic-bezier(0.22, 1, 0.36, 1);
-            }
-
-            .trait-description {
-                font-size: 15px;
-                line-height: 2.2; /* حیاتی برای خوانایی متون سنگین روان‌شناختی */
-                color: rgba(232, 227, 217, 0.75);
-                margin: 0;
-                text-align: justify;
-                font-weight: 300;
-            }
-
-
             .labels-row span {
-                color: rgba(232, 227, 217, 0.6);
-                font-size: 12px;
-                font-weight: 400;
-                letter-spacing: 0.5px;
-                }
+                display: inline-block;
+                white-space: nowrap;
+                /* رنگ قبلی یک فاجعه Accessibility بود، این جایگزینش شد: */
+                color: rgba(255, 255, 255, 0.95);
+                font-size: 13px; /* کمی بزرگتر */
+                font-weight: 600; /* ضخیم‌تر برای خوانایی */
+                letter-spacing: 0;
+                text-shadow: 0 2px 6px rgba(0, 0, 0, 0.8); /* سایه برای جدا شدن از بک‌گراند */
+            }
             /* 🌟 Pure Fade Animation */
             .fade-out { animation: simpleFadeOut 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
             .fade-in { animation: simpleFadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
@@ -636,7 +667,14 @@
                 background: radial-gradient(circle at 50% 20%, rgba(210, 194, 172, 0.08) 0%, transparent 65%) !important;
             }
 
-
+            .glass-card.comparison-card {
+                background: linear-gradient(180deg, rgba(23, 24, 23, 0.45) 0%, rgba(23, 24, 23, 0.75) 100%);
+                backdrop-filter: blur(16px);
+                -webkit-backdrop-filter: blur(16px);
+                border: 1px solid rgba(244, 241, 234, 0.07);
+                border-radius: 20px;
+                box-shadow: 0 12px 35px rgba(0, 0, 0, 0.35);
+            }
 
             .text-highlight.comparison-highlight {
                 color: var(--story-white);
@@ -1118,7 +1156,25 @@
             /* 🔮 Sacred Geometry Loaders */
 
 
+            /* ---- Navigation Pill ---- */
+            .smart-nav-wrapper {
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                width: 100%;
 
+                /* هم‌رنگ با بک‌گراند پنل محتوا */
+                background: #1a1a1c;
+
+                /* یک هاله نوری در بالای دکمه‌ها تا حس جدا شدن از متن اسکرول‌شونده را بدهد */
+                box-shadow: 0 -10px 30px rgba(26, 26, 28, 0.95);
+
+                padding: 15px 20px 25px 20px; /* پدینگ برای دکمه‌ها */
+                z-index: 10; /* بالاترین لایه تا همیشه در دسترس باشد */
+
+                display: flex;
+                justify-content: center; /* اگر ساختار داخلی دکمه‌هایت فلکس است این کمک می‌کند */
+            }
 
 
             .nav-pill {
@@ -1448,13 +1504,19 @@
             }
 
             .story-content-wrapper p {
-                color: rgba(232, 227, 217, 0.85); /* سفید نرم */
-                font-size: 16px;
-                line-height: 2.4; /* حیاتی برای متون تحلیلی و طولانی */
-                font-weight: 300;
-                text-align: justify;
-                text-shadow: none !important; /* قتل‌عام سایه‌های کثیف */
-                margin-bottom: 28px;
+                max-width: 640px;
+                margin: 0 0 24px;
+
+                /* رنگ متن روی شیشه تاریک باید سفید با شفافیت بالا باشد تا چشم را نزند */
+                color: rgba(255, 255, 255, 0.9);
+
+                font-size: clamp(15px, 3vw, 17px);
+                line-height: 2.1; /* فاصله خطوط (Leading) بیشتر، خوانایی متن‌های طولانی را راحت‌تر می‌کند */
+                font-weight: 300; /* وزن سبک‌تر برای انتقال حس آرامش */
+                text-align: right;
+
+                /* یک سایه بسیار نرم زیر خود متن برای تضمین خوانایی در صورت روشن بودن پس‌زمینه عکس */
+                text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
             }
 
             .story-content-wrapper p:last-child {
@@ -1465,14 +1527,40 @@
             }
 
             .soul-quote {
-                border-right: 2px solid #D2C2AC;
-                background: transparent;
-                padding: 10px 20px;
-                font-style: italic;
-                color: #D2C2AC;
-                font-size: 15px;
-                line-height: 2.2;
-                box-shadow: none; /* حذف باکس‌شدوهای بی‌معنی */
+
+                position:relative;
+
+                margin:0 0 25px 0;
+
+                padding:20px 22px;
+
+                background:
+                    rgba(255,255,255,0.025);
+
+
+                border-right:
+                    1px solid rgba(157,179,155,0.7);
+
+
+                border-radius:16px;
+
+
+                color:
+                    var(--text-ivory);
+
+
+                font-style:italic;
+
+                font-size:14px;
+
+                line-height:2.2;
+
+
+                box-shadow:
+                    inset 0 0 25px rgba(0,0,0,.08);
+
+
+                letter-spacing:.3px;
             }
 
             .soul-quote::before {
@@ -1655,21 +1743,30 @@
 
             .climax-cta-button {
                 width: 100%;
-                padding: 16px 24px;
-                background: #E8E3D9; /* رنگ کاغذ/استخوان */
-                border: none;
-                border-radius: 4px;
-                color: #121110; /* متن تیره روی پس‌زمینه روشن */
-                font-weight: 600;
-                font-size: 15px;
-                letter-spacing: 0.5px;
+                padding: 15px 24px;
+                background: rgba(212, 175, 55, 0.08);
+                border: 1px solid rgba(212, 175, 55, 0.3);
+                border-radius: 4px; /* بدون گردی اغراق‌آمیز */
+                color: var(--accent-warm);
+                font-weight: 500;
+                font-size: 14px;
+                font-family: 'Vazirmatn', sans-serif;
                 cursor: pointer;
-                transition: transform 0.2s ease, opacity 0.2s ease;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 12px;
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+                transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+                letter-spacing: 1px;
+                backdrop-filter: blur(5px);
             }
 
             .climax-cta-button:active {
                 transform: scale(0.98);
-                opacity: 0.9;
+                background: var(--accent-warm);
+                color: var(--bg-dark);
+                box-shadow: 0 0 20px rgba(212, 175, 55, 0.2);
             }
 
             .cta-arrow {
@@ -2415,7 +2512,7 @@
                 content: "";
                 position: absolute;
                 top: 38px;
-                right: -4px;
+                right: -4px; 
                 width: 5px;
                 height: 5px;
                 border-radius: 50%;
@@ -2766,7 +2863,9 @@
                 <svg id="icon-muted" viewBox="0 0 24 24" style="display: none;"><path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/></svg>
             </button>
             <div class="progress-container">
-                <div class="progress-glow" id="progress"></div>
+                <div class="progress-track">
+                    <div class="progress-glow" id="progress"></div>
+                </div>
                 <div class="q-counter" id="q-num">1 / 60</div>
             </div>
 
@@ -4215,42 +4314,214 @@
             }
 
 
-            function renderComparisonResultUI(containerId, resultsData) {
-                const container = document.getElementById(containerId);
-                if (!container) {
-                    console.error("Container not found for rendering results.");
-                    return;
+            function renderComparisonResultUI(resultText) {
+                document.getElementById('app').style.display = 'none';
+                document.getElementById('intro-screen').style.display = 'none';
+
+                const container = document.getElementById('result-container');
+                const slidesWrapper = document.getElementById('slides-wrapper');
+                const progressWrapper = document.getElementById('story-progress');
+                const navWrapper = document.querySelector('.smart-nav-wrapper');
+
+                slidesWrapper.innerHTML = '';
+                progressWrapper.innerHTML = '';
+                if (navWrapper) navWrapper.style.display = 'flex';
+
+                let rawContent = resultText || "";
+                let sections = rawContent.split(/(?=##\s)/);
+
+                parsedSlides = [];
+
+                if (sections.length > 1) {
+                    sections.forEach(section => {
+                        section = section.trim();
+                        if (!section) return;
+
+                        let lines = section.split('\n');
+                        let slideTitle = lines[0].replace('##', '').replace(/<b>|<\/b>/g, '').trim();
+                        let slideBody = lines.slice(1).join('\n').trim();
+
+                        parsedSlides.push({
+                            title: slideTitle,
+                            content: slideBody,
+                            isClimax: false
+                        });
+                    });
+                } else {
+                    parsedSlides.push({
+                        title: "نقاط اتصال",
+                        content: rawContent,
+                        isClimax: false
+                    });
                 }
 
-                // پاکسازی کامل کانتینر
-                container.innerHTML = '';
-
-                // ایجاد یک Wrapper اصلی برای کنترل جریان محتوا
-                let htmlContent = `<div class="cognitive-analysis-wrapper">`;
-
-                // فرض بر این است که resultsData آرایه‌ای از آبجکت‌های نتیجه است
-                resultsData.forEach(item => {
-                    htmlContent += `
-                        <div class="cognitive-trait-block">
-                            <div class="trait-header">
-                                <h3 class="trait-title">${item.title}</h3>
-                                <span class="trait-score">${item.score}%</span>
-                            </div>
-
-                            <div class="trait-bar-container">
-                                <!-- تنها استایل این‌لاین مجاز، عرض نوار است که ماهیت داینامیک و دیتامحور دارد -->
-                                <div class="trait-bar-fill" style="width: ${item.score}%;"></div>
-                            </div>
-
-                            <p class="trait-description">${item.description}</p>
-                        </div>
-                    `;
+                parsedSlides.push({
+                    title: "جهان درون شما",
+                    isClimax: true
                 });
 
-                htmlContent += `</div>`;
+                currentSlideIndex = 0;
 
-                // تزریق ساختار تمیز به DOM
-                container.innerHTML = htmlContent;
+                parsedSlides.forEach((slide, index) => {
+                    // ساخت نقاط و خطوط پیمایش (Progress Nodes)
+                    const node = document.createElement('div');
+                    node.className = slide.isClimax ? 'neural-node comparison-node climax-node' : 'neural-node comparison-node';
+                    node.id = `node-${index}`;
+                    progressWrapper.appendChild(node);
+
+                    if (index < parsedSlides.length - 1) {
+                        const link = document.createElement('div');
+                        link.className = 'neural-link comparison-link';
+                        link.id = `link-${index}`;
+                        progressWrapper.appendChild(link);
+                    }
+
+                    const slideDiv = document.createElement('div');
+                    slideDiv.className = 'slide';
+                    slideDiv.id = `slide-${index}`;
+
+                    // اگر اسلاید عادی باشد
+                    if (!slide.isClimax) {
+                        const cleanTitle = slide.title.replace(/^\d+\.\s*/, '').replace(/<\/?[^>]+(>|$)/g, "").replace(/\*/g, '');
+
+                        let safeContent = (slide.content || "");
+                        let processedText = safeContent.replace(/\*\*(.*?)\*\*/g, '<span class="text-highlight comparison-highlight">$1</span>');
+
+                        let normalizedText = processedText
+                            .replace(/(?:^|\n)(>[^\n]*)/g, '\n\n$1\n\n')
+                            .replace(/\n\n\n+/g, '\n\n');
+
+                        let paragraphs = normalizedText.split(/\n\n+/);
+                        let formattedContent = paragraphs.map(para => {
+                            para = para.trim();
+                            if (!para) return '';
+
+                            if (para.startsWith('>')) {
+                                let cleanQuote = para.replace(/^>\s*/mg, '').trim();
+                                return `<div class="soul-quote comparison-quote">${cleanQuote.replace(/\n/g, '<br>')}</div>`;
+                            }
+
+                            if (para.includes('\n- ') || para.startsWith('- ') || para.includes('\n* ') || para.startsWith('* ')) {
+                                let lines = para.split('\n');
+                                let listHtml = '<ul class="soul-list">';
+                                let textBeforeList = '';
+
+                                lines.forEach(line => {
+                                    line = line.trim();
+                                    if (line.startsWith('- ') || line.startsWith('* ')) {
+                                        listHtml += `<li><span style="position:absolute; right:-15px; color:var(--comparison-accent);">•</span>${line.substring(2)}</li>`;
+                                    } else if (line) {
+                                        textBeforeList += `<p>${line.replace(/\n/g, '<br>')}</p>`;
+                                    }
+                                });
+                                listHtml += '</ul>';
+                                return textBeforeList + listHtml;
+                            }
+
+                            return `<p>${para.replace(/\n/g, '<br>')}</p>`;
+                        }).join('');
+
+                        const meta = getComparisonSlideMeta(cleanTitle);
+                        const chapterBlock = meta.chapter ? `
+                            <div class="story-chapter comparison-chapter" style="color: var(--accent-warm); font-weight: 500; letter-spacing: 2px; font-size: 11px; margin-bottom: 8px; text-transform: uppercase;">
+                                ${meta.chapter}
+                            </div>
+                        ` : "";
+
+                        const whisperBlock = meta.whisper ? `
+                            <div class="story-whisper-container" style="margin: 18px 0 24px 0;">
+                                <div class="story-divider" style="display: flex; align-items: center; justify-content: center; gap: 8px; opacity: 0.45;">
+                                    <span style="height: 1px; width: 36px; background: linear-gradient(90deg, transparent, var(--accent-warm));"></span>
+                                    <span style="color: var(--accent-warm); font-size: 11px;">✦</span>
+                                    <span style="height: 1px; width: 36px; background: linear-gradient(-90deg, transparent, var(--accent-warm));"></span>
+                                </div>
+                                <div class="story-whisper" style="font-style: italic; font-size: 14px; color: var(--story-text-soft); margin-top: 10px; font-weight: 300; line-height: 1.9;">
+                                    ${meta.whisper}
+                                </div>
+                            </div>
+                        ` : "";
+
+                        slideDiv.innerHTML = `
+                            <div class="glass-card comparison-card" style="padding: 28px 24px;">
+                                <div class="card-ambient-glow comparison-glow"></div>
+                                <div class="glass-card-content">
+                                    <div class="relationship-signature">
+                                        <span>روایتِ دو نگاه در یک قاب</span>
+                                    </div>
+
+                                    ${chapterBlock}
+
+                                    <h2 class="typewriter-target" data-text="${cleanTitle}"
+                                        style="text-align:center; margin:0 0 15px 0; font-size:24px; font-weight:700; background: linear-gradient(135deg, #FFFFFF 40%, var(--accent-warm) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; line-height:1.5; position:relative; z-index:2; text-shadow: 0 4px 20px rgba(0,0,0,0.3);">
+                                    </h2>
+
+                                    <div class="story-title-rule" style="background: rgba(210, 194, 172, 0.25);" aria-hidden="true"></div>
+
+                                    ${whisperBlock}
+
+                                    <div class="story-content-wrapper paragraph-target" style="line-height: 1.9; font-size: 15px; color: var(--story-text); font-weight: 300;">
+                                        ${formattedContent}
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    }
+                    else {
+                        slideDiv.innerHTML = `
+                        <div class="glass-card" style="background: transparent; border: none; box-shadow: none; padding: 40px 20px; text-align: center;">
+                            <div class="glass-card-content" style="align-items: center;">
+                                <div class="story-chapter" style="color: var(--accent-warm); opacity: 0.8; letter-spacing: 3px; font-size: 11px; margin-bottom: 20px; text-transform: uppercase;">
+                                    CHAPTER • عمیق‌ترین فصل
+                                </div>
+
+                                <h2 style="font-size: 32px; font-weight: 600; color: var(--story-white); margin-bottom: 25px; line-height: 1.4; text-shadow: 0 4px 15px rgba(0,0,0,0.5);">
+                                    جهان درون شما
+                                </h2>
+
+                                <div style="width: 30px; height: 1px; background: var(--accent-warm); margin: 0 auto 35px; opacity: 0.4;"></div>
+
+                                <p style="font-size: 16px; color: var(--story-text-soft); line-height: 2.1; margin-bottom: 60px; max-width: 340px; margin-left: auto; margin-right: auto; font-weight: 300; text-align: center; letter-spacing: 0.2px;">
+                                    ما تا اینجا فقط سطح را دیدیم؛<br>
+                                    اکنون نوبت به ورود به دنیای درونی‌ترِ این رابطه است.<br>
+                                    جایی که الگوهای پنهان معنا پیدا می‌کنند.
+                                </p>
+
+                                <div class="climax-cta-container" style="width: 100%; display: flex; flex-direction: column; align-items: center; gap: 20px;">
+                                    <button id="btn-submit-order" onclick="handleCreateTelegramOrder()"
+                                        style="background: #F4F1EA; color: #171817; border: none; padding: 18px 45px; border-radius: 14px; font-size: 16px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 12px; transition: all 0.4s cubic-bezier(0.2, 1, 0.3, 1); box-shadow: 0 12px 35px rgba(0,0,0,0.4); width: 100%; max-width: 320px;">
+                                        <span>ورود به جهان درون شما</span>
+                                        <span style="font-size: 20px;">←</span>
+                                    </button>
+                                    <div style="display: flex; flex-direction: column; gap: 4px; align-items: center;">
+                                        <span style="font-size: 13px; color: var(--accent-warm); opacity: 0.8; font-weight: 400; letter-spacing: 0.5px;">
+                                            تحلیل عمیق‌تر الگوهای پنهان این رابطه
+                                        </span>
+                                        <span style="font-size: 11px; color: var(--story-text-faint); font-weight: 300; letter-spacing: 1px;">
+                                            PREMIUM EXPERIENCE
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    }
+
+                    slidesWrapper.appendChild(slideDiv);
+                });
+
+                document.documentElement.style.setProperty('--comparison-accent', '#D4AF37');
+
+                const bgImg = document.querySelector('.story-background-image');
+                if (bgImg) bgImg.style.backgroundImage = 'url("comparison_analysis.webp")';
+
+                container.style.display = 'flex';
+                updateStoryUI();
+
+                if (tg && tg.MainButton) {
+                    tg.MainButton.setText("بازگشت");
+                    tg.MainButton.show();
+                    tg.MainButton.onClick(() => tg.close());
+                }
             }
 
             async function handleCreateTelegramOrder() {
