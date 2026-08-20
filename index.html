@@ -4211,6 +4211,8 @@
             function getComparisonSlideMeta(titleText) {
                 let meta = { chapter: "", whisper: "" };
 
+                if (!titleText) return meta;
+
                 if (titleText.includes('لحظه‌') || titleText.includes('واقعی') || titleText.includes('اتصال') || titleText.includes('شما دو نفر')) {
                     meta.chapter = "CHAPTER • لحظه‌های مشترک";
                     meta.whisper = "در هر ارتباط، لحظاتی هست<br>که بدون کلام معنا پیدا می‌کنند.";
@@ -4233,6 +4235,8 @@
 
             function getSlideMeta(titleText) {
                 let meta = { chapter: "", whisper: "" };
+
+                if (!titleText) return meta;
 
                 if (titleText.includes('قبل از اینکه شروع کنیم')) {
                     meta.chapter = "CHAPTER I • آغاز";
@@ -4275,16 +4279,10 @@
             }
 
             function parseMarkdownToSlides(rawText) {
-
                 if (typeof rawText !== 'string') {
-                    console.error(
-                        '[Inner World] Expected string, got:',
-                        typeof rawText
-                    );
-
+                    console.error('[Inner World] Expected string, got:', typeof rawText);
                     return [];
                 }
-
 
                 const normalizedText = rawText
                     .replace(/\r\n/g, '\n')
@@ -4292,110 +4290,32 @@
                     .replace(/^\uFEFF/, '')
                     .trim();
 
+                if (!normalizedText) return [];
 
-                if (!normalizedText) {
-                    return [];
-                }
+                const sections = normalizedText
+                    .split(/(?:^|\n)\s*##\s+/)
+                    .map(section => section.trim())
+                    .filter(Boolean);
 
+                const slides = sections.map((section, index) => {
+                    const lines = section.split('\n');
+                    const rawTitle = lines.shift()?.trim() || '';
+                    const content = lines.join('\n').trim();
+                    const title = rawTitle.replace(/^\d+\.\s*/, '');
 
-                /*
-                * Backend format:
-                *
-                * ## 0. <b>...</b>
-                * content...
-                *
-                * ## 1. <b>...</b>
-                * content...
-                *
-                * ...
-                *
-                * ## 10. <b>...</b>
-                * content...
-                *
-                *
-                * We split ONLY on markdown H2 headings.
-                */
-
-                const sections =
-                    normalizedText
-                        .split(/(?:^|\n)\s*##\s+/)
-                        .map(section => section.trim())
-                        .filter(Boolean);
-
-
-                const slides = sections.map(
-                    (section, index) => {
-
-                        const lines =
-                            section
-                                .split('\n');
-
-
-                        const rawTitle =
-                            lines.shift()?.trim() || '';
-
-
-                        const content =
-                            lines
-                                .join('\n')
-                                .trim();
-
-
-                        /*
-                        * Remove the numeric prefix:
-                        *
-                        * 0. <b>Title</b>
-                        *
-                        * becomes:
-                        *
-                        * <b>Title</b>
-                        */
-
-                        const title =
-                            rawTitle.replace(
-                                /^\d+\.\s*/,
-                                ''
-                            );
-
-
-                        return {
-
-                            id:
-                                `premium-slide-${index}`,
-
-                            type:
-                                index === 0
-                                    ? 'opening'
-                                    : 'article',
-
-                            chapter:
-                                `CHAPTER ${toRoman(index + 1)}`,
-
-                            title:
-                                title,
-
-                            subtitle:
-                                '',
-
-                            content:
-                                content,
-
-                            quote:
-                                ''
-                        };
-                    }
-                );
-
-
-                console.log(
-                    '[Inner World] Parsed slides:',
-                    slides.length
-                );
-
+                    return {
+                        id: `premium-slide-${index}`,
+                        type: index === 0 ? 'opening' : 'article',
+                        chapter: `CHAPTER ${index + 1}`,
+                        title: title,
+                        subtitle: '',
+                        content: content,
+                        quote: ''
+                    };
+                });
 
                 return slides;
             }
-
 
             function typeWriterEffect(element, text, speed = 35, onComplete) {
                 if (element.twTimeout) clearTimeout(element.twTimeout);
@@ -4415,7 +4335,6 @@
             }
 
             async function handleComparisonFlow(requestId) {
-
                 const loadingOverlay = document.getElementById('loading-overlay');
                 if (loadingOverlay) {
                     loadingOverlay.style.display = 'flex';
@@ -4423,7 +4342,8 @@
                     document.querySelector('#loading-overlay p').innerText = "در حال پردازش نقاط اتصال...";
                 }
 
-                const initData = tg?.initData || "debug_init_data";
+                const initData = window.Telegram?.WebApp?.initData || (typeof tg !== 'undefined' ? tg?.initData : "") || "debug_init_data";
+                let resultText = "";
 
                 try {
                     const url = `https://90c2-2a0b-4140-101a-00-2.ngrok-free.app/comparison/receive-comparison-result`;
@@ -4455,7 +4375,6 @@
 
                     if (!response.ok) throw new Error(`Status: ${response.status}`);
 
-                    let resultText = "";
                     const contentType = response.headers.get("content-type") || "";
                     if (contentType.includes("application/json")) {
                         const data = await response.json();
@@ -4471,26 +4390,32 @@
                         return;
                     }
 
-                    renderComparisonResultUI(resultText);
-
                 } catch (error) {
                     if (loadingOverlay) loadingOverlay.style.display = 'none';
+                    console.error("Network Fetch Error:", error);
                     showErrorState("خطای ارتباطی", "سیگنال بین مینی‌اپ و سرور قطع شد یا اینترنت شما دچار نوسان است.");
+                    return;
+                }
+
+                // ایزوله‌سازی رندر UI جهت جلوگیری از پریدن به catch شبکه در صورت بروز خطای فرانت
+                try {
+                    renderComparisonResultUI(resultText);
+                } catch (uiErr) {
+                    console.error("UI Render Error:", uiErr);
                 }
             }
 
-
             function renderComparisonResultUI(resultText) {
-
-                document.getElementById('app').style.display = 'none';
-                document.getElementById('intro-screen').style.display = 'none';
+                const appEl = document.getElementById('app');
+                const introEl = document.getElementById('intro-screen');
+                if (appEl) appEl.style.display = 'none';
+                if (introEl) introEl.style.display = 'none';
 
                 const container = document.getElementById('result-container');
                 const slidesWrapper = document.getElementById('slides-wrapper');
                 const progressWrapper = document.getElementById('story-progress');
                 const navWrapper = document.querySelector('.smart-nav-wrapper');
 
-                // رندر دکمه کپسولی نوبار
                 if (navWrapper) {
                     navWrapper.style.display = 'flex';
                     navWrapper.innerHTML = `
@@ -4503,44 +4428,44 @@
                     `;
                 }
 
-                slidesWrapper.innerHTML = '';
-                progressWrapper.innerHTML = '';
+                if (slidesWrapper) slidesWrapper.innerHTML = '';
+                if (progressWrapper) progressWrapper.innerHTML = '';
 
-                // در اینجا resultText همان رشته‌ی مارک‌داون خامی است که بک‌اند فرستاده
                 let rawContent = resultText || "";
                 let sections = rawContent.split(/(?=##\s)/);
 
-                parsedSlides = [];
+                // تعریف صریح متغیرهای سراسری برای جلوگیری از ReferenceError
+                window.parsedSlides = [];
 
                 if (sections.length > 1) {
                     sections.forEach(section => {
                         section = section.trim();
                         if (!section) return;
                         let lines = section.split('\n');
-                        // پاکسازی دقیق تگ‌ها و مارک‌داون‌ها
-                        let slideTitle = lines[0].replace('##', '').replace(/<b>|<\/b>/g, '').replace(/\*/g, '').trim();
+                        let rawTitleLine = lines[0] || "";
+                        let slideTitle = rawTitleLine.replace(/^##\s*/, '').replace(/<b>|<\/b>/g, '').replace(/\*/g, '').trim();
                         let slideBody = lines.slice(1).join('\n').trim();
-                        parsedSlides.push({ title: slideTitle, content: slideBody, isClimax: false });
+                        window.parsedSlides.push({ title: slideTitle, content: slideBody, isClimax: false });
                     });
                 } else {
-                    parsedSlides.push({ title: "نقاط اتصال", content: rawContent, isClimax: false });
+                    window.parsedSlides.push({ title: "نقاط اتصال", content: rawContent, isClimax: false });
                 }
 
-                // اضافه کردن اسلاید نهایی (Climax)
-                parsedSlides.push({ title: "جهان درون شما", isClimax: true });
-                currentSlideIndex = 0;
+                window.parsedSlides.push({ title: "جهان درون شما", isClimax: true });
+                window.currentSlideIndex = 0;
 
-                // رندر لاین پروگرس مینیمال
-                progressWrapper.innerHTML = `
-                    <div class="minimal-progress-indicator">
-                        <span id="progress-text-label">فصل ۱ • واکاوی</span>
-                        <div class="progress-line-container">
-                            <div class="progress-line-fill" id="progress-line-fill"></div>
+                if (progressWrapper) {
+                    progressWrapper.innerHTML = `
+                        <div class="minimal-progress-indicator">
+                            <span id="progress-text-label">فصل ۱ • واکاوی</span>
+                            <div class="progress-line-container">
+                                <div class="progress-line-fill" id="progress-line-fill"></div>
+                            </div>
                         </div>
-                    </div>
-                `;
+                    `;
+                }
 
-                parsedSlides.forEach((slide, index) => {
+                window.parsedSlides.forEach((slide, index) => {
                     const slideDiv = document.createElement('div');
                     slideDiv.className = 'slide';
                     slideDiv.id = `slide-${index}`;
@@ -4560,25 +4485,23 @@
                             return `<p>${para.replace(/\n/g, '<br>')}</p>`;
                         }).join('');
 
-                        // فراخوانی تابع متادیتا برای گرفتن چپتر و متن زمزمه
                         const meta = getComparisonSlideMeta(slide.title);
 
                         slideDiv.innerHTML = `
                             <div class="glass-card comparison-card">
                                 <div class="glass-card-content">
                                     <div class="relationship-signature">روایتِ دو نگاه</div>
-                                    ${meta.chapter ? `<div class="story-chapter">${meta.chapter}</div>` : ""}
+                                    ${meta && meta.chapter ? `<div class="story-chapter">${meta.chapter}</div>` : ""}
                                     <h2 class="slide-title">🌱 ${slide.title}</h2>
                                     <div class="elegant-divider" aria-hidden="true">
                                         <span class="line"></span><span class="icon">✦</span><span class="line"></span>
                                     </div>
-                                    ${meta.whisper ? `<div class="story-whisper">${meta.whisper}</div>` : ""}
+                                    ${meta && meta.whisper ? `<div class="story-whisper">${meta.whisper}</div>` : ""}
                                     <div class="story-content-wrapper">${formattedContent}</div>
                                 </div>
                             </div>
                         `;
                     } else {
-                        // اسلاید نهایی با استایل‌های تاریک و دکمه درگاه
                         slideDiv.innerHTML = `
                             <div class="climax-atmosphere">
                                 <div class="climax-chapter">CHAPTER • عمیق‌ترین فصل</div>
@@ -4602,11 +4525,14 @@
                             </div>
                         `;
                     }
-                    slidesWrapper.appendChild(slideDiv);
+                    if (slidesWrapper) slidesWrapper.appendChild(slideDiv);
                 });
 
-                container.style.display = 'flex';
-                updateStoryUI(); // این تابع باید در کدهای قبلی شما موجود باشد
+                if (container) container.style.display = 'flex';
+
+                if (typeof updateStoryUI === 'function') {
+                    updateStoryUI();
+                }
 
                 if (window.Telegram?.WebApp?.MainButton) {
                     window.Telegram.WebApp.MainButton.setText("بازگشت");
@@ -4637,7 +4563,6 @@
                         body: JSON.stringify({ init_data: telegramInitData })
                     });
 
-                    // حالا فقط چک می‌کنیم که سرور خطای 4xx یا 5xx نداده باشد
                     if (response.ok) {
                         if (window.Telegram?.WebApp?.HapticFeedback) {
                             window.Telegram.WebApp.HapticFeedback.notificationOccurred('success');
@@ -4649,7 +4574,6 @@
                             if (window.Telegram?.WebApp) window.Telegram.WebApp.close();
                         }, 2000);
                     } else {
-                        // اگر بک‌اند ارور داد (مثل 400 یا 500)
                         throw new Error('سرور درخواست را نپذیرفت.');
                     }
                 } catch (error) {
@@ -4662,6 +4586,7 @@
             }
 
             function resetClimaxButton(btn) {
+                if (!btn) return;
                 btn.disabled = false;
                 btn.classList.remove('loading-state', 'success-state');
                 btn.innerHTML = `
@@ -4669,7 +4594,6 @@
                     <span class="btn-icon">✦</span>
                 `;
             }
-
 
             function showErrorState(title, message) {
                 document.getElementById('app').style.display = 'none';
