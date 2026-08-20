@@ -4481,6 +4481,7 @@
 
 
             function renderComparisonResultUI(resultText) {
+
                 document.getElementById('app').style.display = 'none';
                 document.getElementById('intro-screen').style.display = 'none';
 
@@ -4489,7 +4490,7 @@
                 const progressWrapper = document.getElementById('story-progress');
                 const navWrapper = document.querySelector('.smart-nav-wrapper');
 
-                // ناوبری مینیمال جدید: دکمه ادامه
+                // رندر دکمه کپسولی نوبار
                 if (navWrapper) {
                     navWrapper.style.display = 'flex';
                     navWrapper.innerHTML = `
@@ -4505,6 +4506,7 @@
                 slidesWrapper.innerHTML = '';
                 progressWrapper.innerHTML = '';
 
+                // در اینجا resultText همان رشته‌ی مارک‌داون خامی است که بک‌اند فرستاده
                 let rawContent = resultText || "";
                 let sections = rawContent.split(/(?=##\s)/);
 
@@ -4515,7 +4517,8 @@
                         section = section.trim();
                         if (!section) return;
                         let lines = section.split('\n');
-                        let slideTitle = lines[0].replace('##', '').replace(/<b>|<\/b>/g, '').trim();
+                        // پاکسازی دقیق تگ‌ها و مارک‌داون‌ها
+                        let slideTitle = lines[0].replace('##', '').replace(/<b>|<\/b>/g, '').replace(/\*/g, '').trim();
                         let slideBody = lines.slice(1).join('\n').trim();
                         parsedSlides.push({ title: slideTitle, content: slideBody, isClimax: false });
                     });
@@ -4523,10 +4526,11 @@
                     parsedSlides.push({ title: "نقاط اتصال", content: rawContent, isClimax: false });
                 }
 
+                // اضافه کردن اسلاید نهایی (Climax)
                 parsedSlides.push({ title: "جهان درون شما", isClimax: true });
                 currentSlideIndex = 0;
 
-                // ناوبری دوگانه (Dual Mechanics): جایگزینی نقطه‌ها با یک نشانگر متنی
+                // رندر لاین پروگرس مینیمال
                 progressWrapper.innerHTML = `
                     <div class="minimal-progress-indicator">
                         <span id="progress-text-label">فصل ۱ • واکاوی</span>
@@ -4542,13 +4546,12 @@
                     slideDiv.id = `slide-${index}`;
 
                     if (!slide.isClimax) {
-                        // منطق قبلی برای اسلایدهای عادی (بدون تغییرات اضافی)
-                        const cleanTitle = slide.title.replace(/^\d+\.\s*/, '').replace(/<\/?[^>]+(>|$)/g, "").replace(/\*/g, '');
-                        let safeContent = (slide.content || "");
-                        let processedText = safeContent.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-                        let normalizedText = processedText.replace(/(?:^|\n)(>[^\n]*)/g, '\n\n$1\n\n').replace(/\n\n\n+/g, '\n\n');
-                        let paragraphs = normalizedText.split(/\n\n+/);
-                        let formattedContent = paragraphs.map(para => {
+                        const safeContent = (slide.content || "");
+                        const processedText = safeContent.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+                        const normalizedText = processedText.replace(/(?:^|\n)(>[^\n]*)/g, '\n\n$1\n\n').replace(/\n\n\n+/g, '\n\n');
+                        const paragraphs = normalizedText.split(/\n\n+/);
+
+                        const formattedContent = paragraphs.map(para => {
                             para = para.trim();
                             if (!para) return '';
                             if (para.startsWith('>')) {
@@ -4557,20 +4560,25 @@
                             return `<p>${para.replace(/\n/g, '<br>')}</p>`;
                         }).join('');
 
+                        // فراخوانی تابع متادیتا برای گرفتن چپتر و متن زمزمه
+                        const meta = getComparisonSlideMeta(slide.title);
+
                         slideDiv.innerHTML = `
                             <div class="glass-card comparison-card">
                                 <div class="glass-card-content">
                                     <div class="relationship-signature">روایتِ دو نگاه</div>
-                                    <h2 class="slide-title">🌱 ${cleanTitle}</h2>
+                                    ${meta.chapter ? `<div class="story-chapter">${meta.chapter}</div>` : ""}
+                                    <h2 class="slide-title">🌱 ${slide.title}</h2>
                                     <div class="elegant-divider" aria-hidden="true">
                                         <span class="line"></span><span class="icon">✦</span><span class="line"></span>
                                     </div>
+                                    ${meta.whisper ? `<div class="story-whisper">${meta.whisper}</div>` : ""}
                                     <div class="story-content-wrapper">${formattedContent}</div>
                                 </div>
                             </div>
                         `;
                     } else {
-                        // ساختار جدید اسلاید Climax بدون استایل درون‌خطی
+                        // اسلاید نهایی با استایل‌های تاریک و دکمه درگاه
                         slideDiv.innerHTML = `
                             <div class="climax-atmosphere">
                                 <div class="climax-chapter">CHAPTER • عمیق‌ترین فصل</div>
@@ -4598,9 +4606,9 @@
                 });
 
                 container.style.display = 'flex';
-                updateStoryUI();
+                updateStoryUI(); // این تابع باید در کدهای قبلی شما موجود باشد
 
-                if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.MainButton) {
+                if (window.Telegram?.WebApp?.MainButton) {
                     window.Telegram.WebApp.MainButton.setText("بازگشت");
                     window.Telegram.WebApp.MainButton.show();
                     window.Telegram.WebApp.MainButton.onClick(() => window.Telegram.WebApp.close());
@@ -4629,13 +4637,11 @@
                         body: JSON.stringify({ init_data: telegramInitData })
                     });
 
-                    const data = await response.json();
-
-                    if (response.ok && data.success && data.message === "invoice_sent") {
+                    // حالا فقط چک می‌کنیم که سرور خطای 4xx یا 5xx نداده باشد
+                    if (response.ok) {
                         if (window.Telegram?.WebApp?.HapticFeedback) {
                             window.Telegram.WebApp.HapticFeedback.notificationOccurred('success');
                         }
-                        // جایگزینی alert با تغییر وضعیت دکمه به عنوان بازخورد بصری
                         btn.classList.add('success-state');
                         btn.innerHTML = `<span class="btn-text">مسیر باز شد</span>`;
 
@@ -4643,7 +4649,8 @@
                             if (window.Telegram?.WebApp) window.Telegram.WebApp.close();
                         }, 2000);
                     } else {
-                        throw new Error(data.message || 'خطا در گشایش مسیر');
+                        // اگر بک‌اند ارور داد (مثل 400 یا 500)
+                        throw new Error('سرور درخواست را نپذیرفت.');
                     }
                 } catch (error) {
                     if (window.Telegram?.WebApp?.HapticFeedback) {
@@ -4662,6 +4669,7 @@
                     <span class="btn-icon">✦</span>
                 `;
             }
+
 
             function showErrorState(title, message) {
                 document.getElementById('app').style.display = 'none';
