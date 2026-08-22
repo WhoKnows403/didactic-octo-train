@@ -330,28 +330,6 @@
             }
 
 
-            #story-progress {
-
-                display:flex;
-
-                align-items:center;
-
-                justify-content:center;
-
-
-                width:60%;
-
-
-                margin:
-                18px auto 28px;
-
-
-                gap:8px;
-
-
-                opacity:.75;
-            }
-
             .neural-node {
 
                 width:8px;
@@ -882,10 +860,7 @@
                 width: 100%;
                 max-height: 100%;
 
-                padding:
-                    0
-                    0
-                    clamp(110px, 16vh, 150px);
+                padding: 80px 24px 100px 24px; /* Rigid spacing for header and footer */
 
                 overflow-y: auto;
 
@@ -2854,27 +2829,16 @@
         01. PAGE / SLIDE
         --------------------------------------------------------- */
 
-        #result-container {
-            position: relative;
-            isolation: isolate;
-            width: 100%;
-            overflow: hidden; /* جلوگیری از بیرون‌زدگی اسلایدها */
-        }
 
         #slides-wrapper {
-            position: relative;
+            flex: 1;
+            display: flex;
             width: 100%;
-            display: flex; /* چینش افقی اسلایدها */
-            transition: transform 0.5s ease-in-out; /* حرکت نرم بین اسلایدها */
+            height: 100%;
+            transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+            will-change: transform;
         }
 
-        .slide {
-            position: relative;
-            flex: 0 0 100%; /* این خط کلیدی است: اجازه نمی‌دهد اسلاید له شود یا عرضش کم شود */
-            width: 100%;
-            padding: 0 15px; /* فاصله امن از لبه‌های موبایل */
-            box-sizing: border-box;
-        }
 
         /* ---------------------------------------------------------
         02. COMPARISON CARD
@@ -3068,21 +3032,103 @@
             border-bottom: 1px solid rgba(207, 181, 139, 0.22);
         }
 
-
-        .comparison-title {
-            position: relative;
-            margin: 0 0 20px;
-            color: #f2ebd9; /* رنگ گرم‌تر و کاغذی‌تر */
-            font-size: clamp(24px, 5vw, 30px);
-            font-weight: 500;
-            line-height: 1.5;
-            text-align: center;
-            letter-spacing: 0; /* حروف فارسی نباید letter-spacing منفی داشته باشند */
+        .glass-card, .comparison-card {
+            background-color: #FFFFFF;
+            border: 1px solid #E5E7EB;
+            border-radius: 12px;
+            padding: 40px 32px;
+            width: 100%;
+            max-width: 540px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            margin: auto;
         }
 
+        .comparison-title {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #111827;
+            margin-bottom: 32px;
+            text-align: center;
+            letter-spacing: -0.01em;
+        }
         /* ---------------------------------------------------------
         10. QUOTE
         --------------------------------------------------------- */
+
+
+        .avatars-header {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 32px;
+            margin-bottom: 40px;
+        }
+
+        .avatar-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #E5E7EB;
+            background-color: #F3F4F6;
+        }
+
+        .avatar-label {
+            margin-top: 12px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        .trait-row {
+            display: flex;
+            align-items: flex-start;
+            padding: 20px 0;
+            border-bottom: 1px solid #F3F4F6;
+            gap: 16px;
+        }
+
+        .trait-row:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .trait-icon {
+            font-size: 1.5rem;
+            flex-shrink: 0;
+            background-color: #F8F9FA;
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            border: 1px solid #E5E7EB;
+        }
+
+        .trait-content {
+            flex: 1;
+        }
+
+        .trait-name {
+            font-weight: 700;
+            color: #111827;
+            font-size: 1.125rem;
+            margin-bottom: 4px;
+        }
+
+        .trait-description {
+            color: #4B5563;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
 
         .soul-quote {
             position: relative;
@@ -3144,13 +3190,29 @@
         --------------------------------------------------------- */
 
         #story-progress {
+            position: absolute;
+            top: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: calc(100% - 48px);
+            max-width: 600px;
             display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px; /* فاصله یکدست */
-            margin: 32px auto 24px;
-            width: min(100%, 520px);
-            direction: ltr; /* پروگرس بار معمولا از چپ به راست پر می‌شود */
+            gap: 6px;
+            z-index: 10;
+        }
+        .progress-bar {
+            flex: 1;
+            height: 4px;
+            background-color: #E5E7EB;
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background-color: #111827; /* High contrast editorial black */
+            width: 0%;
+            transition: width 0.1s linear;
         }
 
         #story-progress .neural-node {
@@ -3627,6 +3689,57 @@
         }
 
 
+
+        #navigation-controls {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 20px 24px 24px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(to top, rgba(248, 249, 250, 1) 70%, rgba(248, 249, 250, 0));
+            z-index: 10;
+            pointer-events: none; /* Allows scrolling through the gradient */
+        }
+
+        #navigation-controls > * {
+            pointer-events: auto;
+        }
+
+        .nav-btn {
+            background-color: #111827;
+            color: #FFFFFF;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            min-width: 120px;
+        }
+
+        .nav-btn:hover {
+            background-color: #374151;
+        }
+
+        .nav-btn.secondary {
+            background-color: #FFFFFF;
+            color: #111827;
+            border: 1px solid #D1D5DB;
+            min-width: auto;
+            padding: 14px 20px;
+        }
+
+        .nav-btn.secondary:hover {
+            background-color: #F3F4F6;
+        }
+
+        .hidden {
+            display: none !important;
+        }
 
 
         </style>
