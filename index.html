@@ -2857,18 +2857,24 @@
         #result-container {
             position: relative;
             isolation: isolate;
+            width: 100%;
+            overflow: hidden; /* جلوگیری از بیرون‌زدگی اسلایدها */
         }
 
         #slides-wrapper {
             position: relative;
             width: 100%;
+            display: flex; /* چینش افقی اسلایدها */
+            transition: transform 0.5s ease-in-out; /* حرکت نرم بین اسلایدها */
         }
 
         .slide {
             position: relative;
+            flex: 0 0 100%; /* این خط کلیدی است: اجازه نمی‌دهد اسلاید له شود یا عرضش کم شود */
             width: 100%;
+            padding: 0 15px; /* فاصله امن از لبه‌های موبایل */
+            box-sizing: border-box;
         }
-
 
         /* ---------------------------------------------------------
         02. COMPARISON CARD
@@ -2876,41 +2882,31 @@
         --------------------------------------------------------- */
 
         .comparison-card.glass-card {
-            position: relative;
+        position: relative;
+        width: min(100%, 720px);
+        margin: 0 auto;
+        padding: 48px 40px; /* فضای تنفس بیشتر برای حس آرامش */
 
-            width: min(100%, 720px);
-            margin: 0 auto;
+        /* یک پس‌زمینه نرم و گرم به جای شیشه سرد */
+        background: linear-gradient(145deg, rgba(42, 37, 33, 0.95), rgba(35, 31, 28, 0.95));
+        border: 1px solid rgba(214, 199, 176, 0.08); /* حاشیه بسیار محو */
+        border-radius: 16px; /* گوشه‌های گرد و انسانی‌تر به جای 4px */
 
-            padding: 42px 34px;
-
-            background: rgba(30, 31, 28, 0.72);
-
-            border: 1px solid rgba(214, 199, 176, 0.12);
-
-            border-radius: 4px;
-
-            box-shadow:
-                0 20px 60px rgba(0, 0, 0, 0.20);
-
-            backdrop-filter: none;
-            -webkit-backdrop-filter: none;
-
-            overflow: hidden;
+        box-shadow: 0 25px 50px rgba(15, 12, 10, 0.5); /* سایه عمیق و گرم */
+        overflow: hidden;
         }
-
-
-        .comparison-card .card-ambient-glow,
-        .comparison-card .comparison-glow {
-            display: none;
-        }
-
 
         .comparison-card .glass-card-content {
             position: relative;
             z-index: 2;
-
             display: flex;
             flex-direction: column;
+            direction: rtl; /* حیاتی: برای اصلاح ساختار متن فارسی */
+        }
+
+        .comparison-card .card-ambient-glow,
+        .comparison-card .comparison-glow {
+            display: none;
         }
 
 
@@ -2967,24 +2963,6 @@
         No AI-style treatment.
         --------------------------------------------------------- */
 
-        .comparison-title {
-            position: relative;
-
-            margin: 0 0 18px;
-
-            color: #eee9df;
-
-            font-size: clamp(22px, 4vw, 27px);
-            font-weight: 600;
-
-            line-height: 1.65;
-
-            text-align: center;
-
-            letter-spacing: -0.15px;
-
-            text-shadow: none;
-        }
 
 
         /* ---------------------------------------------------------
@@ -3041,21 +3019,14 @@
         }
 
 
-        .story-whisper {
-            margin-top: 12px;
-
-            color: rgba(218, 211, 199, 0.64);
-
-            font-size: 13px;
-            font-weight: 300;
-
-            font-style: italic;
-
-            line-height: 2;
-
-            text-align: center;
+        .story-content-wrapper {
+            color: rgba(235, 228, 218, 0.9);
+            font-size: 16px;
+            font-weight: 400;
+            line-height: 2.2; /* فاصله خطوط بیشتر برای خوانایی و حس آرامش */
+            text-align: right;
+            text-justify: inter-word;
         }
-
 
         /* ---------------------------------------------------------
         08. MAIN STORY TEXT
@@ -3097,6 +3068,17 @@
             border-bottom: 1px solid rgba(207, 181, 139, 0.22);
         }
 
+
+        .comparison-title {
+            position: relative;
+            margin: 0 0 20px;
+            color: #f2ebd9; /* رنگ گرم‌تر و کاغذی‌تر */
+            font-size: clamp(24px, 5vw, 30px);
+            font-weight: 500;
+            line-height: 1.5;
+            text-align: center;
+            letter-spacing: 0; /* حروف فارسی نباید letter-spacing منفی داشته باشند */
+        }
 
         /* ---------------------------------------------------------
         10. QUOTE
@@ -3163,53 +3145,26 @@
 
         #story-progress {
             display: flex;
-
             align-items: center;
             justify-content: center;
-
-            gap: 0;
-
-            margin: 28px auto 20px;
-
+            gap: 8px; /* فاصله یکدست */
+            margin: 32px auto 24px;
             width: min(100%, 520px);
-
-            min-height: 18px;
+            direction: ltr; /* پروگرس بار معمولا از چپ به راست پر می‌شود */
         }
-
 
         #story-progress .neural-node {
-            position: relative;
-
-            flex: 0 0 auto;
-
-            width: 7px;
-            height: 7px;
-
+            width: 6px;
+            height: 6px;
             border-radius: 50%;
-
-            background: rgba(214, 199, 176, 0.26);
-
-            border: 1px solid rgba(214, 199, 176, 0.28);
-
-            box-shadow: none;
-
-            transition:
-                width 0.35s ease,
-                height 0.35s ease,
-                background 0.35s ease,
-                border-color 0.35s ease;
+            background: rgba(214, 199, 176, 0.2);
+            transition: all 0.4s ease;
         }
 
-
         #story-progress .neural-node.active {
-            width: 9px;
-            height: 9px;
-
-            background: rgba(207, 181, 139, 0.88);
-
-            border-color: rgba(207, 181, 139, 0.72);
-
-            box-shadow: none;
+            width: 24px; /* تبدیل نقطه به یک خط تیره نرم برای نمایش مرحله فعلی */
+            border-radius: 4px;
+            background: rgba(207, 181, 139, 0.9);
         }
 
 
@@ -3226,16 +3181,7 @@
 
 
         #story-progress .neural-link {
-            flex: 0 1 42px;
-
-            width: 42px;
-            height: 1px;
-
-            margin: 0 5px;
-
-            background: rgba(214, 199, 176, 0.16);
-
-            box-shadow: none;
+            display: none; /* خطوط اتصال رو حذف کردم تا ظاهر تمیزتر و مینیمال‌تر بشه */
         }
 
 
