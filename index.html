@@ -330,6 +330,28 @@
             }
 
 
+            #story-progress {
+
+                display:flex;
+
+                align-items:center;
+
+                justify-content:center;
+
+
+                width:60%;
+
+
+                margin:
+                18px auto 28px;
+
+
+                gap:8px;
+
+
+                opacity:.75;
+            }
+
             .neural-node {
 
                 width:8px;
@@ -860,7 +882,10 @@
                 width: 100%;
                 max-height: 100%;
 
-                padding: 80px 24px 100px 24px; /* Rigid spacing for header and footer */
+                padding:
+                    0
+                    0
+                    clamp(110px, 16vh, 150px);
 
                 overflow-y: auto;
 
@@ -2809,1187 +2834,6 @@
         }
 
 
-
-
-
-
-
-
-
-
-
-                /* =========================================================
-        COMPARISON EXPERIENCE — EDITORIAL REDESIGN
-        Presentation only.
-        JS logic remains untouched.
-        ========================================================= */
-
-
-        /* ---------------------------------------------------------
-        01. PAGE / SLIDE
-        --------------------------------------------------------- */
-
-
-        #slides-wrapper {
-            flex: 1;
-            display: flex;
-            width: 100%;
-            height: 100%;
-            transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
-            will-change: transform;
-        }
-
-
-        /* ---------------------------------------------------------
-        02. COMPARISON CARD
-        Remove SaaS / glass / AI-panel feeling
-        --------------------------------------------------------- */
-
-        .comparison-card.glass-card {
-        position: relative;
-        width: min(100%, 720px);
-        margin: 0 auto;
-        padding: 48px 40px; /* فضای تنفس بیشتر برای حس آرامش */
-
-        /* یک پس‌زمینه نرم و گرم به جای شیشه سرد */
-        background: linear-gradient(145deg, rgba(42, 37, 33, 0.95), rgba(35, 31, 28, 0.95));
-        border: 1px solid rgba(214, 199, 176, 0.08); /* حاشیه بسیار محو */
-        border-radius: 16px; /* گوشه‌های گرد و انسانی‌تر به جای 4px */
-
-        box-shadow: 0 25px 50px rgba(15, 12, 10, 0.5); /* سایه عمیق و گرم */
-        overflow: hidden;
-        }
-
-        .comparison-card .glass-card-content {
-            position: relative;
-            z-index: 2;
-            display: flex;
-            flex-direction: column;
-            direction: rtl; /* حیاتی: برای اصلاح ساختار متن فارسی */
-        }
-
-        .comparison-card .card-ambient-glow,
-        .comparison-card .comparison-glow {
-            display: none;
-        }
-
-
-        /* ---------------------------------------------------------
-        03. RELATIONSHIP SIGNATURE
-        --------------------------------------------------------- */
-
-        .relationship-signature {
-            margin-bottom: 24px;
-
-            text-align: center;
-
-            font-size: 10px;
-            font-weight: 400;
-
-            letter-spacing: 2.4px;
-
-            color: rgba(214, 199, 176, 0.58);
-
-            text-transform: uppercase;
-        }
-
-        .relationship-signature span {
-            display: inline-block;
-        }
-
-
-        /* ---------------------------------------------------------
-        04. CHAPTER LABEL
-        --------------------------------------------------------- */
-
-        .story-chapter.comparison-chapter {
-            margin-bottom: 10px;
-
-            color: rgba(207, 181, 139, 0.82);
-
-            font-size: 10px;
-            font-weight: 500;
-
-            letter-spacing: 2.8px;
-
-            line-height: 1.6;
-
-            text-transform: uppercase;
-
-            text-align: center;
-        }
-
-
-        /* ---------------------------------------------------------
-        05. MAIN TITLE
-        No gradient.
-        No glowing text.
-        No AI-style treatment.
-        --------------------------------------------------------- */
-
-
-
-        /* ---------------------------------------------------------
-        06. TITLE RULE
-        --------------------------------------------------------- */
-
-        .story-title-rule {
-            width: 52px;
-            height: 1px;
-
-            margin: 0 auto;
-
-            background: rgba(210, 194, 172, 0.24);
-        }
-
-
-        /* ---------------------------------------------------------
-        07. WHISPER
-        --------------------------------------------------------- */
-
-        .story-whisper-container {
-            margin: 24px 0 28px;
-        }
-
-
-        .story-divider {
-            display: flex;
-
-            align-items: center;
-            justify-content: center;
-
-            gap: 9px;
-
-            opacity: 0.55;
-        }
-
-
-        .story-divider-line {
-            display: block;
-
-            width: 34px;
-            height: 1px;
-
-            background: rgba(207, 181, 139, 0.42);
-        }
-
-
-        .story-divider-mark {
-            color: rgba(207, 181, 139, 0.72);
-
-            font-size: 9px;
-
-            line-height: 1;
-        }
-
-
-        .story-content-wrapper {
-            color: rgba(235, 228, 218, 0.9);
-            font-size: 16px;
-            font-weight: 400;
-            line-height: 2.2; /* فاصله خطوط بیشتر برای خوانایی و حس آرامش */
-            text-align: right;
-            text-justify: inter-word;
-        }
-
-        /* ---------------------------------------------------------
-        08. MAIN STORY TEXT
-        --------------------------------------------------------- */
-
-        .story-content-wrapper {
-            color: rgba(229, 225, 217, 0.82);
-
-            font-size: 15px;
-            font-weight: 350;
-
-            line-height: 2.15;
-
-            text-align: right;
-        }
-
-
-        .story-content-wrapper p {
-            margin: 0 0 22px;
-        }
-
-
-        .story-content-wrapper p:last-child {
-            margin-bottom: 0;
-        }
-
-
-        /* ---------------------------------------------------------
-        09. HIGHLIGHT
-        --------------------------------------------------------- */
-
-        .comparison-highlight {
-            color: #d4c3a5;
-
-            font-weight: 500;
-
-            background: transparent;
-
-            border-bottom: 1px solid rgba(207, 181, 139, 0.22);
-        }
-
-        .glass-card, .comparison-card {
-            background-color: #FFFFFF;
-            border: 1px solid #E5E7EB;
-            border-radius: 12px;
-            padding: 40px 32px;
-            width: 100%;
-            max-width: 540px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
-            margin: auto;
-        }
-
-        .comparison-title {
-            font-size: 1.5rem;
-            font-weight: 800;
-            color: #111827;
-            margin-bottom: 32px;
-            text-align: center;
-            letter-spacing: -0.01em;
-        }
-        /* ---------------------------------------------------------
-        10. QUOTE
-        --------------------------------------------------------- */
-
-
-        .avatars-header {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 32px;
-            margin-bottom: 40px;
-        }
-
-        .avatar-wrapper {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .avatar {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 2px solid #E5E7EB;
-            background-color: #F3F4F6;
-        }
-
-        .avatar-label {
-            margin-top: 12px;
-            font-size: 0.875rem;
-            font-weight: 600;
-            color: #374151;
-        }
-
-        .trait-row {
-            display: flex;
-            align-items: flex-start;
-            padding: 20px 0;
-            border-bottom: 1px solid #F3F4F6;
-            gap: 16px;
-        }
-
-        .trait-row:last-child {
-            border-bottom: none;
-            padding-bottom: 0;
-        }
-
-        .trait-icon {
-            font-size: 1.5rem;
-            flex-shrink: 0;
-            background-color: #F8F9FA;
-            width: 44px;
-            height: 44px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 8px;
-            border: 1px solid #E5E7EB;
-        }
-
-        .trait-content {
-            flex: 1;
-        }
-
-        .trait-name {
-            font-weight: 700;
-            color: #111827;
-            font-size: 1.125rem;
-            margin-bottom: 4px;
-        }
-
-        .trait-description {
-            color: #4B5563;
-            font-size: 0.95rem;
-            line-height: 1.6;
-        }
-
-
-        .soul-quote {
-            position: relative;
-
-            margin: 28px 0;
-
-            padding: 6px 22px;
-
-            color: rgba(226, 218, 205, 0.76);
-
-            font-size: 15px;
-            font-weight: 350;
-
-            font-style: italic;
-
-            line-height: 2.1;
-
-            text-align: right;
-
-            border-right: 1px solid rgba(207, 181, 139, 0.34);
-        }
-
-
-        /* ---------------------------------------------------------
-        11. LIST
-        --------------------------------------------------------- */
-
-        .soul-list {
-            margin: 18px 0 24px;
-            padding: 0 22px 0 0;
-
-            list-style: none;
-        }
-
-
-        .soul-list li {
-            position: relative;
-
-            margin-bottom: 12px;
-
-            color: rgba(229, 225, 217, 0.78);
-
-            line-height: 2;
-        }
-
-
-        .soul-list li > span {
-            position: absolute !important;
-
-            right: -16px !important;
-
-            color: rgba(207, 181, 139, 0.65) !important;
-        }
-
-
-        /* ---------------------------------------------------------
-        12. STORY PROGRESS
-        Convert neural-network language into quiet chapter markers
-        --------------------------------------------------------- */
-
-        #story-progress {
-            position: absolute;
-            top: 24px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: calc(100% - 48px);
-            max-width: 600px;
-            display: flex;
-            gap: 6px;
-            z-index: 10;
-        }
-        .progress-bar {
-            flex: 1;
-            height: 4px;
-            background-color: #E5E7EB;
-            border-radius: 2px;
-            overflow: hidden;
-        }
-
-        .progress-fill {
-            height: 100%;
-            background-color: #111827; /* High contrast editorial black */
-            width: 0%;
-            transition: width 0.1s linear;
-        }
-
-        #story-progress .neural-node {
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            background: rgba(214, 199, 176, 0.2);
-            transition: all 0.4s ease;
-        }
-
-        #story-progress .neural-node.active {
-            width: 24px; /* تبدیل نقطه به یک خط تیره نرم برای نمایش مرحله فعلی */
-            border-radius: 4px;
-            background: rgba(207, 181, 139, 0.9);
-        }
-
-
-        #story-progress .neural-node.climax-node {
-            width: 9px;
-            height: 9px;
-
-            background: rgba(207, 181, 139, 0.72);
-
-            border-color: rgba(207, 181, 139, 0.55);
-
-            box-shadow: none;
-        }
-
-
-        #story-progress .neural-link {
-            display: none; /* خطوط اتصال رو حذف کردم تا ظاهر تمیزتر و مینیمال‌تر بشه */
-        }
-
-
-        #story-progress .neural-link.active {
-            background: rgba(207, 181, 139, 0.42);
-
-            box-shadow: none;
-        }
-
-
-        /* ---------------------------------------------------------
-        13. NAVIGATION
-        --------------------------------------------------------- */
-
-        .smart-nav-wrapper {
-            display: flex;
-
-            align-items: center;
-            justify-content: center;
-
-            gap: 12px;
-
-            width: 100%;
-
-            margin-top: 24px;
-
-            padding: 0 20px;
-        }
-
-
-        .smart-nav-wrapper button {
-            min-width: 108px;
-
-            padding: 10px 18px;
-
-            border: 1px solid rgba(214, 199, 176, 0.16);
-            border-radius: 2px;
-
-            background: rgba(34, 35, 32, 0.52);
-
-            color: rgba(229, 225, 217, 0.72);
-
-            font-size: 12px;
-            font-weight: 400;
-
-            box-shadow: none;
-
-            transition:
-                background 0.25s ease,
-                border-color 0.25s ease,
-                color 0.25s ease;
-        }
-
-
-        .smart-nav-wrapper button:hover {
-            background: rgba(207, 181, 139, 0.08);
-
-            border-color: rgba(207, 181, 139, 0.30);
-
-            color: rgba(239, 234, 225, 0.94);
-        }
-
-
-        .smart-nav-wrapper button:disabled {
-            opacity: 0.28;
-
-            cursor: default;
-        }
-
-
-        /* ---------------------------------------------------------
-        14. CLIMAX
-        --------------------------------------------------------- */
-
-        .slide:last-child .glass-card {
-            padding: 56px 24px;
-
-            background: transparent;
-
-            border: none;
-
-            box-shadow: none;
-        }
-
-
-        .slide:last-child .glass-card-content {
-            align-items: center;
-        }
-
-
-        .slide:last-child .story-chapter {
-            margin-bottom: 20px;
-
-            color: rgba(207, 181, 139, 0.78);
-
-            font-size: 10px;
-            font-weight: 500;
-
-            letter-spacing: 3px;
-
-            text-transform: uppercase;
-        }
-
-
-        .slide:last-child h2 {
-            margin: 0 0 26px;
-
-            color: #eee9df;
-
-            font-size: clamp(28px, 6vw, 36px);
-            font-weight: 600;
-
-            line-height: 1.55;
-
-            text-shadow: none;
-        }
-
-
-        .slide:last-child .glass-card-content > div:first-of-type {
-            background: rgba(207, 181, 139, 0.42) !important;
-        }
-
-
-        /* ---------------------------------------------------------
-        15. CLIMAX TEXT
-        --------------------------------------------------------- */
-
-        .slide:last-child p {
-            max-width: 360px;
-
-            margin: 0 auto 52px;
-
-            color: rgba(218, 211, 199, 0.66);
-
-            font-size: 15px;
-            font-weight: 300;
-
-            line-height: 2.15;
-
-            text-align: center;
-
-            letter-spacing: 0;
-        }
-
-
-        /* ---------------------------------------------------------
-        16. CTA
-        --------------------------------------------------------- */
-
-        .climax-cta-container {
-            width: 100%;
-
-            display: flex;
-
-            flex-direction: column;
-
-            align-items: center;
-
-            gap: 16px;
-        }
-
-
-        #btn-submit-order {
-            width: min(100%, 320px);
-
-            min-height: 58px;
-
-            padding: 16px 28px;
-
-            border: 1px solid rgba(238, 232, 221, 0.82);
-            border-radius: 2px;
-
-            background: #eee9df;
-
-            color: #242521;
-
-            font-size: 14px;
-            font-weight: 500;
-
-            letter-spacing: 0;
-
-            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.18);
-
-            cursor: pointer;
-
-            transition:
-                transform 0.25s ease,
-                background 0.25s ease,
-                box-shadow 0.25s ease;
-        }
-
-
-        #btn-submit-order:hover {
-            transform: translateY(-1px);
-
-            background: #f3eee5;
-
-            box-shadow: 0 16px 34px rgba(0, 0, 0, 0.22);
-        }
-
-
-        #btn-submit-order:active {
-            transform: translateY(0);
-        }
-
-
-        #btn-submit-order:disabled {
-            cursor: wait;
-        }
-
-
-        /* ---------------------------------------------------------
-        17. PREMIUM LABEL
-        --------------------------------------------------------- */
-
-        .climax-cta-container > div {
-            display: flex;
-
-            flex-direction: column;
-
-            align-items: center;
-
-            gap: 5px;
-        }
-
-
-        .climax-cta-container > div span:first-child {
-            color: rgba(207, 181, 139, 0.72) !important;
-
-            font-size: 12px !important;
-
-            font-weight: 400 !important;
-
-            letter-spacing: 0 !important;
-        }
-
-
-        .climax-cta-container > div span:last-child {
-            color: rgba(218, 211, 199, 0.32) !important;
-
-            font-size: 9px !important;
-
-            font-weight: 400 !important;
-
-            letter-spacing: 2px !important;
-        }
-
-
-        /* ---------------------------------------------------------
-        18. MOBILE
-        --------------------------------------------------------- */
-
-        @media (max-width: 600px) {
-
-            .comparison-card.glass-card {
-                width: calc(100% - 24px);
-
-                padding: 32px 22px;
-
-                border-radius: 3px;
-            }
-
-
-            .comparison-title {
-                font-size: 22px;
-
-                line-height: 1.7;
-            }
-
-
-            .story-content-wrapper {
-                font-size: 14px;
-
-                line-height: 2.1;
-            }
-
-
-            .story-whisper {
-                font-size: 12px;
-
-                line-height: 1.95;
-            }
-
-
-            #story-progress .neural-link {
-                flex-basis: 24px;
-
-                width: 24px;
-
-                margin: 0 3px;
-            }
-
-
-            .smart-nav-wrapper {
-                gap: 8px;
-
-                padding: 0 12px;
-            }
-
-
-            .smart-nav-wrapper button {
-                min-width: 0;
-
-                flex: 1;
-
-                padding: 10px 12px;
-            }
-
-
-            .slide:last-child .glass-card {
-                padding: 44px 18px;
-            }
-
-
-            #btn-submit-order {
-                width: 100%;
-            }
-        }
-
-
-
-
-
-        .comparison-climax-card {
-            width: min(100%, 620px);
-
-            margin: 0 auto;
-
-            padding: 56px 24px;
-
-            background: transparent;
-
-            border: none;
-
-            box-shadow: none;
-        }
-
-
-        .comparison-climax-card .glass-card-content {
-            display: flex;
-
-            flex-direction: column;
-
-            align-items: center;
-
-            text-align: center;
-        }
-
-
-        .climax-chapter {
-            margin-bottom: 20px;
-
-            color: rgba(207, 181, 139, 0.78);
-
-            font-size: 10px;
-
-            font-weight: 500;
-
-            letter-spacing: 3px;
-
-            line-height: 1.6;
-
-            text-transform: uppercase;
-        }
-
-
-        .climax-title {
-            margin: 0 0 26px;
-
-            color: #eee9df;
-
-            font-size: clamp(28px, 6vw, 36px);
-
-            font-weight: 600;
-
-            line-height: 1.55;
-
-            text-shadow: none;
-        }
-
-
-        .climax-rule {
-            width: 30px;
-
-            height: 1px;
-
-            margin-bottom: 34px;
-
-            background: rgba(207, 181, 139, 0.42);
-        }
-
-
-        .climax-description {
-            max-width: 360px;
-
-            margin: 0 auto 52px;
-
-            color: rgba(218, 211, 199, 0.66);
-
-            font-size: 15px;
-
-            font-weight: 300;
-
-            line-height: 2.15;
-
-            text-align: center;
-        }
-
-
-        .climax-arrow {
-            font-size: 18px;
-        }
-
-
-        .climax-meta {
-            display: flex;
-
-            flex-direction: column;
-
-            align-items: center;
-
-            gap: 5px;
-        }
-
-
-        .climax-meta span:first-child {
-            color: rgba(207, 181, 139, 0.72);
-
-            font-size: 12px;
-
-            font-weight: 400;
-        }
-
-
-        .climax-meta span:last-child {
-            color: rgba(218, 211, 199, 0.32);
-
-            font-size: 9px;
-
-            font-weight: 400;
-
-            letter-spacing: 2px;
-        }
-
-
-
-        #navigation-controls {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            padding: 20px 24px 24px 24px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: linear-gradient(to top, rgba(248, 249, 250, 1) 70%, rgba(248, 249, 250, 0));
-            z-index: 10;
-            pointer-events: none; /* Allows scrolling through the gradient */
-        }
-
-        #navigation-controls > * {
-            pointer-events: auto;
-        }
-
-        .nav-btn {
-            background-color: #111827;
-            color: #FFFFFF;
-            border: none;
-            padding: 14px 28px;
-            border-radius: 6px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background-color 0.2s;
-            min-width: 120px;
-        }
-
-        .nav-btn:hover {
-            background-color: #374151;
-        }
-
-        .nav-btn.secondary {
-            background-color: #FFFFFF;
-            color: #111827;
-            border: 1px solid #D1D5DB;
-            min-width: auto;
-            padding: 14px 20px;
-        }
-
-        .nav-btn.secondary:hover {
-            background-color: #F3F4F6;
-        }
-
-        .hidden {
-            display: none !important;
-        }
-
-
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        #result-container {
-            position: fixed;
-            inset: 0;
-            background-color: #F8F9FA; /* رنگ زمینه مات ادیتوریال */
-            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            direction: rtl;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-            z-index: 100;
-            color: #111827;
-        }
-
-        /* 2. PROGRESS NODES (گام‌های بالای صفحه) */
-        #story-progress {
-            position: absolute;
-            top: 24px;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            z-index: 10;
-            width: auto;
-            max-width: 90%;
-        }
-
-        .neural-node {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background-color: #E5E7EB;
-            transition: all 0.3s ease;
-        }
-
-        .neural-node.active {
-            background-color: #111827;
-            transform: scale(1.25);
-        }
-
-        .neural-link {
-            width: 16px;
-            height: 2px;
-            background-color: #E5E7EB;
-        }
-
-        /* 3. SLIDES WRAPPER */
-        #slides-wrapper {
-            flex: 1;
-            display: flex;
-            width: 100%;
-            height: 100%;
-            transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
-            will-change: transform;
-        }
-
-        .slide {
-            flex: 0 0 100%;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 70px 20px 90px 20px;
-            overflow-y: auto;
-        }
-
-        /* 4. EDITORIAL CARDS (کارت‌های مینیمال) */
-        .glass-card,
-        .comparison-card,
-        .comparison-climax-card {
-            background-color: #FFFFFF;
-            border: 1px solid #E5E7EB;
-            border-radius: 12px;
-            padding: 36px 28px;
-            width: 100%;
-            max-width: 520px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.04), 0 2px 4px -1px rgba(0, 0, 0, 0.02);
-            margin: auto;
-            position: relative;
-        }
-
-        /* 5. TYPOGRAPHY & INTERNAL ELEMENTS */
-        .relationship-signature {
-            font-size: 0.75rem;
-            font-weight: 700;
-            letter-spacing: 0.05em;
-            color: #6B7280;
-            text-transform: uppercase;
-            text-align: center;
-            margin-bottom: 8px;
-        }
-
-        .story-chapter, .climax-chapter {
-            font-size: 0.8rem;
-            font-weight: 600;
-            color: #4B5563;
-            text-align: center;
-            margin-bottom: 16px;
-        }
-
-        .comparison-title, .climax-title {
-            font-size: 1.4rem;
-            font-weight: 800;
-            color: #111827;
-            text-align: center;
-            margin-bottom: 20px;
-            line-height: 1.3;
-        }
-
-        .story-title-rule, .climax-rule {
-            width: 40px;
-            height: 2px;
-            background-color: #111827;
-            margin: 0 auto 24px auto;
-        }
-
-        /* Whispers & Quotes */
-        .story-whisper-container {
-            margin-bottom: 20px;
-        }
-
-        .story-whisper {
-            font-size: 0.9rem;
-            color: #4B5563;
-            text-align: center;
-            font-style: italic;
-            line-height: 1.5;
-        }
-
-        .story-divider {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            margin-bottom: 12px;
-            color: #9CA3AF;
-        }
-
-        .story-divider-line {
-            height: 1px;
-            width: 30px;
-            background-color: #E5E7EB;
-        }
-
-        /* Paragraphs & Dynamic Content */
-        .story-content-wrapper p, .climax-description {
-            font-size: 0.95rem;
-            line-height: 1.75;
-            color: #374151;
-            margin-bottom: 16px;
-            text-align: justify;
-        }
-
-        .text-highlight {
-            font-weight: 700;
-            color: #111827;
-        }
-
-        .soul-quote {
-            background-color: #F8F9FA;
-            border-right: 3px solid #111827;
-            padding: 14px 18px;
-            margin: 20px 0;
-            font-size: 0.9rem;
-            color: #374151;
-            line-height: 1.6;
-            border-radius: 0 6px 6px 0;
-        }
-
-        .soul-list {
-            list-style: none;
-            margin: 16px 0;
-            padding-right: 8px;
-        }
-
-        .soul-list li {
-            position: relative;
-            padding-right: 18px;
-            margin-bottom: 10px;
-            font-size: 0.95rem;
-            line-height: 1.6;
-            color: #374151;
-        }
-
-        /* 6. CLIMAX / CALL TO ACTION (کارت پایانی) */
-        .climax-description {
-            text-align: center;
-            margin-bottom: 28px;
-        }
-
-        .climax-cta-container {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-        }
-
-        #btn-submit-order {
-            background-color: #111827;
-            color: #FFFFFF;
-            border: none;
-            padding: 16px 20px;
-            border-radius: 8px;
-            font-size: 0.95rem;
-            font-weight: 700;
-            cursor: pointer;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            transition: background-color 0.2s;
-            width: 100%;
-        }
-
-        #btn-submit-order:hover {
-            background-color: #1F2937;
-        }
-
-        .climax-meta {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 0.7rem;
-            color: #6B7280;
-            font-weight: 500;
-        }
-
-        /* 7. NAVIGATION WRAPPER */
-        .smart-nav-wrapper {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            padding: 16px 24px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: linear-gradient(to top, rgba(248, 249, 250, 1) 80%, rgba(248, 249, 250, 0));
-            z-index: 10;
-        }
-
-
         </style>
     <body>
 
@@ -4369,7 +3213,7 @@
                     const controller = new AbortController();
                     const timeoutId = setTimeout(() => controller.abort(), 30000);
 
-                    const response = await fetch('https://60c4-2a01-4ff-f0-fec7-00-1.ngrok-free.app/assessment/receive-data', {
+                    const response = await fetch('https://90c2-2a0b-4140-101a-00-2.ngrok-free.app/assessment/receive-data', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify(payload),
@@ -4491,7 +3335,7 @@
                 const timeoutId = setTimeout(() => controller.abort(), 12000);
 
                 try {
-                    const response = await fetch('https://60c4-2a01-4ff-f0-fec7-00-1.ngrok-free.app/assessment/receive-result', {
+                    const response = await fetch('https://90c2-2a0b-4140-101a-00-2.ngrok-free.app/assessment/receive-result', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'
@@ -4601,7 +3445,7 @@
                 try {
 
                     const response = await fetch(
-                        'https://60c4-2a01-4ff-f0-fec7-00-1.ngrok-free.app/subscription/receive-sub-analysis',
+                        'https://90c2-2a0b-4140-101a-00-2.ngrok-free.app/subscription/receive-sub-analysis',
                         {
                             method: 'POST',
 
@@ -5416,7 +4260,7 @@
                 const initData = tg?.initData || "debug_init_data";
 
                 try {
-                    const url = `https://60c4-2a01-4ff-f0-fec7-00-1.ngrok-free.app/comparison/receive-comparison-result`;
+                    const url = `https://90c2-2a0b-4140-101a-00-2.ngrok-free.app/comparison/receive-comparison-result`;
 
                     const response = await fetch(url, {
                         method: 'POST',
@@ -5579,110 +4423,87 @@
 
                         const meta = getComparisonSlideMeta(cleanTitle);
                         const chapterBlock = meta.chapter ? `
-                            <div class="story-chapter comparison-chapter">
+                            <div class="story-chapter comparison-chapter" style="color: var(--accent-warm); font-weight: 500; letter-spacing: 2px; font-size: 11px; margin-bottom: 8px; text-transform: uppercase;">
                                 ${meta.chapter}
                             </div>
                         ` : "";
-                        const whisperBlock = meta.whisper ? `
-                            <div class="story-whisper-container">
-                                <div class="story-divider">
-                                    <span class="story-divider-line story-divider-line-left"></span>
-                                    <span class="story-divider-mark">✦</span>
-                                    <span class="story-divider-line story-divider-line-right"></span>
-                                </div>
 
-                                <div class="story-whisper">
+                        const whisperBlock = meta.whisper ? `
+                            <div class="story-whisper-container" style="margin: 18px 0 24px 0;">
+                                <div class="story-divider" style="display: flex; align-items: center; justify-content: center; gap: 8px; opacity: 0.45;">
+                                    <span style="height: 1px; width: 36px; background: linear-gradient(90deg, transparent, var(--accent-warm));"></span>
+                                    <span style="color: var(--accent-warm); font-size: 11px;">✦</span>
+                                    <span style="height: 1px; width: 36px; background: linear-gradient(-90deg, transparent, var(--accent-warm));"></span>
+                                </div>
+                                <div class="story-whisper" style="font-style: italic; font-size: 14px; color: var(--story-text-soft); margin-top: 10px; font-weight: 300; line-height: 1.9;">
                                     ${meta.whisper}
                                 </div>
                             </div>
                         ` : "";
 
                         slideDiv.innerHTML = `
-                            <div class="glass-card comparison-card">
+                            <div class="glass-card comparison-card" style="padding: 28px 24px;">
                                 <div class="card-ambient-glow comparison-glow"></div>
-
                                 <div class="glass-card-content">
-
                                     <div class="relationship-signature">
                                         <span>روایتِ دو نگاه در یک قاب</span>
                                     </div>
 
                                     ${chapterBlock}
 
-                                    <h2
-                                        class="typewriter-target comparison-title"
-                                        data-text="${cleanTitle}">
+                                    <h2 class="typewriter-target" data-text="${cleanTitle}"
+                                        style="text-align:center; margin:0 0 15px 0; font-size:24px; font-weight:700; background: linear-gradient(135deg, #FFFFFF 40%, var(--accent-warm) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; line-height:1.5; position:relative; z-index:2; text-shadow: 0 4px 20px rgba(0,0,0,0.3);">
                                     </h2>
 
-                                    <div
-                                        class="story-title-rule"
-                                        aria-hidden="true">
-                                    </div>
+                                    <div class="story-title-rule" style="background: rgba(210, 194, 172, 0.25);" aria-hidden="true"></div>
 
                                     ${whisperBlock}
 
-                                    <div class="story-content-wrapper paragraph-target">
+                                    <div class="story-content-wrapper paragraph-target" style="line-height: 1.9; font-size: 15px; color: var(--story-text); font-weight: 300;">
                                         ${formattedContent}
                                     </div>
-
                                 </div>
                             </div>
                         `;
                     }
                     else {
                         slideDiv.innerHTML = `
-                            <div class="glass-card comparison-climax-card">
+                        <div class="glass-card" style="background: transparent; border: none; box-shadow: none; padding: 40px 20px; text-align: center;">
+                            <div class="glass-card-content" style="align-items: center;">
+                                <div class="story-chapter" style="color: var(--accent-warm); opacity: 0.8; letter-spacing: 3px; font-size: 11px; margin-bottom: 20px; text-transform: uppercase;">
+                                    CHAPTER • عمیق‌ترین فصل
+                                </div>
 
-                                <div class="glass-card-content">
+                                <h2 style="font-size: 32px; font-weight: 600; color: var(--story-white); margin-bottom: 25px; line-height: 1.4; text-shadow: 0 4px 15px rgba(0,0,0,0.5);">
+                                    جهان درون شما
+                                </h2>
 
-                                    <div class="story-chapter climax-chapter">
-                                        CHAPTER • عمیق‌ترین فصل
+                                <div style="width: 30px; height: 1px; background: var(--accent-warm); margin: 0 auto 35px; opacity: 0.4;"></div>
+
+                                <p style="font-size: 16px; color: var(--story-text-soft); line-height: 2.1; margin-bottom: 60px; max-width: 340px; margin-left: auto; margin-right: auto; font-weight: 300; text-align: center; letter-spacing: 0.2px;">
+                                    ما تا اینجا فقط سطح را دیدیم؛<br>
+                                    اکنون نوبت به ورود به دنیای درونی‌ترِ این رابطه است.<br>
+                                    جایی که الگوهای پنهان معنا پیدا می‌کنند.
+                                </p>
+
+                                <div class="climax-cta-container" style="width: 100%; display: flex; flex-direction: column; align-items: center; gap: 20px;">
+                                    <button id="btn-submit-order" onclick="handleCreateTelegramOrder()"
+                                        style="background: #F4F1EA; color: #171817; border: none; padding: 18px 45px; border-radius: 14px; font-size: 16px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 12px; transition: all 0.4s cubic-bezier(0.2, 1, 0.3, 1); box-shadow: 0 12px 35px rgba(0,0,0,0.4); width: 100%; max-width: 320px;">
+                                        <span>ورود به جهان درون شما</span>
+                                        <span style="font-size: 20px;">←</span>
+                                    </button>
+                                    <div style="display: flex; flex-direction: column; gap: 4px; align-items: center;">
+                                        <span style="font-size: 13px; color: var(--accent-warm); opacity: 0.8; font-weight: 400; letter-spacing: 0.5px;">
+                                            تحلیل عمیق‌تر الگوهای پنهان این رابطه
+                                        </span>
+                                        <span style="font-size: 11px; color: var(--story-text-faint); font-weight: 300; letter-spacing: 1px;">
+                                            PREMIUM EXPERIENCE
+                                        </span>
                                     </div>
-
-                                    <h2 class="climax-title">
-                                        جهان درون شما
-                                    </h2>
-
-                                    <div
-                                        class="climax-rule"
-                                        aria-hidden="true">
-                                    </div>
-
-                                    <p class="climax-description">
-                                        ما تا اینجا فقط سطح را دیدیم؛<br>
-                                        اکنون نوبت به ورود به دنیای درونی‌ترِ این رابطه است.<br>
-                                        جایی که الگوهای پنهان معنا پیدا می‌کنند.
-                                    </p>
-
-                                    <div class="climax-cta-container">
-
-                                        <button
-                                            id="btn-submit-order"
-                                            onclick="handleCreateTelegramOrder()">
-
-                                            <span>ورود به جهان درون شما</span>
-                                            <span class="climax-arrow">←</span>
-
-                                        </button>
-
-                                        <div class="climax-meta">
-
-                                            <span>
-                                                تحلیل عمیق‌تر الگوهای پنهان این رابطه
-                                            </span>
-
-                                            <span>
-                                                PREMIUM EXPERIENCE
-                                            </span>
-
-                                        </div>
-
-                                    </div>
-
                                 </div>
                             </div>
-                        `;
-
+                        </div>
+                    `;
                     }
 
                     slidesWrapper.appendChild(slideDiv);
@@ -5727,7 +4548,7 @@
                 }
 
                 try {
-                    const response = await fetch('https://60c4-2a01-4ff-f0-fec7-00-1.ngrok-free.app/orders/create-telegram-order', {
+                    const response = await fetch('https://90c2-2a0b-4140-101a-00-2.ngrok-free.app/orders/create-telegram-order', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
