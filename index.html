@@ -2834,6 +2834,733 @@
         }
 
 
+       /* =========================================================
+        new
+        ========================================================= */
+
+        /* =========================================================
+        PREMIUM INNER WORLD — DARK EDITORIAL PSYCHOLOGICAL EXPERIENCE
+        Personal Study Room / Living Psychological Book
+        ========================================================= */
+        #premium-inner-world {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            display: none;
+            flex-direction: column;
+            width: 100%;
+            height: 100dvh;
+            overflow: hidden;
+            box-sizing: border-box;
+            background: #0f100e;
+            color: #E8E3D5;
+            isolation: isolate;
+        }
+
+        #premium-inner-world.is-active {
+            display: flex !important;
+            animation: fadeInWorld 800ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+
+        #premium-inner-world::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            z-index: 20;
+            pointer-events: none;
+            opacity: 0.025;
+            background-image:
+                repeating-linear-gradient(
+                    0deg,
+                    rgba(255,255,255,0.5) 0,
+                    rgba(255,255,255,0.5) 1px,
+                    transparent 1px,
+                    transparent 3px
+                );
+            mix-blend-mode: soft-light;
+        }
+
+        @keyframes fadeInWorld {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .premium-atmosphere {
+            position: absolute;
+            inset: 0;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .premium-atmosphere::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            z-index: -1;
+            opacity: 0.04;
+            pointer-events: none;
+            background-image: url('data:image/svg+xml;utf8,%3Csvg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noiseFilter"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23noiseFilter)"/%3E%3C/svg%3E');
+        }
+
+        .premium-atmosphere-image {
+            position: absolute;
+            inset: -2%;
+            background-image: url("inner_world.webp");
+            background-size: cover;
+            background-position: center;
+            opacity: 0.38;
+            mix-blend-mode: luminosity;
+            filter: saturate(0) brightness(0.8) contrast(1.2);
+        }
+
+        .premium-atmosphere-vignette {
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(
+                ellipse at 50% 50%,
+                transparent 15%,
+                rgba(15, 16, 14, 0.75) 60%,
+                #0f100e 100%
+            );
+            pointer-events: none;
+        }
+
+        .premium-header,
+        .premium-slides-wrapper {
+            position: relative;
+            z-index: 10;
+        }
+
+        .premium-header {
+            position: relative;
+            z-index: 10;
+            flex: 0 0 auto;
+            width: min(100%, 700px);
+            margin: 0 auto;
+            padding: clamp(30px, 6vh, 50px) 24px 0;
+            text-align: center;
+        }
+
+        .premium-header-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: rgba(232, 227, 213, 0.4);
+            font-size: 10px;
+            font-weight: 300;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+        }
+
+        .premium-header-separator {
+            display: none;
+        }
+
+        .premium-story-progress {
+            display: flex;
+            gap: 4px;
+            width: 140px;
+            margin: 24px auto 0;
+        }
+
+        .premium-progress-mark {
+            flex: 1;
+            height: 2px;
+            background: rgba(232, 227, 213, 0.1);
+            border-radius: 2px;
+            transition: all 500ms ease;
+        }
+
+        .premium-progress-mark.is-active {
+            background: #C4B48F;
+            box-shadow: 0 0 8px rgba(196, 180, 143, 0.3);
+        }
+
+        .premium-progress-mark.is-passed {
+            background: rgba(232, 227, 213, 0.3);
+        }
+
+        .premium-slides-wrapper {
+            position: relative;
+            flex: 1 1 auto;
+            width: 100%;
+            margin: 0 auto;
+            overflow: hidden;
+        }
+
+        .premium-slide {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            overflow-y: auto;
+            scrollbar-width: none;
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            transform: translateY(20px);
+            transition: opacity 700ms ease, transform 700ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            z-index: 0;
+        }
+
+        .premium-slide::-webkit-scrollbar {
+            display: none;
+        }
+
+        .premium-slide.is-active {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+            transform: translateY(0);
+            z-index: 2;
+        }
+
+        .premium-slide.is-before {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            transform: translateY(-10px);
+            z-index: 1;
+        }
+
+        .premium-slide.is-after {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            transform: translateY(14px);
+            z-index: 1;
+        }
+
+        .premium-editorial-page {
+            width: min(100%, 600px);
+            margin: 0 auto;
+            padding: clamp(60px, 10vh, 100px) 24px 140px;
+            box-sizing: border-box;
+        }
+
+        .premium-slide .premium-editorial-page {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .premium-slide.is-active .premium-editorial-title {
+            opacity: 0;
+            animation: textBreathe 800ms cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+            animation-delay: 100ms;
+        }
+
+        .premium-slide.is-active .premium-reading-column p {
+            opacity: 0;
+            animation: textBreathe 800ms cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+        }
+
+        .premium-slide.is-active .premium-reading-column p:nth-child(1) { animation-delay: 250ms; }
+        .premium-slide.is-active .premium-reading-column p:nth-child(2) { animation-delay: 400ms; }
+        .premium-slide.is-active .premium-reading-column p:nth-child(3) { animation-delay: 550ms; }
+        .premium-slide.is-active .premium-reading-column p:nth-child(4) { animation-delay: 700ms; }
+
+        .premium-slide.is-active .premium-featured-passage {
+            opacity: 0;
+            animation: textBreathe 1000ms ease forwards;
+            animation-delay: 850ms;
+        }
+
+        @keyframes textBreathe {
+            0% {
+                opacity: 0;
+                transform: translateY(12px) scale(0.99);
+                filter: blur(2px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+                filter: blur(0);
+            }
+        }
+
+        .premium-slide.is-active .premium-editorial-page {
+            animation: premiumPageEnter 560ms cubic-bezier(.22,1,.36,1);
+        }
+
+        @keyframes premiumPageEnter {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .premium-page-margin {
+            position: absolute;
+            top: 30px;
+            bottom: 110px;
+            right: 0;
+            width: 1px;
+            background: linear-gradient(to bottom, transparent, rgba(183,165,125,.14) 16%, rgba(183,165,125,.14) 84%, transparent);
+            opacity: .75;
+            pointer-events: none;
+        }
+
+        .premium-page-content {
+            position: relative;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .premium-editorial-kicker {
+            color: #C4B48F;
+            font-size: 11px;
+            font-weight: 300;
+            letter-spacing: 0.2em;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .premium-editorial-kicker::before {
+            content: "";
+            width: 30px;
+            height: 1px;
+            background: #C4B48F;
+            opacity: 0.5;
+        }
+
+        .premium-editorial-title {
+            color: #FFFFFF;
+            font-size: clamp(28px, 6vw, 40px);
+            font-weight: 300;
+            line-height: 1.4;
+            letter-spacing: -0.02em;
+            text-align: right;
+            margin-bottom: 24px;
+        }
+
+        .premium-editorial-article {
+            width: min(100%, 640px);
+            margin-inline: auto;
+            padding-bottom: 12px;
+        }
+
+        .premium-slide-body {
+            width: min(100%, 550px);
+            margin-inline: auto;
+            color: var(--premium-soft);
+            font-size: clamp(15.5px, 3.8vw, 17px);
+            font-weight: 400;
+            line-height: 2.22;
+            letter-spacing: 0;
+            text-align: right;
+        }
+
+        .premium-editorial-lead {
+            width: min(100%, 540px);
+            margin: 22px 0 0 auto;
+            color: var(--iw-paper-soft);
+            font-size: clamp(16px, 3.6vw, 19px);
+            font-weight: 400;
+            line-height: 1.95;
+            text-align: right;
+        }
+
+        .premium-editorial-rule {
+            width: 42px;
+            height: 1px;
+            margin: 40px 0 36px auto;
+            background: rgba(183, 165, 125, 0.55);
+        }
+
+        /* =========================================================
+        READING AREA (ENHANCED HIERARCHY)
+        ========================================================= */
+        .premium-reading-column {
+            width: min(100%, 650px);
+            margin-inline: auto;
+            color: rgba(232, 227, 213, 0.85);
+            font-size: clamp(16px, 3.8vw, 18px);
+            font-weight: 300;
+            line-height: 2;
+            text-align: right;
+            padding-bottom: 30px;
+        }
+
+        .premium-reading-column p {
+            color: rgba(232, 227, 213, 0.85);
+            font-size: clamp(16px, 3.8vw, 18px);
+            font-weight: 300;
+            line-height: 2;
+            text-align: right;
+            margin-bottom: 32px;
+        }
+
+        .premium-reading-column p:first-of-type {
+            position: relative;
+        }
+        .premium-reading-column p:first-of-type::first-line {
+            color: #FFFFFF;
+            font-weight: 400;
+        }
+
+        .premium-reading-column p:first-of-type::before {
+            content: "";
+            display: inline-block;
+            width: 12px;
+            height: 2px;
+            background-color: #C4B48F;
+            margin-left: 8px;
+            vertical-align: middle;
+            transform: rotate(-45deg);
+        }
+
+        .premium-reading-column p:last-child {
+            margin-bottom: 0;
+        }
+
+        .premium-reading-column strong {
+            position: relative;
+            color: #FFF;
+            font-weight: 400;
+            z-index: 1;
+            white-space: nowrap;
+        }
+
+        .premium-reading-column strong::after {
+            content: '';
+            position: absolute;
+            bottom: 2px;
+            right: -2px;
+            left: -2px;
+            height: 35%;
+            background: rgba(196, 180, 143, 0.25);
+            z-index: -1;
+            transform: skewX(-15deg);
+            border-radius: 2px;
+        }
+
+        .premium-reading-column em {
+            color: var(--iw-brass);
+            font-style: normal;
+        }
+
+        .premium-marginal-note {
+            position: relative;
+            width: min(100%, 440px);
+            margin: 40px 0 40px auto;
+            padding: 3px 18px 3px 0;
+            border-right: 1px solid rgba(132, 144, 125, 0.55);
+            color: var(--iw-sage);
+            font-size: 11px;
+            font-weight: 500;
+            line-height: 1.9;
+            text-align: right;
+            opacity: 0.9;
+        }
+
+        .premium-marginal-note::before {
+            content: "NOTE";
+            display: block;
+            margin-bottom: 6px;
+            color: var(--iw-brass);
+            font-size: 8px;
+            letter-spacing: 0.16em;
+            opacity: 0.72;
+        }
+
+        .premium-important-passage {
+            width: min(100%, 540px);
+            margin: 46px 0 46px auto;
+            padding: 4px 24px 4px 0;
+            border-right: 1px solid rgba(183, 165, 125, 0.62);
+            color: var(--iw-paper);
+            font-size: clamp(17px, 3.8vw, 20px);
+            font-weight: 500;
+            line-height: 2;
+            text-align: right;
+        }
+
+        .premium-featured-passage {
+            position: relative;
+            width: min(100%, 570px);
+            margin: 65px 0 45px auto;
+            padding: 32px 28px 32px 0;
+            box-shadow: inset 3px 0 0 0 #C4B48F;
+            border: none;
+            background: linear-gradient(90deg, rgba(196, 180, 143, 0.04) 0%, transparent 100%);
+            color: #FFFFFF;
+            font-size: clamp(18px, 4.2vw, 22px);
+            font-weight: 300;
+            line-height: 1.95;
+            font-style: italic;
+            border-radius: 2px 0 0 2px;
+        }
+
+        .premium-featured-passage::after {
+            content: "";
+            position: absolute;
+            top: 38px;
+            right: -4px;
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: #C4B48F;
+            box-shadow: 0 0 10px #C4B48F;
+            animation: pulseThought 3.5s infinite alternate ease-in-out;
+        }
+
+        @keyframes pulseThought {
+            0% { opacity: 0.2; transform: scale(0.8); box-shadow: 0 0 5px rgba(196, 180, 143, 0.2); }
+            100% { opacity: 1; transform: scale(1.3); box-shadow: 0 0 15px rgba(196, 180, 143, 0.8); }
+        }
+
+        .premium-featured-passage::before {
+            content: "REFLECTION";
+            display: block;
+            margin-bottom: 12px;
+            color: #C4B48F;
+            font-size: 9px;
+            letter-spacing: 0.3em;
+            font-style: normal;
+        }
+
+        .premium-page-folio {
+            position: absolute;
+            right: 0;
+            bottom: 116px;
+            color: rgba(238, 234, 225, 0.32);
+            font-family: 'Vazirmatn', sans-serif;
+            font-size: 9px;
+            font-weight: 500;
+            letter-spacing: 0.14em;
+            direction: ltr;
+            user-select: none;
+        }
+
+        .premium-navigation {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 30;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: min(100%, 700px);
+            margin: 0 auto;
+            padding: 24px;
+            background: linear-gradient(to top, #0f100e 60%, transparent);
+        }
+
+        .premium-nav-button {
+            background: transparent;
+            border: none;
+            color: rgba(232, 227, 213, 0.6);
+            font-size: 12px;
+            font-weight: 300;
+            letter-spacing: 0.1em;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: color 300ms ease;
+        }
+
+        .premium-nav-button:active { transform: translateY(1px); }
+        .premium-nav-button:disabled { opacity: 0.22; cursor: default; }
+        .premium-nav-button:first-child { justify-self: start; }
+        .premium-nav-button:last-child { justify-self: end; }
+        .premium-nav-button:hover, .premium-nav-button:active { color: #C4B48F; }
+
+        .premium-nav-arrow { font-size: 18px; font-family: monospace; }
+        .premium-nav-index {
+            min-width: 38px;
+            color: var(--premium-muted);
+            font-size: 9px;
+            font-weight: 500;
+            letter-spacing: 0.14em;
+            text-align: center;
+            pointer-events: none;
+        }
+
+        .premium-opening { display: flex; align-items: center; }
+        .premium-opening .premium-editorial-page { min-height: 100%; display: flex; align-items: center; }
+        .premium-opening .premium-page-content { padding-bottom: 8vh; }
+        .premium-opening .premium-editorial-kicker { margin-bottom: 26px; }
+        .premium-opening .premium-editorial-title { font-size: clamp(36px, 8vw, 58px); line-height: 1.38; }
+        .premium-opening .premium-editorial-lead { max-width: 460px; font-size: clamp(16px, 3.8vw, 19px); }
+        .premium-opening .premium-editorial-rule { margin-top: 34px; }
+
+
+        /* =========================================================
+        NEW ENHANCEMENTS — ATMOSPHERE & EXTENSIONS
+        ========================================================= */
+
+        .premium-slide::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            z-index: -1;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 800ms ease;
+            filter: blur(12px);
+        }
+
+        .premium-slide.is-active::before {
+            opacity: 1;
+        }
+
+        .premium-page-type-discovery::before {
+            background: radial-gradient(circle at 50% 20%, rgba(166, 179, 159, 0.12), transparent 60%);
+        }
+
+        .premium-page-type-cinematic::before {
+            background: linear-gradient(to bottom, rgba(15, 16, 14, 0.4) 0%, transparent 30%, rgba(15, 16, 14, 0.6) 100%);
+        }
+
+        .premium-page-type-journal::before {
+            background: repeating-linear-gradient(to bottom, transparent, transparent 31px, rgba(196, 180, 143, 0.03) 31px, rgba(196, 180, 143, 0.03) 32px);
+        }
+
+        .premium-page-type-media::before {
+            background: radial-gradient(ellipse at 50% 50%, rgba(196, 180, 143, 0.08), transparent 70%);
+        }
+
+        .premium-page-type-closing::before {
+            background: radial-gradient(ellipse at 50% 100%, rgba(166, 179, 159, 0.1), transparent 70%);
+        }
+
+        .premium-highlight-wrapper {
+            margin: 40px 0;
+            text-align: center;
+            padding: 0 20px;
+            opacity: 0;
+            animation: textBreathe 1000ms ease forwards;
+            animation-delay: 600ms;
+        }
+
+        .premium-highlight-line {
+            width: 60%;
+            max-width: 150px;
+            height: 1px;
+            background: rgba(196, 180, 143, 0.4);
+            margin: 16px auto;
+        }
+
+        .premium-highlight-text {
+            font-size: clamp(17px, 4vw, 21px);
+            line-height: 2;
+            color: #C4B48F;
+            font-weight: 300;
+        }
+
+        .premium-media-block {
+            width: min(100%, 540px);
+            margin: 40px auto;
+            text-align: center;
+            position: relative;
+            padding: 20px 0;
+            opacity: 0;
+            animation: mediaBreathe 800ms ease forwards;
+            animation-delay: 800ms;
+        }
+
+        @keyframes mediaBreathe {
+            0% { opacity: 0; transform: translateY(12px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        .media-separator {
+            width: 100%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(196, 180, 143, 0.2), transparent);
+            margin: 24px 0;
+        }
+
+        .media-icon {
+            font-size: 20px;
+            margin-bottom: 8px;
+            opacity: 0.9;
+        }
+
+        .media-title {
+            color: #C4B48F;
+            font-size: 13px;
+            letter-spacing: 0.05em;
+            margin-bottom: 24px;
+            font-weight: 300;
+        }
+
+        .media-cover {
+            width: 120px;
+            height: 160px;
+            border-radius: 18px;
+            object-fit: cover;
+            opacity: 0.9;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            margin-bottom: 16px;
+            transition: transform 400ms ease;
+            background: #1a1a1a;
+        }
+
+        .media-cover:hover {
+            transform: translateY(-4px);
+        }
+
+        .media-movie-title {
+            color: #FFFFFF;
+            font-size: 16px;
+            font-weight: 400;
+            margin-bottom: 4px;
+            letter-spacing: 0.02em;
+        }
+
+        .media-movie-director {
+            color: rgba(232, 227, 213, 0.6);
+            font-size: 12px;
+            font-weight: 300;
+            letter-spacing: 0.05em;
+        }
+
+        .premium-page-type-journal .premium-page-content {
+            border-right: 1px solid rgba(196, 180, 143, 0.15);
+            padding-right: 24px;
+        }
+
+        .premium-page-type-cinematic .premium-editorial-title {
+            text-shadow: 0 4px 12px rgba(0,0,0,0.5);
+        }
+
+        .premium-page-type-cinematic .premium-highlight-text {
+            color: #FFFFFF;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.8);
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .premium-slide, .premium-editorial-page, .premium-editorial-title, .premium-editorial-lead,
+            .premium-editorial-rule, .premium-reading-column, .premium-featured-passage,
+            .premium-nav-button, .premium-progress-mark, .premium-media-block, .premium-highlight-wrapper {
+                transition: none !important;
+                animation: none !important;
+            }
+        }
+
+        @media (max-width: 600px) {
+            #premium-inner-world { min-height: 100dvh; }
+            .premium-header { padding-top: max(20px, env(safe-area-inset-top)); }
+            .premium-header-meta { font-size: 8px; letter-spacing: 0.12em; }
+            .premium-story-progress { margin-top: 15px; width: min(150px, 42vw); }
+            .premium-editorial-page { width: calc(100% - 38px); padding: 38px 2px 132px; }
+            .premium-editorial-title { font-size: 29px; line-height: 1.5; }
+            .premium-editorial-lead { font-size: 15px; line-height: 2; }
+            .premium-reading-column { font-size: 15.5px; line-height: 2.08; }
+            .premium-reading-column p { width: 100%; margin-bottom: 26px; line-height: 2.08; }
+            .premium-marginal-note { width: 92%; margin: 34px 0 34px auto; }
+            .premium-important-passage { width: 94%; font-size: 17px; line-height: 2; }
+            .premium-featured-passage { width: 96%; padding: 24px 18px 24px 0; font-size: 17px; }
+            .premium-page-folio { bottom: 108px; }
+            .premium-navigation { grid-template-columns: 1fr auto 1fr; padding: 14px 20px max(18px, env(safe-area-inset-bottom)); }
+            .premium-nav-button { font-size: 10px; }
+        }
+
+
+
         </style>
     <body>
 
@@ -2930,11 +3657,11 @@
             Dark Editorial Psychological Experience
             ========================================================= -->
 
-        <div
-            id="premium-inner-world"
-            hidden
-            aria-hidden="true">
-
+       <!-- =========================================================
+    PREMIUM INNER WORLD
+    Dark Editorial Psychological Experience
+    ========================================================= -->
+        <div id="premium-inner-world" hidden aria-hidden="true">
             <div class="premium-atmosphere" aria-hidden="true">
                 <div class="premium-atmosphere-image"></div>
                 <div class="premium-atmosphere-vignette"></div>
@@ -2945,50 +3672,21 @@
                     <span id="premium-section-label">دفتر درون</span>
                     <span id="premium-page-number">۰۱</span>
                 </div>
-
-                <div
-                    id="premium-story-progress"
-                    class="premium-story-progress"
-                    aria-hidden="true">
-                </div>
+                <div id="premium-story-progress" class="premium-story-progress" aria-hidden="true"></div>
             </header>
 
-            <main
-                id="premium-slides-wrapper"
-                class="premium-slides-wrapper"
-                aria-live="polite">
-            </main>
+            <main id="premium-slides-wrapper" class="premium-slides-wrapper" aria-live="polite"></main>
 
-            <nav
-                class="premium-navigation"
-                aria-label="ناوبری دفتر درون">
-
-                <button
-                    id="premium-btn-prev"
-                    class="premium-nav-button premium-nav-prev"
-                    type="button"
-                    onclick="prevPremiumSlide()">
-
+            <nav class="premium-navigation" aria-label="ناوبری دفتر درون">
+                <button id="premium-btn-prev" class="premium-nav-button premium-nav-prev" type="button" onclick="prevPremiumSlide()">
                     <span class="premium-nav-arrow" aria-hidden="true">→</span>
                     <span id="premium-prev-btn-text">قبلی</span>
                 </button>
-
-                <div
-                    id="premium-nav-index"
-                    class="premium-nav-index">
-                    01 — 06
-                </div>
-
-                <button
-                    id="premium-btn-next"
-                    class="premium-nav-button premium-nav-next"
-                    type="button"
-                    onclick="nextPremiumSlide()">
-
+                <div id="premium-nav-index" class="premium-nav-index">01 — 06</div>
+                <button id="premium-btn-next" class="premium-nav-button premium-nav-next" type="button" onclick="nextPremiumSlide()">
                     <span id="premium-next-btn-text">ادامه</span>
                     <span class="premium-nav-arrow" aria-hidden="true">←</span>
                 </button>
-
             </nav>
         </div>
 
@@ -3413,6 +4111,31 @@
 
             // Premium Inner World Loader and Renderer
 
+            const mediaAssets = {
+                mirror: [
+                    {
+                        title: "Perfect Days",
+                        subtitle: "Wim Wenders",
+                        image: "https://via.placeholder.com/240x320/1a1a1a/C4B48F?text=Cover"
+                    }
+                ]
+            };
+
+            const sectionThemes = {
+                discover: { icon: "🌌", style: "discovery" },
+                scene: { style: "cinematic" },
+                mirror: { style: "media" },
+                reflect: { style: "journal" },
+                integrate: { style: "closing" }
+            };
+
+            function getSectionStyle(type) {
+                if (!type) return 'default';
+                const theme = sectionThemes[type.toLowerCase()];
+                return theme ? theme.style : 'default';
+            }
+
+
             async function loadInnerWorld() {
 
                 const loadingOverlay = document.getElementById('loading-overlay');
@@ -3493,7 +4216,7 @@
 
 
                     renderInnerWorldUI(
-                        data.inner_world_analysis
+                            data.inner_world_analysis
                     );
 
 
@@ -3611,74 +4334,34 @@
 
 
             function renderInnerWorldUI(analysis) {
-
-                /*
-                * 1. Hide previous experiences (State-based)
-                */
                 hideQuestionExperience();
                 hideResultExperience();
                 hideNetworkError();
 
-                /*
-                * 2. Reset Premium
-                */
                 premiumSlides = [];
                 currentPremiumSlideIndex = 0;
-
-                /*
-                * 3. Convert backend data into editorial slides
-                */
                 premiumSlides = parseAnalysisSections(analysis);
 
-
-                /*
-                * 4. Safety check
-                */
                 if (!premiumSlides.length) {
-                    console.error(
-                        '[Inner World] No premium slides generated.',
-                        analysis
-                    );
+                    console.error('[Inner World] No premium slides generated.', analysis);
                     tg.showAlert('محتوای تحلیل برای نمایش آماده نیست.');
                     return;
                 }
 
-                /*
-                * 5. Show Premium (State-based)
-                */
                 showPremiumInnerWorld();
-
-                /*
-                * 6. Render DOM
-                */
                 renderPremiumSlides();
+
                 const renderedSlides = document.querySelectorAll('#premium-slides-wrapper .premium-slide');
-
-                if (!renderedSlides.length) {
-                    console.error('[Inner World] Render produced no slides.');
-                    return;
-                }
-
+                if (!renderedSlides.length) return;
                 if (!document.querySelector('#premium-slides-wrapper .premium-slide.is-active')) {
                     renderedSlides[0].classList.add('is-active');
                 }
 
-                /*
-                * 7. Render progress
-                */
                 renderPremiumProgress();
+                if (typeof updatePremiumUI === 'function') updatePremiumUI();
 
-                /*
-                * 8. Initial UI state
-                */
-                updatePremiumUI();
-
-                /*
-                * 9. Telegram MainButton should not compete
-                * with the editorial navigation.
-                */
-                if (tg && tg.MainButton) {
-                    tg.MainButton.hide();
+                if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.MainButton) {
+                    window.Telegram.WebApp.MainButton.hide();
                 }
             }
 
@@ -3753,57 +4436,18 @@
 
 
 
-            function renderPremiumSlides() {
-                const wrapper =
-                    document.getElementById(
-                        'premium-slides-wrapper'
-                    );
-
-                if (!wrapper) {
-                    console.error(
-                        '[Inner World] Slides wrapper not found.'
-                    );
-
-                    return;
-                }
-
+             function renderPremiumSlides() {
+                const wrapper = document.getElementById('premium-slides-wrapper');
+                if (!wrapper) return;
                 wrapper.innerHTML = '';
 
-                if (!Array.isArray(premiumSlides) ||
-                    !premiumSlides.length) {
-
-                    console.error(
-                        '[Inner World] No slides available.'
-                    );
-
-                    return;
-                }
-
                 premiumSlides.forEach((slide, index) => {
-
-                    const slideElement =
-                        document.createElement('article');
-
-                    slideElement.className =
-                        index === currentPremiumSlideIndex
-                            ? 'premium-slide is-active'
-                            : 'premium-slide';
-
-                    slideElement.dataset.index =
-                        String(index);
-
-                    slideElement.id =
-                        `premium-slide-${index}`;
-
-                    slideElement.innerHTML =
-                        buildPremiumSlideHTML(
-                            slide,
-                            index
-                        );
-
-                    wrapper.appendChild(
-                        slideElement
-                    );
+                    const slideElement = document.createElement('article');
+                    slideElement.className = index === currentPremiumSlideIndex ? 'premium-slide is-active' : 'premium-slide';
+                    slideElement.dataset.index = String(index);
+                    slideElement.id = `premium-slide-${index}`;
+                    slideElement.innerHTML = buildPremiumSlideHTML(slide, index);
+                    wrapper.appendChild(slideElement);
                 });
             }
 
@@ -3844,59 +4488,70 @@
             }
 
 
-            function buildPremiumSlideHTML(slide, index) {
-                const isOpening =
-                    slide.type === 'opening' ||
-                    index === 0;
+                    // --- View Building Helpers --- //
 
-                const pageType =
-                    String(slide.type || 'editorial')
-                        .toLowerCase()
-                        .replace(/[^a-z0-9_-]/g, '');
+            function renderSectionHeader(slide, index) {
+                const defaultIcon = slide.type ? (sectionThemes[slide.type.toLowerCase()]?.icon || '') : '';
+                const icon = slide.icon || defaultIcon;
+                const chapterText = slide.chapter || `فصل ${String(index + 1).padStart(2, '0')}`;
 
-                const chapterHTML = slide.chapter
-                    ? `
-                        <div class="premium-editorial-kicker">
-                            ${escapeHTML(slide.chapter)}
-                        </div>
-                    `
-                    : `
-                        <div class="premium-editorial-kicker">
-                            فصل ${String(index + 1).padStart(2, '0')}
-                        </div>
-                    `;
+                let html = `
+                    <div class="premium-editorial-kicker">
+                        ${icon ? `<span style="font-size: 1.2em; margin-left: 8px;">${icon}</span>` : ''}${escapeHTML(chapterText)}
+                    </div>
+                `;
 
-                const titleHTML = slide.title
-                    ? `
+                if (slide.title) {
+                    html += `
                         <h1 class="premium-editorial-title">
                             ${formatPremiumTitle(slide.title)}
                         </h1>
-                    `
-                    : '';
+                    `;
+                }
 
-                const subtitleHTML = slide.subtitle
-                    ? `
+                if (slide.subtitle) {
+                    html += `
                         <p class="premium-editorial-lead">
                             ${escapeHTML(slide.subtitle)}
                         </p>
-                    `
-                    : '';
+                    `;
+                }
+                return html;
+            }
 
-                const contentHTML = slide.content
-                    ? `
-                        <div class="premium-reading-column">
-                            ${formatPremiumContent(slide.content)}
+            function renderMediaBlock(type) {
+                if (!type || type.toLowerCase() !== 'mirror') return '';
+                const media = mediaAssets.mirror[0];
+                if (!media) return '';
+
+                return `
+                    <div class="premium-media-block">
+                        <div class="media-separator"></div>
+                        <div class="media-icon">🎬</div>
+                        <div class="media-title">چیزهایی برای دیدن و خواندن</div>
+                        <img src="${media.image}" alt="Media Cover" class="media-cover">
+                        <div class="media-meta">
+                            <div class="media-movie-title">${escapeHTML(media.title)}</div>
+                            <div class="media-movie-director">${escapeHTML(media.subtitle)}</div>
                         </div>
-                    `
-                    : '';
+                        <div class="media-separator"></div>
+                    </div>
+                `;
+            }
 
-                const quoteHTML = slide.quote
-                    ? `
-                        <aside class="premium-featured-passage">
-                            ${formatPremiumContent(slide.quote)}
-                        </aside>
-                    `
-                    : '';
+            function renderSectionContent(slide) {
+                if (!slide.content) return '';
+                return `
+                    <div class="premium-reading-column">
+                        ${formatPremiumContent(slide.content)}
+                    </div>
+                `;
+            }
+
+
+            function buildPremiumSlideHTML(slide, index) {
+                const isOpening = slide.type === 'opening' || index === 0;
+                const pageType = getSectionStyle(slide.type);
 
                 return `
                     <article
@@ -3907,137 +4562,97 @@
                         "
                         data-page="${index + 1}"
                     >
-
-                        <div
-                            class="premium-page-margin"
-                            aria-hidden="true">
-                        </div>
-
+                        <div class="premium-page-margin" aria-hidden="true"></div>
                         <div class="premium-page-content">
 
-                            ${chapterHTML}
+                            ${renderSectionHeader(slide, index)}
 
-                            ${titleHTML}
+                            <div class="premium-editorial-rule" aria-hidden="true"></div>
 
-                            ${subtitleHTML}
+                            ${renderSectionContent(slide)}
 
-                            <div
-                                class="premium-editorial-rule"
-                                aria-hidden="true">
-                            </div>
+                            ${renderMediaBlock(slide.type)}
 
-                            ${contentHTML}
-
-                            ${quoteHTML}
+                            ${slide.quote ? `
+                                <aside class="premium-featured-passage">
+                                    ${formatPremiumContent(slide.quote)}
+                                </aside>
+                            ` : ''}
 
                         </div>
-
-                        <div
-                            class="premium-page-folio"
-                            aria-hidden="true">
+                        <div class="premium-page-folio" aria-hidden="true">
                             ${String(index + 1).padStart(2, '0')}
                         </div>
-
                     </article>
                 `;
             }
 
+
             function formatPremiumContent(text) {
-                if (!text) {
-                    return '';
-                }
+                if (!text) return '';
 
                 let safeText = escapeHTML(text);
-
-                safeText = safeText.replace(
-                    /&lt;b&gt;(.*?)&lt;\/b&gt;/g,
-                    '<strong>$1</strong>'
-                );
-
-                safeText = safeText.replace(
-                    /\*\*(.*?)\*\*/g,
-                    '<strong>$1</strong>'
-                );
+                safeText = safeText.replace(/&lt;b&gt;(.*?)&lt;\/b&gt;/g, '<strong>$1</strong>');
+                safeText = safeText.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
 
                 const lines = safeText.split('\n');
-
                 let html = '';
                 let paragraph = [];
+                let highlightUsed = false;
 
                 function flushParagraph() {
+                    if (!paragraph.length) return;
+                    const content = paragraph.join('<br>');
 
-                    if (!paragraph.length) {
-                        return;
+                    let resultHtml = content;
+                    if (!highlightUsed) {
+                        const parts = content.split(/([.!?؟]+\s+)/);
+                        let reconstructed = [];
+                        for (let i = 0; i < parts.length; i += 2) {
+                            let sentence = parts[i];
+                            let delim = parts[i+1] || '';
+                            let fullSentence = sentence + delim;
+
+                            let rawText = fullSentence.replace(/<[^>]*>?/gm, '').trim();
+                            // Extract exactly one meaningful sentence per slide dynamically
+                            if (!highlightUsed && rawText.length >= 40 && rawText.length <= 150 && rawText.includes(' ')) {
+                                highlightUsed = true;
+                                reconstructed.push(`</p>
+                                    <div class="premium-highlight-wrapper">
+                                        <div class="premium-highlight-line"></div>
+                                        <div class="premium-highlight-text">${fullSentence.trim()}</div>
+                                        <div class="premium-highlight-line"></div>
+                                    </div>
+                                <p>`);
+                            } else {
+                                reconstructed.push(fullSentence);
+                            }
+                        }
+                        resultHtml = reconstructed.join('');
                     }
 
-                    const content =
-                        paragraph.join('<br>');
-
-                    html += `
-                        <p>
-                            ${content}
-                        </p>
-                    `;
-
+                    html += `<p>${resultHtml}</p>`;
                     paragraph = [];
                 }
 
                 lines.forEach(line => {
-
                     const trimmed = line.trim();
-
                     if (!trimmed) {
                         flushParagraph();
                         return;
                     }
 
-                    /*
-                    * Explicit editorial marginal note.
-                    *
-                    * Supported syntax:
-                    *
-                    * [NOTE] متن یادداشت
-                    *
-                    * This is optional and does not alter normal content.
-                    */
-                    if (
-                        trimmed.startsWith('[NOTE]')
-                    ) {
-
+                    if (trimmed.startsWith('[NOTE]')) {
                         flushParagraph();
-
-                        const noteText =
-                            trimmed
-                                .replace(/^\[NOTE\]\s*/i, '');
-
-                        html += `
-                            <aside class="premium-marginal-note">
-                                ${noteText}
-                            </aside>
-                        `;
-
+                        const noteText = trimmed.replace(/^\[NOTE\]\s*/i, '');
+                        html += `<aside class="premium-marginal-note">${noteText}</aside>`;
                         return;
                     }
 
-                    /*
-                    * Block quote / important passage.
-                    */
                     if (trimmed.startsWith('>')) {
-
                         flushParagraph();
-
-                        const quote =
-                            trimmed.replace(
-                                /^>\s?/,
-                                ''
-                            );
-
-                        html += `
-                            <blockquote class="premium-important-passage">
-                                ${quote}
-                            </blockquote>
-                        `;
-
+                        const quote = trimmed.replace(/^>\s?/, '');
+                        html += `<blockquote class="premium-important-passage">${quote}</blockquote>`;
                         return;
                     }
 
@@ -4045,7 +4660,7 @@
                 });
 
                 flushParagraph();
-
+                html = html.replace(/<p>\s*<\/p>/g, '');
                 return html;
             }
 
@@ -4128,123 +4743,28 @@
             }
 
             function parseMarkdownToSlides(rawText) {
+                if (typeof rawText !== 'string') return [];
+                const normalizedText = rawText.replace(/\r\n/g, '\n').replace(/\r/g, '\n').replace(/^\uFEFF/, '').trim();
+                if (!normalizedText) return [];
 
-                if (typeof rawText !== 'string') {
-                    console.error(
-                        '[Inner World] Expected string, got:',
-                        typeof rawText
-                    );
+                const sections = normalizedText.split(/(?:^|\n)\s*##\s+/).map(s => s.trim()).filter(Boolean);
 
-                    return [];
-                }
+                const slides = sections.map((section, index) => {
+                    const lines = section.split('\n');
+                    const rawTitle = lines.shift()?.trim() || '';
+                    const content = lines.join('\n').trim();
+                    const title = rawTitle.replace(/^\d+\.\s*/, '');
 
-
-                const normalizedText = rawText
-                    .replace(/\r\n/g, '\n')
-                    .replace(/\r/g, '\n')
-                    .replace(/^\uFEFF/, '')
-                    .trim();
-
-
-                if (!normalizedText) {
-                    return [];
-                }
-
-
-                /*
-                * Backend format:
-                *
-                * ## 0. <b>...</b>
-                * content...
-                *
-                * ## 1. <b>...</b>
-                * content...
-                *
-                * ...
-                *
-                * ## 10. <b>...</b>
-                * content...
-                *
-                *
-                * We split ONLY on markdown H2 headings.
-                */
-
-                const sections =
-                    normalizedText
-                        .split(/(?:^|\n)\s*##\s+/)
-                        .map(section => section.trim())
-                        .filter(Boolean);
-
-
-                const slides = sections.map(
-                    (section, index) => {
-
-                        const lines =
-                            section
-                                .split('\n');
-
-
-                        const rawTitle =
-                            lines.shift()?.trim() || '';
-
-
-                        const content =
-                            lines
-                                .join('\n')
-                                .trim();
-
-
-                        /*
-                        * Remove the numeric prefix:
-                        *
-                        * 0. <b>Title</b>
-                        *
-                        * becomes:
-                        *
-                        * <b>Title</b>
-                        */
-
-                        const title =
-                            rawTitle.replace(
-                                /^\d+\.\s*/,
-                                ''
-                            );
-
-
-                        return {
-
-                            id:
-                                `premium-slide-${index}`,
-
-                            type:
-                                index === 0
-                                    ? 'opening'
-                                    : 'article',
-
-                            chapter:
-                                `CHAPTER ${toRoman(index + 1)}`,
-
-                            title:
-                                title,
-
-                            subtitle:
-                                '',
-
-                            content:
-                                content,
-
-                            quote:
-                                ''
-                        };
-                    }
-                );
-
-
-                console.log(
-                    '[Inner World] Parsed slides:',
-                    slides.length
-                );
-
+                    return {
+                        id: `premium-slide-${index}`,
+                        type: index === 0 ? 'opening' : 'article',
+                        chapter: `CHAPTER ${index + 1}`,
+                        title: title,
+                        subtitle: '',
+                        content: content,
+                        quote: ''
+                    };
+                });
 
                 return slides;
             }
@@ -4254,7 +4774,6 @@
                 if (element.twTimeout) clearTimeout(element.twTimeout);
                 element.innerHTML = "";
                 let i = 0;
-
                 function type() {
                     if (i < text.length) {
                         element.innerHTML += text.charAt(i);
