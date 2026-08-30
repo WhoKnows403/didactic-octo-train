@@ -7,55 +7,47 @@
         <script src="https://telegram.org/js/telegram-web-app.js"></script>
         <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@200;300;400;500;600&display=swap" rel="stylesheet">
         <style>
-:root {
-                /* =========================================================
-                RESULT STORY — VISUAL SYSTEM
-                Human / Editorial / Cinematic / Intimate
-                ========================================================= */
+        :root {
+            /* =========================================================
+               INNER WORLD — STRICT EDITORIAL VISUAL SYSTEM
+               Quiet, cinematic, high contrast, readable
+               ========================================================= */
 
-                /* Base */
-                --story-ink: #171817;
-                --story-white: #F4F1EA;
+            /* Base Palette */
+            --story-bg: #0c0d0c;
+            --story-white: #F9F7F1;
 
-                /* Text */
-                --story-text: rgba(244, 241, 234, 0.94);
-                --story-text-soft: rgba(244, 241, 234, 0.70);
-                --story-text-faint: rgba(244, 241, 234, 0.48);
+            /* Text Hierarchy */
+            --story-text-primary: rgba(249, 247, 241, 0.92);
+            --story-text-secondary: rgba(249, 247, 241, 0.65);
+            --story-text-faint: rgba(249, 247, 241, 0.35);
 
-                /* Identity */
-                --accent-sage: #A6B39F;
-                --accent-sage-soft: rgba(166, 179, 159, 0.16);
-                --accent-sage-line: rgba(166, 179, 159, 0.34);
-                --accent-warm: #D2C2AC;
-                --accent-gold-soft: rgba(196, 180, 143, 0.4);
+            /* Accents */
+            --accent-gold: #C4B48F;
+            --accent-gold-soft: rgba(196, 180, 143, 0.25);
+            --accent-gold-faint: rgba(196, 180, 143, 0.08);
 
-                /* Editorial separators */
-                --story-line: rgba(244, 241, 234, 0.16);
-                --story-line-soft: rgba(244, 241, 234, 0.08);
+            /* Layout */
+            --content-width: min(100%, 680px);
+            --side-padding: clamp(24px, 6vw, 48px);
+            --story-ease: cubic-bezier(0.25, 1, 0.35, 1);
+        }
 
-                /* Layout */
-                --story-side-padding: clamp(24px, 6vw, 44px);
-                --story-content-width: min(100%, 640px);
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
 
-                /* Motion */
-                --story-ease: cubic-bezier(0.22, 1, 0.36, 1);
-            }
-
-            * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
-
-            body, html {
-                font-family: 'Vazirmatn', "Apple Color Emoji", "Segoe UI Emoji", sans-serif;
-                background: #0f100e;
-                color: var(--story-text);
-                margin: 0;
-                padding: 0;
-                width: 100%;
-                height: 100%;
-                overflow: hidden;
-                overscroll-behavior: none;
-                position: fixed;
-                user-select: none;
-            }
+        body, html {
+            font-family: 'Vazirmatn', "Apple Color Emoji", "Segoe UI Emoji", sans-serif;
+            background: var(--story-bg);
+            color: var(--story-text-primary);
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            overscroll-behavior: none;
+            position: fixed;
+            user-select: none;
+        }
 
 
 
@@ -2804,9 +2796,9 @@
         }
 
 
-  /* =========================================================
-        PREMIUM INNER WORLD — DARK EDITORIAL EXPERIENCE
-        ========================================================= */
+        /* =========================================================
+           CORE APPLICATION SHELL
+           ========================================================= */
         #premium-inner-world {
             position: fixed;
             inset: 0;
@@ -2816,27 +2808,25 @@
             width: 100%;
             height: 100dvh;
             overflow: hidden;
-            box-sizing: border-box;
-            background: #0f100e;
-            color: #E8E3D5;
+            background: var(--story-bg);
             isolation: isolate;
         }
 
         #premium-inner-world.is-active {
             display: flex !important;
-            animation: fadeInWorld 800ms var(--story-ease) forwards;
+            animation: fadeInWorld 1s var(--story-ease) forwards;
         }
 
-        /* Subtle analog texture overlay */
+        /* Subtle organic noise, removed heavy gradients */
         #premium-inner-world::after {
             content: "";
             position: absolute;
             inset: 0;
             z-index: 20;
             pointer-events: none;
-            opacity: 0.025;
-            background-image: repeating-linear-gradient(0deg, rgba(255,255,255,0.5) 0, rgba(255,255,255,0.5) 1px, transparent 1px, transparent 3px);
-            mix-blend-mode: soft-light;
+            opacity: 0.02;
+            background-image: repeating-linear-gradient(0deg, rgba(255,255,255,0.8) 0, rgba(255,255,255,0.8) 1px, transparent 1px, transparent 3px);
+            mix-blend-mode: overlay;
         }
 
         @keyframes fadeInWorld {
@@ -2849,82 +2839,69 @@
             inset: 0;
             z-index: -1;
             pointer-events: none;
+            background: radial-gradient(ellipse at top center, rgba(196, 180, 143, 0.03) 0%, transparent 70%);
         }
 
-        .premium-atmosphere::before {
-            content: "";
-            position: absolute;
-            inset: 0;
-            z-index: -1;
-            opacity: 0.03;
-            pointer-events: none;
-            background-image: url('data:image/svg+xml;utf8,%3Csvg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noiseFilter"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23noiseFilter)"/%3E%3C/svg%3E');
-        }
-
-        /* Base vignette to focus reading center */
-        .premium-atmosphere-vignette {
-            position: absolute;
-            inset: 0;
-            background: radial-gradient(ellipse at 50% 50%, transparent 10%, rgba(15, 16, 14, 0.6) 70%, #0f100e 100%);
-            pointer-events: none;
-        }
-
-        .premium-header,
-        .premium-slides-wrapper {
-            position: relative;
-            z-index: 10;
-        }
-
+        /* =========================================================
+           HEADER & PROGRESS
+           ========================================================= */
         .premium-header {
             flex: 0 0 auto;
-            width: min(100%, 700px);
+            width: var(--content-width);
             margin: 0 auto;
-            padding: clamp(30px, 6vh, 50px) var(--story-side-padding) 0;
+            padding: clamp(24px, 5vh, 48px) var(--side-padding) 0;
             text-align: center;
+            position: relative;
+            z-index: 10;
         }
 
         .premium-header-meta {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            color: rgba(232, 227, 213, 0.4);
-            font-size: 10px;
+            color: var(--story-text-faint);
+            font-size: 11px;
             font-weight: 300;
-            letter-spacing: 0.25em;
-            text-transform: uppercase;
+            letter-spacing: 0.1em;
         }
 
-        /* Existing Progress UI preserved exactly */
         .premium-story-progress {
             display: flex;
-            gap: 4px;
-            width: 140px;
-            margin: 24px auto 0;
+            gap: 6px;
+            width: 160px;
+            margin: 20px auto 0;
         }
 
         .premium-progress-mark {
             flex: 1;
             height: 2px;
-            background: rgba(232, 227, 213, 0.1);
+            background: var(--story-text-faint);
             border-radius: 2px;
-            transition: all 500ms ease;
+            transition: all 400ms ease;
+            opacity: 0.3;
         }
 
         .premium-progress-mark.is-active {
-            background: #C4B48F;
-            box-shadow: 0 0 8px rgba(196, 180, 143, 0.3);
+            background: var(--accent-gold);
+            opacity: 1;
         }
 
         .premium-progress-mark.is-passed {
-            background: rgba(232, 227, 213, 0.3);
+            background: var(--story-text-secondary);
+            opacity: 0.6;
         }
 
+        /* =========================================================
+           SLIDES SYSTEM
+           ========================================================= */
         .premium-slides-wrapper {
             position: relative;
             flex: 1 1 auto;
             width: 100%;
+            height: 100%;
             margin: 0 auto;
             overflow: hidden;
+            z-index: 1;
         }
 
         .premium-slide {
@@ -2937,8 +2914,8 @@
             opacity: 0;
             visibility: hidden;
             pointer-events: none;
-            transform: translateY(20px);
-            transition: opacity 700ms ease, transform 700ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            transform: translateY(12px);
+            transition: opacity 600ms ease, transform 800ms var(--story-ease);
             z-index: 0;
         }
 
@@ -2952,391 +2929,332 @@
             z-index: 2;
         }
 
-        .premium-slide.is-before { opacity: 0; visibility: hidden; pointer-events: none; transform: translateY(-10px); z-index: 1; }
-        .premium-slide.is-after { opacity: 0; visibility: hidden; pointer-events: none; transform: translateY(14px); z-index: 1; }
+        .premium-slide.is-before { transform: translateY(-12px); }
+        .premium-slide.is-after { transform: translateY(12px); }
 
-        /* Responsive page container enforcing safe reading width and spacing */
+        /* =========================================================
+           EDITORIAL TYPOGRAPHY & LAYOUT
+           ========================================================= */
         .premium-editorial-page {
-            width: var(--story-content-width);
+            width: var(--content-width);
             margin: 0 auto;
-            padding: clamp(60px, 10vh, 100px) var(--story-side-padding) 160px;
+            padding: clamp(6vh, 8vh, 12vh) var(--side-padding) max(160px, env(safe-area-inset-bottom) + 120px);
             box-sizing: border-box;
             min-height: 100%;
             position: relative;
         }
 
-        /* Subtle Global Editorial Motif: The marginal line and registration mark */
-        .premium-page-margin {
-            position: absolute;
-            top: 40px;
-            bottom: 110px;
-            right: 0;
-            width: 1px;
-            background: linear-gradient(to bottom, transparent, rgba(183,165,125,0.08) 16%, rgba(183,165,125,0.08) 84%, transparent);
-            pointer-events: none;
-        }
-        .premium-page-margin::before {
-            content: "+";
-            position: absolute;
-            top: 15vh;
-            right: -4px;
-            color: rgba(183,165,125,0.25);
-            font-size: 10px;
-            font-family: monospace;
+        .premium-page-content {
+            position: relative;
+            width: 100%;
         }
 
-        .premium-page-content { position: relative; width: 100%; box-sizing: border-box; }
-
-        /* Kicker / Chapter marker */
+        /* Subdued kicker / Icon */
         .premium-editorial-kicker {
-            color: #C4B48F; font-size: 11px; font-weight: 300; letter-spacing: 0.2em; margin-bottom: 20px; display: flex; align-items: center; gap: 12px;
+            color: var(--accent-gold);
+            font-size: 11px;
+            font-weight: 400;
+            letter-spacing: 0.05em;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            opacity: 0.9;
         }
-        .premium-editorial-kicker::before { content: ""; width: 24px; height: 1px; background: #C4B48F; opacity: 0.4; }
 
-        /* Titles: No clipping, fluid typography, safe wrapping */
+        .premium-editorial-kicker span {
+            font-size: 14px !important;
+            opacity: 0.6;
+            filter: grayscale(0.3);
+        }
+
         .premium-editorial-title {
-            color: #FFFFFF;
-            font-size: clamp(26px, 6.5vw, 40px);
+            color: var(--story-white);
+            font-size: clamp(28px, 6.5vw, 42px);
             font-weight: 300;
-            line-height: 1.4;
+            line-height: 1.35;
             letter-spacing: -0.01em;
             text-align: right;
-            margin-bottom: 24px;
+            margin: 0 0 24px 0;
             word-wrap: break-word;
             overflow-wrap: break-word;
-            white-space: normal;
         }
 
         .premium-editorial-lead {
-            width: min(100%, 540px);
-            margin: 24px 0 0 auto;
-            color: var(--story-text-soft);
+            color: var(--story-text-secondary);
             font-size: clamp(16px, 3.8vw, 19px);
-            font-weight: 400;
-            line-height: 1.95;
+            font-weight: 300;
+            line-height: 2;
             text-align: right;
+            margin: 0;
+            max-width: 90%;
         }
 
-        .premium-editorial-rule { width: 36px; height: 1px; margin: 44px 0 40px auto; background: rgba(183, 165, 125, 0.4); }
+        .premium-editorial-rule {
+            width: 32px;
+            height: 1px;
+            margin: 40px 0;
+            background: var(--accent-gold-soft);
+        }
 
         /* =========================================================
-        READING COLUMN & RHYTHM
-        ========================================================= */
+           READING COLUMN
+           ========================================================= */
         .premium-reading-column {
             position: relative;
-            z-index: 1;
             width: 100%;
-            margin-inline: auto;
-            color: rgba(232, 227, 213, 0.88);
-            font-size: clamp(16px, 4vw, 18.5px);
+            color: var(--story-text-primary);
+            font-size: clamp(16px, 4vw, 18px);
             font-weight: 300;
-            line-height: 2.15;
+            line-height: 2.2;
             text-align: right;
-            padding-bottom: 40px;
         }
 
         .premium-reading-column p {
-            margin-bottom: 34px;
+            margin-top: 0;
+            margin-bottom: 2em;
             overflow-wrap: break-word;
             word-wrap: break-word;
         }
 
-        /* Subtle starting marker for the first paragraph of standard pages */
-        .premium-reading-column > p:first-of-type::first-line { color: #FFFFFF; font-weight: 400; }
-        .premium-reading-column > p:first-of-type::before {
-            content: ""; display: inline-block; width: 10px; height: 2px; background-color: rgba(196,180,143,0.7); margin-left: 12px; vertical-align: middle;
+        /* Remove the old hardcoded line marker, use subtle typography */
+        .premium-reading-column > p:first-of-type {
+            color: var(--story-white);
         }
 
-        /* Inline emphasis styling */
         .premium-reading-column strong {
-            color: #FFF; font-weight: 400;
+            color: var(--story-white);
+            font-weight: 500;
         }
 
-        /* Dynamically extracted Highlight / Pull Quote */
-        .premium-highlight-wrapper { margin: 48px 0; text-align: center; padding: 0 16px; }
-        .premium-highlight-line { width: 40px; height: 1px; background: rgba(196, 180, 143, 0.3); margin: 24px auto; }
-        .premium-highlight-text { font-size: clamp(18px, 4.5vw, 22px); line-height: 1.9; color: #C4B48F; font-weight: 300; font-style: italic; }
-
-        /* Preserved backend lists */
-        .premium-list-container { margin: 24px 0 40px 0; padding: 0; }
+        /* Lists */
+        .premium-list-container {
+            margin: 2em 0;
+            padding: 0;
+        }
         .premium-list-item {
             display: block;
             padding-right: 24px;
             position: relative;
-            margin-bottom: 16px;
-            line-height: 1.85;
+            margin-bottom: 1.2em;
         }
         .premium-list-item::before {
-            content: "•";
+            content: "—";
             position: absolute;
-            right: 4px;
+            right: 0;
             top: 0;
-            color: #C4B48F;
-            font-size: 1.2em;
-            opacity: 0.7;
+            color: var(--accent-gold);
+            opacity: 0.5;
         }
 
-        /* Section Entry Animations */
+        /* =========================================================
+           HIGHLIGHT / QUOTE EXTRACT
+           ========================================================= */
+        .premium-highlight-wrapper {
+            margin: 4em 0;
+            padding: 0 24px;
+            border-right: 2px solid var(--accent-gold-soft);
+        }
+        .premium-highlight-line { display: none; } /* Hid the decorative structural lines to clean up UI */
+        .premium-highlight-text {
+            font-size: clamp(20px, 4.8vw, 26px);
+            line-height: 1.8;
+            color: var(--story-white);
+            font-weight: 300;
+        }
+
+        /* =========================================================
+           SUBTLE ENTRY ANIMATIONS
+           ========================================================= */
         .premium-slide.is-active .premium-editorial-title {
-            opacity: 0; animation: textBreathe 800ms var(--story-ease) forwards; animation-delay: 100ms;
+            opacity: 0; animation: gentleRise 800ms var(--story-ease) forwards; animation-delay: 100ms;
         }
         .premium-slide.is-active .premium-reading-column > p,
+        .premium-slide.is-active .premium-highlight-wrapper,
         .premium-slide.is-active .premium-symbolic-media {
-            opacity: 0; animation: textBreathe 800ms var(--story-ease) forwards;
+            opacity: 0; animation: gentleRise 800ms var(--story-ease) forwards;
         }
-        .premium-slide.is-active .premium-reading-column > p:nth-child(1), .premium-slide.is-active .premium-symbolic-media { animation-delay: 250ms; }
-        .premium-slide.is-active .premium-reading-column > p:nth-child(2) { animation-delay: 400ms; }
-        .premium-slide.is-active .premium-reading-column > p:nth-child(3) { animation-delay: 550ms; }
-        .premium-slide.is-active .premium-highlight-wrapper {
-            opacity: 0; animation: textBreathe 1000ms ease forwards; animation-delay: 600ms;
-        }
+        .premium-slide.is-active .premium-reading-column > p:nth-child(1), .premium-slide.is-active .premium-symbolic-media { animation-delay: 200ms; }
+        .premium-slide.is-active .premium-reading-column > p:nth-child(2) { animation-delay: 300ms; }
+        .premium-slide.is-active .premium-reading-column > p:nth-child(3) { animation-delay: 400ms; }
 
-        @keyframes textBreathe {
-            0% { opacity: 0; transform: translateY(12px); filter: blur(2px); }
-            100% { opacity: 1; transform: translateY(0); filter: blur(0); }
-        }
-        .premium-slide.is-active .premium-editorial-page { animation: premiumPageEnter 600ms var(--story-ease); }
-        @keyframes premiumPageEnter { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-        /* =========================================================
-        ATMOSPHERIC EDITORIAL MEDIA (Local Asset, Fragmented Integration)
-        ========================================================= */
-        .premium-symbolic-media {
-            position: absolute;
-            bottom: 0;
-            right: 0;
-            width: clamp(120px, 30%, 180px);
-            aspect-ratio: 1 / 1.2;
-            border-radius: 16px;
-            overflow: hidden;
-
-            /* Fades into background toward the outer bottom/right edges */
-            -webkit-mask-image: radial-gradient(circle at 0% 0%, rgba(0,0,0,1) 20%, rgba(0,0,0,0) 90%);
-            mask-image: radial-gradient(circle at 0% 0%, rgba(0,0,0,1) 20%, rgba(0,0,0,0) 90%);
-
-            pointer-events: none; /* purely decorative */
-            z-index: -1; /* Placed safely behind text */
-        }
-        .premium-symbolic-media img {
-            display: block;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            opacity: 0.30;
-            filter: contrast(1.1) brightness(0.9) saturate(0.85); /* cinematic feel */
-            transition: opacity 800ms ease;
-        }
-
-        .premium-page-folio {
-            position: absolute; right: 0; bottom: 116px; color: rgba(238, 234, 225, 0.25); font-family: 'Vazirmatn', sans-serif; font-size: 9px; font-weight: 500; letter-spacing: 0.2em; direction: ltr; user-select: none;
+        @keyframes gentleRise {
+            0% { opacity: 0; transform: translateY(16px); }
+            100% { opacity: 1; transform: translateY(0); }
         }
 
         /* =========================================================
-        NAVIGATION
-        ========================================================= */
+           NAVIGATION (BOTTOM BAR)
+           ========================================================= */
         .premium-navigation {
-            position: absolute; bottom: 0; left: 0; right: 0; z-index: 30; display: flex; justify-content: space-between; align-items: center; width: min(100%, 700px); margin: 0 auto; padding: 24px var(--story-side-padding); background: linear-gradient(to top, #0f100e 70%, transparent);
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            z-index: 30;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: var(--content-width);
+            margin: 0 auto;
+            padding: 24px var(--side-padding) max(24px, env(safe-area-inset-bottom));
+            background: linear-gradient(to top, var(--story-bg) 60%, transparent);
         }
         .premium-nav-button {
-            background: transparent; border: none; color: rgba(232, 227, 213, 0.6); font-size: 12px; font-weight: 300; letter-spacing: 0.1em; display: flex; align-items: center; gap: 8px; cursor: pointer; transition: color 300ms ease;
+            background: transparent; border: none;
+            color: var(--story-text-secondary);
+            font-size: 13px; font-weight: 400;
+            display: flex; align-items: center; gap: 8px;
+            cursor: pointer; transition: color 300ms ease;
+            font-family: inherit;
         }
-        .premium-nav-button:active { transform: translateY(1px); }
-        .premium-nav-button:disabled { opacity: 0.22; cursor: default; }
-        .premium-nav-button:first-child { justify-self: start; }
-        .premium-nav-button:last-child { justify-self: end; }
-        .premium-nav-button:hover, .premium-nav-button:active { color: #C4B48F; }
-        .premium-nav-arrow { font-size: 18px; font-family: monospace; }
-        .premium-nav-index { min-width: 38px; color: rgba(232, 227, 213, 0.4); font-size: 9px; font-weight: 500; letter-spacing: 0.14em; text-align: center; pointer-events: none; }
+        .premium-nav-button:disabled { opacity: 0.2; cursor: default; }
+        .premium-nav-button:not(:disabled):hover, .premium-nav-button:not(:disabled):active { color: var(--story-white); }
+        .premium-nav-arrow { font-size: 16px; margin-bottom: 2px; }
+
+        .premium-nav-index {
+            color: var(--story-text-faint);
+            font-size: 11px;
+            font-weight: 400;
+            letter-spacing: 0.2em;
+            pointer-events: none;
+        }
 
         /* =========================================================
-        12 SECTION THEMES — DISTINCT RHYTHMS & ATMOSPHERES
-        No hardcoded content. Pure CSS presentation shifts.
-        ========================================================= */
-        .premium-slide::before {
-            content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none; opacity: 0; transition: opacity 1000ms ease;
-        }
-        .premium-slide.is-active::before { opacity: 1; }
+           SECTION RHYTHMS & ATMOSPHERES (CSS Only)
+           ========================================================= */
 
-        /* 1. Discover: Spacious, mysterious, quiet entry */
-        .premium-page-type-discover::before { background: radial-gradient(circle at 50% 25%, rgba(166, 179, 159, 0.06), transparent 70%); }
-        .premium-page-type-discover .premium-editorial-page { padding-top: 18vh; }
-        .premium-page-type-discover .premium-editorial-title { font-size: clamp(30px, 7vw, 44px); color: #FFF; font-weight: 300; }
-        .premium-page-type-discover .premium-reading-column > p:first-of-type::before { display: none; }
+        /* 1. Discover: Spacious */
+        .premium-page-type-discover .premium-editorial-page { padding-top: 15vh; }
+        .premium-page-type-discover .premium-editorial-title { font-size: clamp(32px, 7.5vw, 48px); }
 
-        /* 2. Recognize: Tension, tighter composition, subtle divider */
-        .premium-page-type-recognize::before { background: radial-gradient(circle at 100% 50%, rgba(255, 255, 255, 0.02), transparent 60%); }
-        .premium-page-type-recognize .premium-page-content { border-right: 1px solid rgba(196, 180, 143, 0.12); padding-right: 20px; }
-        .premium-page-type-recognize .premium-highlight-text { font-size: clamp(20px, 4.5vw, 24px); font-weight: 400; color: #FFFFFF; }
-        .premium-page-type-recognize .premium-editorial-rule { margin-right: 0; width: 24px; }
+        /* 2. Recognize: Tension & Contrast */
+        .premium-page-type-recognize .premium-highlight-wrapper { border-color: var(--accent-gold); }
 
-        /* 3. Scene: Cinematic rhythm, slight fade into background */
-        .premium-page-type-scene::before { background: linear-gradient(to bottom, rgba(15, 16, 14, 0.1) 0%, transparent 40%, rgba(15, 16, 14, 0.6) 100%); }
-        .premium-page-type-scene .premium-reading-column { font-size: clamp(16.5px, 4vw, 19px); line-height: 2.3; opacity: 0.92; }
-        .premium-page-type-scene .premium-editorial-title { text-shadow: 0 4px 16px rgba(0,0,0,0.6); }
-        .premium-page-type-scene .premium-reading-column p:first-of-type::before { display: none; }
+        /* 3. Scene: Cinematic, comfortable reading */
+        .premium-page-type-scene .premium-reading-column p { line-height: 2.3; opacity: 0.95; }
 
-        /* 4. Respond: Actionable, highlight styled as a margin note */
-        .premium-page-type-respond::before { background: radial-gradient(circle at top right, rgba(210, 194, 172, 0.03), transparent 70%); }
-        .premium-page-type-respond .premium-highlight-wrapper {
-            margin: 32px 0 40px 0; padding: 20px 24px;
-            border-right: 2px solid var(--accent-gold-soft);
-            background: rgba(196,180,143,0.03);
-            text-align: right; border-radius: 8px 0 0 8px;
-        }
-        .premium-page-type-respond .premium-highlight-line { display: none; }
-        .premium-page-type-respond .premium-highlight-text { font-size: clamp(17px, 4.2vw, 19px); font-weight: 400; color: #FFF; font-style: normal; }
-
-        /* 5. Test: An experiment marker. NO PERCENTAGES, NO SCORES. */
-        .premium-page-type-test::before { background: linear-gradient(to bottom right, rgba(196, 180, 143, 0.04), transparent 50%); }
-        .premium-page-type-test .premium-reading-column p:first-of-type {
-            font-size: 1.05em; color: #FFF; padding-right: 24px;
-            border-right: 2px dashed rgba(196, 180, 143, 0.3); margin-bottom: 40px;
+        /* 4. Respond: Actionable formatting, subtle list-like rhythm */
+        .premium-page-type-respond .premium-reading-column p {
             position: relative;
+            padding-right: 1.5em;
         }
-        .premium-page-type-test .premium-reading-column p:first-of-type::before { display: none; }
-
-        /* 6. Reflect: Journal atmosphere, no inputs */
-        .premium-page-type-reflect::before { background: repeating-linear-gradient(to bottom, transparent, transparent 31px, rgba(196, 180, 143, 0.03) 31px, rgba(196, 180, 143, 0.03) 32px); }
-        .premium-page-type-reflect .premium-editorial-page { padding-top: 12vh; }
-        .premium-page-type-reflect .premium-reading-column { opacity: 0.85; line-height: 2.3; }
-        .premium-page-type-reflect .premium-editorial-rule { border-top: 1px solid rgba(196, 180, 143, 0.2); height: 0; background: transparent; }
-
-        /* 7. Context: Spatial, slightly wider perceived area */
-        .premium-page-type-context::before { background: linear-gradient(135deg, rgba(166, 179, 159, 0.04) 0%, transparent 100%); }
-        .premium-page-type-context .premium-editorial-page { padding-top: 14vh; }
-        .premium-page-type-context .premium-reading-column { width: 100%; padding: 0 4%; }
-        .premium-page-type-context .premium-reading-column p:first-of-type::before { display: none; }
-
-        /* 8. Translate: Duality / Offset styling for alternate paragraphs */
-        .premium-page-type-translate::before { background: linear-gradient(to right, rgba(255,255,255,0.02) 0%, transparent 50%, rgba(255,255,255,0.02) 100%); }
-        .premium-page-type-translate .premium-editorial-title { color: rgba(232, 227, 213, 0.9); }
-        .premium-page-type-translate .premium-reading-column > p:nth-of-type(even) {
-            margin-right: 6%; color: rgba(232, 227, 213, 0.75);
-            border-right: 1px solid rgba(255,255,255,0.08); padding-right: 20px;
-        }
-
-        /* 9. Mirror: Refined Desktop Editorial Image Integration */
-        .premium-page-type-mirror::before { background: radial-gradient(ellipse at 50% 50%, rgba(196, 180, 143, 0.05), transparent 70%); }
-        .premium-page-type-mirror .premium-reading-column { min-height: 200px; position: static; }
-        .premium-page-type-mirror .premium-reading-column p:first-of-type::before { display: none; }
-
-        /* Offset the opening content symmetrically to open a clear visual column for the image */
-        .premium-page-type-mirror .premium-editorial-kicker,
-        .premium-page-type-mirror .premium-editorial-title,
-        .premium-page-type-mirror .premium-editorial-lead,
-        .premium-page-type-mirror .premium-editorial-rule,
-        .premium-page-type-mirror .premium-reading-column > *:nth-child(2),
-        .premium-page-type-mirror .premium-reading-column > *:nth-child(3) {
-            margin-left: 36%;
-            transition: margin 0.5s ease;
-        }
-
-        /* Emancipate the image from the flow and anchor to the upper-left composition boundary */
-        .premium-page-type-mirror .premium-symbolic-media {
+        .premium-page-type-respond .premium-reading-column p::before {
+            content: "";
             position: absolute;
-            top: 0;
-            left: 0;
-            width: clamp(160px, 32%, 300px);
-            height: clamp(220px, 35vh, 320px);
-            bottom: auto;
-            right: auto;
-            border-radius: 16px;
-            /* Atmospheric editorial fade merging into the rightward reading area */
-            -webkit-mask-image: radial-gradient(120% 120% at 0% 0%, rgba(0,0,0,1) 40%, rgba(0,0,0,0) 100%);
-            mask-image: radial-gradient(120% 120% at 0% 0%, rgba(0,0,0,1) 40%, rgba(0,0,0,0) 100%);
-            z-index: 0;
-            pointer-events: none;
-            transform: none;
+            right: 0;
+            top: 0.85em;
+            width: 4px; height: 4px;
+            border-radius: 50%;
+            background: var(--accent-gold-soft);
+        }
+        .premium-page-type-respond .premium-highlight-wrapper {
+            background: var(--accent-gold-faint);
+            border-right: none;
+            border-radius: 8px;
+            padding: 24px;
         }
 
-        .premium-page-type-mirror .premium-symbolic-media img {
-            opacity: 0.85;
-            filter: contrast(1.1) brightness(0.9) saturate(0.85);
-            transition: opacity 800ms ease;
+        /* 5. Test: An invitation */
+        .premium-page-type-test .premium-reading-column p:first-of-type {
+            border-right: 1px dashed var(--accent-gold-soft);
+            padding-right: 1.5em;
+            font-size: 1.05em;
         }
 
-        .premium-page-type-mirror .premium-editorial-page:hover .premium-symbolic-media img {
-            opacity: 0.95;
+        /* 6. Reflect: Journal calm */
+        .premium-page-type-reflect .premium-reading-column p { opacity: 0.85; line-height: 2.4; }
+
+        /* 7. Context: Spatial layout */
+        .premium-page-type-context .premium-reading-column { max-width: 95%; }
+
+        /* 8. Translate: Alternating perspectives */
+        .premium-page-type-translate .premium-reading-column p:nth-of-type(even) {
+            padding-right: 2em;
+            opacity: 0.75;
+            border-right: 1px solid rgba(255,255,255,0.08);
         }
 
-        /* 10. Remember: Notes style, generous spacing */
-        .premium-page-type-remember::before { background: linear-gradient(180deg, rgba(196, 180, 143, 0.04) 0%, transparent 60%); }
-        .premium-page-type-remember .premium-reading-column p { margin-bottom: 48px; }
-
-        /* 11. Question: Open ended, large whitespace, centered alignment */
-        .premium-page-type-question::before { background: radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.03), transparent 60%); }
-        .premium-page-type-question .premium-editorial-page { padding-top: 15vh; }
-        .premium-page-type-question .premium-editorial-title,
-        .premium-page-type-question .premium-editorial-lead,
-        .premium-page-type-question .premium-editorial-kicker { justify-content: center; text-align: center; margin-left: auto; margin-right: auto; }
-        .premium-page-type-question .premium-editorial-kicker::before { display: none; }
-        .premium-page-type-question .premium-editorial-rule { margin: 32px auto; }
-        .premium-page-type-question .premium-reading-column p { text-align: center; font-size: clamp(18px, 4.5vw, 24px); line-height: 2.2; margin: 48px 0; color: #FFF; }
-        .premium-page-type-question .premium-reading-column p:first-of-type::before { display: none; }
-
-        /* 12. Integrate: Closing synthesis, quiet resolution */
-        .premium-page-type-integrate::before { background: radial-gradient(ellipse at 50% 100%, rgba(196, 180, 143, 0.1), transparent 80%); }
-        .premium-page-type-integrate .premium-editorial-page { padding-top: 15vh; }
-        .premium-page-type-integrate .premium-editorial-title { text-align: center; font-size: clamp(30px, 7vw, 44px); margin-left: auto; margin-right: auto; }
-        .premium-page-type-integrate .premium-editorial-lead { text-align: center; margin-left: auto; margin-right: auto; }
-        .premium-page-type-integrate .premium-editorial-kicker { justify-content: center; margin-left: auto; margin-right: auto; }
-        .premium-page-type-integrate .premium-editorial-kicker::before { display: none; }
-        .premium-page-type-integrate .premium-editorial-rule { margin: 40px auto 44px auto; }
-        .premium-page-type-integrate .premium-reading-column p { text-align: center; font-size: clamp(17px, 4vw, 20px); }
-        .premium-page-type-integrate .premium-reading-column p:first-of-type::before { display: none; }
-
-        @media (prefers-reduced-motion: reduce) {
-            .premium-slide, .premium-editorial-page, .premium-editorial-title, .premium-editorial-lead,
-            .premium-reading-column, .premium-nav-button, .premium-progress-mark,
-            .premium-highlight-wrapper, .premium-symbolic-media img {
-                transition: none !important; animation: none !important;
+        /* 9. Mirror: EXACT VISUAL COMPOSITION (Image Upper-Left, Text Right) */
+        @media (min-width: 601px) {
+            .premium-page-type-mirror .premium-page-content {
+                position: relative;
             }
-        }
-
-        /* Mobile Layout Protections */
-        @media (max-width: 600px) {
-            #premium-inner-world { min-height: 100dvh; }
-            .premium-header { padding-top: max(20px, env(safe-area-inset-top)); }
-            .premium-header-meta { font-size: 9px; letter-spacing: 0.12em; }
-            .premium-story-progress { margin-top: 16px; width: min(150px, 42vw); }
-
-            .premium-editorial-page { width: 100%; padding: 40px 24px 140px 24px; }
-            .premium-editorial-title { font-size: clamp(26px, 7vw, 32px); line-height: 1.45; }
-            .premium-editorial-lead { font-size: 16px; line-height: 2; margin-top: 16px; }
-            .premium-reading-column { font-size: 16px; line-height: 2.15; padding-bottom: 24px; width: 100%; }
-            .premium-reading-column p { margin-bottom: 28px; }
-            .premium-highlight-text { font-size: 18px; }
-
-            .premium-symbolic-media { width: clamp(100px, 35%, 130px); bottom: 10px; right: 10px; margin: 0; border-radius: 12px; }
-
-            /* Refined Mobile Mirror Flow — Intersecting title and text elegantly */
+            .premium-page-type-mirror .premium-symbolic-media {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 32%;
+                max-width: 240px;
+                aspect-ratio: 4/5;
+                border-radius: 6px;
+                overflow: hidden;
+                z-index: 10;
+            }
+            .premium-page-type-mirror .premium-symbolic-media img {
+                width: 100%; height: 100%; object-fit: cover;
+                opacity: 0.85; filter: grayscale(0.2);
+            }
+            /* Create the 2-column layout by padding text from the left */
             .premium-page-type-mirror .premium-editorial-kicker,
             .premium-page-type-mirror .premium-editorial-title,
             .premium-page-type-mirror .premium-editorial-lead,
             .premium-page-type-mirror .premium-editorial-rule,
-            .premium-page-type-mirror .premium-reading-column > *:nth-child(2),
-            .premium-page-type-mirror .premium-reading-column > *:nth-child(3) {
-                margin-left: 0;
+            .premium-page-type-mirror .premium-reading-column {
+                padding-left: clamp(34%, 34%, 280px);
             }
+        }
 
+        @media (max-width: 600px) {
+            .premium-page-type-mirror .premium-page-content {
+                display: flex;
+                flex-direction: column;
+            }
             .premium-page-type-mirror .premium-symbolic-media {
                 position: relative;
+                order: -1; /* Elevates above paragraph text */
                 width: 100%;
-                height: clamp(180px, 30vh, 260px);
-                margin: 16px 0 32px 0;
-                bottom: auto; right: auto; left: auto; top: auto;
-                border-radius: 16px;
-                -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 60%, rgba(0,0,0,0) 100%);
-                mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 60%, rgba(0,0,0,0) 100%);
-                z-index: 0;
+                height: clamp(200px, 35vh, 300px);
+                margin-bottom: 32px;
+                border-radius: 8px;
+                overflow: hidden;
             }
+            .premium-page-type-mirror .premium-symbolic-media img {
+                width: 100%; height: 100%; object-fit: cover;
+                opacity: 0.85; filter: grayscale(0.2);
+            }
+        }
 
-            .premium-page-margin { right: 4px; opacity: 0.5; }
+        /* 10. Remember: Distilled Insight */
+        .premium-page-type-remember .premium-reading-column p {
+            font-size: 1.1em; text-align: center; margin-bottom: 2.5em;
+        }
 
-            .premium-page-folio { bottom: 108px; }
-            .premium-navigation { grid-template-columns: 1fr auto 1fr; padding: 16px 20px max(18px, env(safe-area-inset-bottom)); }
-            .premium-nav-button { font-size: 11px; }
-            .premium-page-type-context .premium-reading-column { padding: 0; }
+        /* 11. Question: Open reflection */
+        .premium-page-type-question .premium-editorial-title,
+        .premium-page-type-question .premium-editorial-lead { text-align: center; }
+        .premium-page-type-question .premium-editorial-kicker { justify-content: center; }
+        .premium-page-type-question .premium-editorial-rule { margin: 40px auto; }
+        .premium-page-type-question .premium-reading-column p {
+            font-size: clamp(18px, 4.5vw, 22px); text-align: center; margin: 3em 0; line-height: 2.1;
+        }
+
+        /* 12. Integrate: Closing thoughts */
+        .premium-page-type-integrate .premium-editorial-title { text-align: center; font-size: clamp(30px, 7vw, 44px); }
+        .premium-page-type-integrate .premium-editorial-lead { text-align: center; }
+        .premium-page-type-integrate .premium-editorial-kicker { justify-content: center; }
+        .premium-page-type-integrate .premium-editorial-rule { margin: 40px auto; }
+        .premium-page-type-integrate .premium-reading-column p { text-align: center; opacity: 0.9; }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                transition: none !important; animation: none !important;
+            }
+        }
+
+        /* Mobile specific spacing refinements */
+        @media (max-width: 600px) {
+            .premium-editorial-kicker { margin-bottom: 20px; }
+            .premium-editorial-title { margin-bottom: 20px; }
+            .premium-editorial-rule { margin: 32px 0; }
         }
 
 
@@ -3430,20 +3348,18 @@
         </div>
 
 
- <!-- =========================================================
+     <!-- =========================================================
     PREMIUM INNER WORLD
-    Dark Editorial Psychological Experience
+    Refined Editorial Reading Experience
     ========================================================= -->
     <div id="premium-inner-world" hidden aria-hidden="true">
-        <div class="premium-atmosphere" aria-hidden="true">
-            <div class="premium-atmosphere-image"></div>
-            <div class="premium-atmosphere-vignette"></div>
-        </div>
+        <div class="premium-atmosphere" aria-hidden="true"></div>
 
         <header class="premium-header">
             <div class="premium-header-meta">
                 <span id="premium-section-label">دفتر درون</span>
-                <span id="premium-page-number">۰۱</span>
+                <!-- Kept structural ID intact, handled via logic -->
+                <span id="premium-page-number"></span>
             </div>
             <div id="premium-story-progress" class="premium-story-progress" aria-hidden="true"></div>
         </header>
@@ -3455,7 +3371,7 @@
                 <span class="premium-nav-arrow" aria-hidden="true">→</span>
                 <span id="premium-prev-btn-text">قبلی</span>
             </button>
-            <div id="premium-nav-index" class="premium-nav-index">01 — 06</div>
+            <div id="premium-nav-index" class="premium-nav-index">01 — 12</div>
             <button id="premium-btn-next" class="premium-nav-button premium-nav-next" type="button" onclick="nextPremiumSlide()">
                 <span id="premium-next-btn-text">ادامه</span>
                 <span class="premium-nav-arrow" aria-hidden="true">←</span>
@@ -3464,14 +3380,15 @@
     </div>
 
     <!-- Network Error UI -->
-    <div class="network-error-ui" id="network-error" style="display: none; position: fixed; inset: 0; z-index: 10000; background: #0f100e; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 24px;">
-        <svg viewBox="0 0 24 24" style="width: 48px; height: 48px; fill: var(--story-text-soft); margin-bottom: 16px;"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.36 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM17 13l-5 5-5-5h3V9h4v4h3z"/></svg>
-        <h3 style="color: #F4F1EA; font-weight: 400; margin-bottom: 10px;">ارتباط با سرور کُند است</h3>
-        <p style="color: rgba(244, 241, 234, 0.70); font-size: 14px; margin-bottom: 30px; max-width: 250px; line-height: 1.8;">سیگنال‌های ذهن شما در مسیر ارتباطی گیر کرده‌اند. لطفاً اینترنت خود را بررسی کنید.</p>
-        <button class="btn-start" onclick="loadAnalysis()" style="background: transparent; border: 1px solid #C4B48F; color: #C4B48F; padding: 12px 24px; border-radius: 4px; cursor: pointer;">تلاش مجدد</button>
+    <div class="network-error-ui" id="network-error" style="display: none; position: fixed; inset: 0; z-index: 10000; background: var(--story-bg); flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 24px;">
+        <svg viewBox="0 0 24 24" style="width: 48px; height: 48px; fill: var(--story-text-secondary); margin-bottom: 16px;"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.36 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM17 13l-5 5-5-5h3V9h4v4h3z"/></svg>
+        <h3 style="color: var(--story-white); font-weight: 300; margin-bottom: 12px; font-size: 20px;">ارتباط با سرور کُند است</h3>
+        <p style="color: var(--story-text-secondary); font-size: 15px; margin-bottom: 32px; max-width: 280px; line-height: 1.8;">سیگنال‌های ذهن شما در مسیر ارتباطی گیر کرده‌اند. لطفاً اینترنت خود را بررسی کنید.</p>
+        <button class="btn-start" onclick="loadAnalysis()" style="background: transparent; border: 1px solid var(--accent-gold); color: var(--accent-gold); padding: 12px 28px; font-family: inherit; border-radius: 4px; cursor: pointer; font-size: 14px;">تلاش مجدد</button>
     </div>
     <!-- Dummy Loading Overlay for context if needed -->
     <div id="loading-overlay" style="display: none;"></div>
+
         <script>
             // ✅ Main Logic (Untouched functionally, only UI constants updated)
             const tg = window.Telegram.WebApp;
@@ -3883,7 +3800,7 @@
             }
 
 
-        function escapeHTML(str) {
+            function escapeHTML(str) {
                 if (!str) return '';
                 return str.replace(/[&<>'"]/g,
                     tag => ({
@@ -3896,25 +3813,126 @@
                 );
             }
 
-            // --- Configuration --- //
-            // 1. MUST BE LOCAL.
-            // 2. Used as an atmospheric fragment in MIRROR section. Not a poster.
+
             const MEDIA_VISUAL_ASSET = "fantastic.webp";
 
             // --- 12 Theme Mapping System ---
             const sectionThemes = {
-                discover: { icon: "🌌", style: "discover" },
-                recognize: { icon: "👁", style: "recognize" },
-                scene: { icon: "🎬", style: "scene" },
-                respond: { icon: "🧭", style: "respond" },
-                test: { icon: "⚖️", style: "test" },
-                reflect: { icon: "📓", style: "reflect" },
-                contextualize: { icon: "🕸", style: "context" },
-                translate: { icon: "🗝", style: "translate" },
-                mirror: { icon: "🪞", style: "mirror" },
-                remember: { icon: "📌", style: "remember" },
-                question: { icon: "❔", style: "question" },
-                integrate: { icon: "🔗", style: "integrate" },
+                discover: {
+                    icon: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 2.5l1.65 6.2L20 10.5l-6.35 1.8L12 18.5l-1.65-6.2L4 10.5l6.35-1.8L12 2.5z"/>
+                        <path d="M19 17l.6 2.4L22 20l-2.4.6L19 23l-.6-2.4L16 20l2.4-.6L19 17z"/>
+                    </svg>`,
+                    style: "discover"
+                },
+
+                recognize: {
+                    icon: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M2.5 12s3.4-6.5 9.5-6.5 9.5 6.5 9.5 6.5-3.4 6.5-9.5 6.5S2.5 12 2.5 12z"/>
+                        <circle cx="12" cy="12" r="2.8"/>
+                    </svg>`,
+                    style: "recognize"
+                },
+
+                scene: {
+                    icon: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="4" width="18" height="16" rx="2"/>
+                        <path d="M3 16l5-5 3.5 3.5 2.5-2.5 7 6.5"/>
+                        <circle cx="8.5" cy="8.5" r="1.5"/>
+                    </svg>`,
+                    style: "scene"
+                },
+
+                respond: {
+                    icon: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="8.5"/>
+                        <path d="M12 5.5v6.5l4 2"/>
+                    </svg>`,
+                    style: "respond"
+                },
+
+                test: {
+                    icon: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 4v16"/>
+                        <path d="M5 7h14"/>
+                        <path d="M7 7l-3 8h6L7 7z"/>
+                        <path d="M17 7l-3 8h6l-3-8z"/>
+                    </svg>`,
+                    style: "test"
+                },
+
+                reflect: {
+                    icon: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M5 19.5A2.5 2.5 0 0 1 7.5 17H20"/>
+                        <path d="M7.5 2H20v20H7.5A2.5 2.5 0 0 1 5 19.5v-15A2.5 2.5 0 0 1 7.5 2z"/>
+                        <path d="M9 7h7"/>
+                        <path d="M9 11h5"/>
+                    </svg>`,
+                    style: "reflect"
+                },
+
+                contextualize: {
+                    icon: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="6" cy="12" r="2.5"/>
+                        <circle cx="18" cy="6" r="2.5"/>
+                        <circle cx="18" cy="18" r="2.5"/>
+                        <path d="M8.3 10.8l7.4-3.6"/>
+                        <path d="M8.3 13.2l7.4 3.6"/>
+                    </svg>`,
+                    style: "context"
+                },
+
+                translate: {
+                    icon: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M4 5h8"/>
+                        <path d="M8 5c0 5-2.2 8-5 10"/>
+                        <path d="M5 10c1.2 1.7 2.7 3 4.8 4"/>
+                        <path d="M14 17h7"/>
+                        <path d="M17.5 11l-4 10"/>
+                        <path d="M15.5 16h4"/>
+                    </svg>`,
+                    style: "translate"
+                },
+
+                mirror: {
+                    icon: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="5" y="2.5" width="14" height="19" rx="7"/>
+                        <path d="M12 3v18"/>
+                        <path d="M9 8c1.5-1 2.5-1 3 0"/>
+                        <path d="M15 8c-1.5-1-2.5-1-3 0"/>
+                    </svg>`,
+                    style: "mirror"
+                },
+
+                remember: {
+                    icon: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M8 4.5A4 4 0 0 1 12 2a4 4 0 0 1 4 2.5"/>
+                        <path d="M7 7h10"/>
+                        <path d="M8 7v4.5c0 1.7-.8 2.8-2.2 3.8A3.5 3.5 0 0 0 4 18h16a3.5 3.5 0 0 0-1.8-2.7c-1.4-1-2.2-2.1-2.2-3.8V7"/>
+                        <path d="M9 21h6"/>
+                        <path d="M12 18v3"/>
+                    </svg>`,
+                    style: "remember"
+                },
+
+                question: {
+                    icon: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="9"/>
+                        <path d="M9.5 9a2.7 2.7 0 1 1 4.7 1.8c-.9 1-2.2 1.5-2.2 3"/>
+                        <circle cx="12" cy="17.5" r=".7" fill="currentColor" stroke="none"/>
+                    </svg>`,
+                    style: "question"
+                },
+
+                integrate: {
+                    icon: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M9 15l6-6"/>
+                        <path d="M7.5 18.5l-2 2a4.2 4.2 0 0 1-6-6l3-3a4.2 4.2 0 0 1 6 0"/>
+                        <path d="M16.5 5.5l2-2a4.2 4.2 0 0 1 6 6l-3 3a4.2 4.2 0 0 1-6 0"/>
+                    </svg>`,
+                    style: "integrate"
+                },
+
                 // Fallbacks for structural resilience
                 friction: { style: "recognize" },
                 context: { style: "context" }
@@ -4089,7 +4107,6 @@
 
                 renderPremiumProgress();
 
-                // Standard interface updates if applicable
                 if (typeof updatePremiumUI === 'function') updatePremiumUI();
                 if (window.Telegram?.WebApp?.MainButton) window.Telegram.WebApp.MainButton.hide();
             }
@@ -4119,7 +4136,6 @@
                     navIndex.innerText = `${String(currentPremiumSlideIndex + 1).padStart(2, '0')} — ${String(premiumSlides.length).padStart(2, '0')}`;
                 }
 
-                // Button states
                 const prevBtn = document.getElementById('premium-btn-prev');
                 const nextBtn = document.getElementById('premium-btn-next');
                 if (prevBtn) prevBtn.disabled = currentPremiumSlideIndex === 0;
@@ -4129,8 +4145,6 @@
                 }
             }
 
-            // Basic mock implementations of navigation to ensure visual logic functions stand-alone
-            // if native ones are externalized.
             window.prevPremiumSlide = function() {
                 if (currentPremiumSlideIndex <= 0) return;
                 switchSlide(currentPremiumSlideIndex, currentPremiumSlideIndex - 1);
@@ -4185,8 +4199,6 @@
                 return safeTitle;
             }
 
-            // --- View Building Helpers --- //
-
             function renderSectionHeader(slide, index) {
                 const defaultIcon = slide.type ? (sectionThemes[slide.type.toLowerCase()]?.icon || '') : '';
                 const icon = slide.icon || defaultIcon;
@@ -4194,7 +4206,7 @@
 
                 let html = `
                     <div class="premium-editorial-kicker">
-                        ${icon ? `<span style="font-size: 1.2em; margin-left: 8px;">${icon}</span>` : ''}${escapeHTML(chapterText)}
+                        ${icon ? `<span>${icon}</span>` : ''}${escapeHTML(chapterText)}
                     </div>
                 `;
 
@@ -4210,7 +4222,7 @@
 
             function renderAtmosphericMedia(type) {
                 const t = (type || '').toLowerCase();
-                // Restraint: Image is only used in MIRROR. It is small, local, and atmospheric.
+                // Displayed in MIRROR top-left as integrated composition
                 if (t !== 'mirror') return '';
 
                 return `
@@ -4221,12 +4233,10 @@
             }
 
             function buildPremiumSlideHTML(slide, index) {
-                const isOpening = slide.type === 'opening' || index === 0;
                 const pageType = getSectionStyle(slide.type);
 
                 return `
-                    <article class="premium-editorial-page ${isOpening ? 'premium-opening' : ''} premium-page-type-${pageType}" data-page="${index + 1}">
-                        <div class="premium-page-margin" aria-hidden="true"></div>
+                    <div class="premium-editorial-page premium-page-type-${pageType}" data-page="${index + 1}">
                         <div class="premium-page-content">
                             ${renderSectionHeader(slide, index)}
                             <div class="premium-editorial-rule" aria-hidden="true"></div>
@@ -4236,8 +4246,7 @@
                                 ${formatPremiumContent(slide.content)}
                             </div>
                         </div>
-                        <div class="premium-page-folio" aria-hidden="true">${String(index + 1).padStart(2, '0')}</div>
-                    </article>
+                    </div>
                 `;
             }
 
@@ -4257,7 +4266,7 @@
                     if (!paragraph.length) return;
                     let content = paragraph.join('<br>');
 
-                    // Persist backend list structures cleanly
+                    // Preserve list styles logically
                     if (content.match(/^- /m) || content.match(/^• /m)) {
                         let listHtml = content.split('<br>').map(line => {
                             if (line.trim().startsWith('-') || line.trim().startsWith('•')) {
@@ -4270,7 +4279,7 @@
                         return;
                     }
 
-                    // Safely extract one pull quote/highlight per slide natively derived from content
+                    // Safely extract highlight directly from original content data
                     if (!highlightUsed) {
                         const parts = content.split(/([.!?؟]+(?:\s+|$))/);
                         let reconstructed = [];
@@ -4282,7 +4291,6 @@
                             let rawText = fullSentence.replace(/<[^>]*>?/gm, '').trim();
                             let wordCount = rawText.split(/\s+/).length;
 
-                            // Extraction logic for a safe, editorial pull-quote length
                             if (!highlightUsed && rawText.length >= 30 && rawText.length <= 150 && wordCount >= 4) {
                                 highlightUsed = true;
                                 reconstructed.push(`</p>
