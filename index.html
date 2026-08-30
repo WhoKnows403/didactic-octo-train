@@ -7,7 +7,7 @@
         <script src="https://telegram.org/js/telegram-web-app.js"></script>
         <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@200;300;400;500;600&display=swap" rel="stylesheet">
         <style>
-            :root {
+:root {
                 /* =========================================================
                 RESULT STORY — VISUAL SYSTEM
                 Human / Editorial / Cinematic / Intimate
@@ -2804,7 +2804,7 @@
         }
 
 
-        /* =========================================================
+  /* =========================================================
         PREMIUM INNER WORLD — DARK EDITORIAL EXPERIENCE
         ========================================================= */
         #premium-inner-world {
@@ -3126,9 +3126,6 @@
             filter: contrast(1.1) brightness(0.9) saturate(0.85); /* cinematic feel */
             transition: opacity 800ms ease;
         }
-        .premium-page-type-mirror .premium-editorial-page:hover .premium-symbolic-media img {
-            opacity: 0.40;
-        }
 
         .premium-page-folio {
             position: absolute; right: 0; bottom: 116px; color: rgba(238, 234, 225, 0.25); font-family: 'Vazirmatn', sans-serif; font-size: 9px; font-weight: 500; letter-spacing: 0.2em; direction: ltr; user-select: none;
@@ -3218,10 +3215,49 @@
             border-right: 1px solid rgba(255,255,255,0.08); padding-right: 20px;
         }
 
-        /* 9. Mirror: Local atmospheric fragment image */
+        /* 9. Mirror: Refined Desktop Editorial Image Integration */
         .premium-page-type-mirror::before { background: radial-gradient(ellipse at 50% 50%, rgba(196, 180, 143, 0.05), transparent 70%); }
-        .premium-page-type-mirror .premium-reading-column { min-height: 200px; }
+        .premium-page-type-mirror .premium-reading-column { min-height: 200px; position: static; }
         .premium-page-type-mirror .premium-reading-column p:first-of-type::before { display: none; }
+
+        /* Offset the opening content symmetrically to open a clear visual column for the image */
+        .premium-page-type-mirror .premium-editorial-kicker,
+        .premium-page-type-mirror .premium-editorial-title,
+        .premium-page-type-mirror .premium-editorial-lead,
+        .premium-page-type-mirror .premium-editorial-rule,
+        .premium-page-type-mirror .premium-reading-column > *:nth-child(2),
+        .premium-page-type-mirror .premium-reading-column > *:nth-child(3) {
+            margin-left: 36%;
+            transition: margin 0.5s ease;
+        }
+
+        /* Emancipate the image from the flow and anchor to the upper-left composition boundary */
+        .premium-page-type-mirror .premium-symbolic-media {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: clamp(160px, 32%, 300px);
+            height: clamp(220px, 35vh, 320px);
+            bottom: auto;
+            right: auto;
+            border-radius: 16px;
+            /* Atmospheric editorial fade merging into the rightward reading area */
+            -webkit-mask-image: radial-gradient(120% 120% at 0% 0%, rgba(0,0,0,1) 40%, rgba(0,0,0,0) 100%);
+            mask-image: radial-gradient(120% 120% at 0% 0%, rgba(0,0,0,1) 40%, rgba(0,0,0,0) 100%);
+            z-index: 0;
+            pointer-events: none;
+            transform: none;
+        }
+
+        .premium-page-type-mirror .premium-symbolic-media img {
+            opacity: 0.85;
+            filter: contrast(1.1) brightness(0.9) saturate(0.85);
+            transition: opacity 800ms ease;
+        }
+
+        .premium-page-type-mirror .premium-editorial-page:hover .premium-symbolic-media img {
+            opacity: 0.95;
+        }
 
         /* 10. Remember: Notes style, generous spacing */
         .premium-page-type-remember::before { background: linear-gradient(180deg, rgba(196, 180, 143, 0.04) 0%, transparent 60%); }
@@ -3272,6 +3308,29 @@
             .premium-highlight-text { font-size: 18px; }
 
             .premium-symbolic-media { width: clamp(100px, 35%, 130px); bottom: 10px; right: 10px; margin: 0; border-radius: 12px; }
+
+            /* Refined Mobile Mirror Flow — Intersecting title and text elegantly */
+            .premium-page-type-mirror .premium-editorial-kicker,
+            .premium-page-type-mirror .premium-editorial-title,
+            .premium-page-type-mirror .premium-editorial-lead,
+            .premium-page-type-mirror .premium-editorial-rule,
+            .premium-page-type-mirror .premium-reading-column > *:nth-child(2),
+            .premium-page-type-mirror .premium-reading-column > *:nth-child(3) {
+                margin-left: 0;
+            }
+
+            .premium-page-type-mirror .premium-symbolic-media {
+                position: relative;
+                width: 100%;
+                height: clamp(180px, 30vh, 260px);
+                margin: 16px 0 32px 0;
+                bottom: auto; right: auto; left: auto; top: auto;
+                border-radius: 16px;
+                -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 60%, rgba(0,0,0,0) 100%);
+                mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 60%, rgba(0,0,0,0) 100%);
+                z-index: 0;
+            }
+
             .premium-page-margin { right: 4px; opacity: 0.5; }
 
             .premium-page-folio { bottom: 108px; }
@@ -3279,6 +3338,7 @@
             .premium-nav-button { font-size: 11px; }
             .premium-page-type-context .premium-reading-column { padding: 0; }
         }
+
 
         </style>
     <body>
@@ -3370,8 +3430,7 @@
         </div>
 
 
-
-    <!-- =========================================================
+ <!-- =========================================================
     PREMIUM INNER WORLD
     Dark Editorial Psychological Experience
     ========================================================= -->
@@ -3411,7 +3470,6 @@
         <p style="color: rgba(244, 241, 234, 0.70); font-size: 14px; margin-bottom: 30px; max-width: 250px; line-height: 1.8;">سیگنال‌های ذهن شما در مسیر ارتباطی گیر کرده‌اند. لطفاً اینترنت خود را بررسی کنید.</p>
         <button class="btn-start" onclick="loadAnalysis()" style="background: transparent; border: 1px solid #C4B48F; color: #C4B48F; padding: 12px 24px; border-radius: 4px; cursor: pointer;">تلاش مجدد</button>
     </div>
-
     <!-- Dummy Loading Overlay for context if needed -->
     <div id="loading-overlay" style="display: none;"></div>
         <script>
@@ -3825,7 +3883,7 @@
             }
 
 
-            function escapeHTML(str) {
+        function escapeHTML(str) {
                 if (!str) return '';
                 return str.replace(/[&<>'"]/g,
                     tag => ({
@@ -4259,6 +4317,7 @@
                 html = html.replace(/<p><\/p>/g, '');
                 return html;
             }
+
 
             function getComparisonSlideMeta(titleText) {
                 let meta = { chapter: "", whisper: "" };
