@@ -2817,7 +2817,7 @@
             animation: fadeInWorld 1s var(--story-ease) forwards;
         }
 
-        /* Subtle organic noise, removed heavy gradients */
+        /* Subtle organic noise */
         #premium-inner-world::after {
             content: "";
             position: absolute;
@@ -2834,12 +2834,35 @@
             to { opacity: 1; }
         }
 
+        /* =========================================================
+           RESTORED ATMOSPHERIC BACKGROUND
+           ========================================================= */
         .premium-atmosphere {
             position: absolute;
             inset: 0;
             z-index: -1;
             pointer-events: none;
-            background: radial-gradient(ellipse at top center, rgba(196, 180, 143, 0.03) 0%, transparent 70%);
+            background-color: var(--story-bg);
+        }
+
+        .premium-atmosphere::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background-image: url('inner_world.webp');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            opacity: 0.25;
+            mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,0.1) 80%);
+            -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,0.1) 80%);
+        }
+
+        .premium-atmosphere::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to bottom, rgba(12, 13, 12, 0.2) 0%, var(--story-bg) 85%);
         }
 
         /* =========================================================
@@ -2892,13 +2915,13 @@
         }
 
         /* =========================================================
-           SLIDES SYSTEM
+           SLIDES SYSTEM & OVERFLOW FIXES
            ========================================================= */
         .premium-slides-wrapper {
             position: relative;
             flex: 1 1 auto;
             width: 100%;
-            height: 100%;
+            min-height: 0; /* Let flex handle boundaries */
             margin: 0 auto;
             overflow: hidden;
             z-index: 1;
@@ -2910,6 +2933,7 @@
             width: 100%;
             height: 100%;
             overflow-y: auto;
+            overflow-x: hidden;
             scrollbar-width: none;
             opacity: 0;
             visibility: hidden;
@@ -2947,9 +2971,10 @@
         .premium-page-content {
             position: relative;
             width: 100%;
+            min-width: 0;
         }
 
-        /* Subdued kicker / Icon */
+        /* Subdued kicker / Lightweight SVG Icon */
         .premium-editorial-kicker {
             color: var(--accent-gold);
             font-size: 11px;
@@ -2963,21 +2988,37 @@
         }
 
         .premium-editorial-kicker span {
-            font-size: 14px !important;
-            opacity: 0.6;
-            filter: grayscale(0.3);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 18px;
+            height: 18px;
+            opacity: 0;
+            transform: translateY(4px);
+        }
+
+        .premium-editorial-kicker span svg {
+            width: 100%;
+            height: 100%;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 1.5;
+            stroke-linecap: round;
+            stroke-linejoin: round;
         }
 
         .premium-editorial-title {
             color: var(--story-white);
             font-size: clamp(28px, 6.5vw, 42px);
             font-weight: 300;
-            line-height: 1.35;
+            line-height: 1.4;
             letter-spacing: -0.01em;
             text-align: right;
             margin: 0 0 24px 0;
             word-wrap: break-word;
-            overflow-wrap: break-word;
+            overflow-wrap: anywhere;
+            word-break: normal;
+            padding-bottom: 0.1em; /* prevents descender clipping */
         }
 
         .premium-editorial-lead {
@@ -3017,7 +3058,6 @@
             word-wrap: break-word;
         }
 
-        /* Remove the old hardcoded line marker, use subtle typography */
         .premium-reading-column > p:first-of-type {
             color: var(--story-white);
         }
@@ -3051,11 +3091,13 @@
            HIGHLIGHT / QUOTE EXTRACT
            ========================================================= */
         .premium-highlight-wrapper {
-            margin: 4em 0;
-            padding: 0 24px;
+            margin: 3em 0;
+            padding: 24px 32px 24px 24px;
             border-right: 2px solid var(--accent-gold-soft);
+            background: linear-gradient(to left, rgba(196,180,143,0.05) 0%, transparent 100%);
+            border-radius: 4px 0 0 4px;
         }
-        .premium-highlight-line { display: none; } /* Hid the decorative structural lines to clean up UI */
+        .premium-highlight-line { display: none; }
         .premium-highlight-text {
             font-size: clamp(20px, 4.8vw, 26px);
             line-height: 1.8;
@@ -3066,6 +3108,10 @@
         /* =========================================================
            SUBTLE ENTRY ANIMATIONS
            ========================================================= */
+        .premium-slide.is-active .premium-editorial-kicker span {
+            animation: iconFadeIn 600ms var(--story-ease) forwards;
+            animation-delay: 150ms;
+        }
         .premium-slide.is-active .premium-editorial-title {
             opacity: 0; animation: gentleRise 800ms var(--story-ease) forwards; animation-delay: 100ms;
         }
@@ -3077,6 +3123,11 @@
         .premium-slide.is-active .premium-reading-column > p:nth-child(1), .premium-slide.is-active .premium-symbolic-media { animation-delay: 200ms; }
         .premium-slide.is-active .premium-reading-column > p:nth-child(2) { animation-delay: 300ms; }
         .premium-slide.is-active .premium-reading-column > p:nth-child(3) { animation-delay: 400ms; }
+
+        @keyframes iconFadeIn {
+            0% { opacity: 0; transform: translateY(4px); }
+            100% { opacity: 0.8; transform: translateY(0); }
+        }
 
         @keyframes gentleRise {
             0% { opacity: 0; transform: translateY(16px); }
@@ -3122,17 +3173,13 @@
            SECTION RHYTHMS & ATMOSPHERES (CSS Only)
            ========================================================= */
 
-        /* 1. Discover: Spacious */
         .premium-page-type-discover .premium-editorial-page { padding-top: 15vh; }
         .premium-page-type-discover .premium-editorial-title { font-size: clamp(32px, 7.5vw, 48px); }
 
-        /* 2. Recognize: Tension & Contrast */
         .premium-page-type-recognize .premium-highlight-wrapper { border-color: var(--accent-gold); }
 
-        /* 3. Scene: Cinematic, comfortable reading */
         .premium-page-type-scene .premium-reading-column p { line-height: 2.3; opacity: 0.95; }
 
-        /* 4. Respond: Actionable formatting, subtle list-like rhythm */
         .premium-page-type-respond .premium-reading-column p {
             position: relative;
             padding-right: 1.5em;
@@ -3153,82 +3200,70 @@
             padding: 24px;
         }
 
-        /* 5. Test: An invitation */
         .premium-page-type-test .premium-reading-column p:first-of-type {
             border-right: 1px dashed var(--accent-gold-soft);
             padding-right: 1.5em;
             font-size: 1.05em;
         }
 
-        /* 6. Reflect: Journal calm */
         .premium-page-type-reflect .premium-reading-column p { opacity: 0.85; line-height: 2.4; }
 
-        /* 7. Context: Spatial layout */
         .premium-page-type-context .premium-reading-column { max-width: 95%; }
 
-        /* 8. Translate: Alternating perspectives */
         .premium-page-type-translate .premium-reading-column p:nth-of-type(even) {
             padding-right: 2em;
             opacity: 0.75;
             border-right: 1px solid rgba(255,255,255,0.08);
         }
 
-        /* 9. Mirror: EXACT VISUAL COMPOSITION (Image Upper-Left, Text Right) */
-        @media (min-width: 601px) {
-            .premium-page-type-mirror .premium-page-content {
-                position: relative;
-            }
-            .premium-page-type-mirror .premium-symbolic-media {
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 32%;
-                max-width: 240px;
-                aspect-ratio: 4/5;
-                border-radius: 6px;
-                overflow: hidden;
-                z-index: 10;
-            }
-            .premium-page-type-mirror .premium-symbolic-media img {
-                width: 100%; height: 100%; object-fit: cover;
-                opacity: 0.85; filter: grayscale(0.2);
-            }
-            /* Create the 2-column layout by padding text from the left */
-            .premium-page-type-mirror .premium-editorial-kicker,
-            .premium-page-type-mirror .premium-editorial-title,
-            .premium-page-type-mirror .premium-editorial-lead,
-            .premium-page-type-mirror .premium-editorial-rule,
-            .premium-page-type-mirror .premium-reading-column {
-                padding-left: clamp(34%, 34%, 280px);
-            }
+        /* 9. Mirror: REFINED EDITORIAL GRID (Preserves RTL layout perfectly) */
+        .premium-page-type-mirror .premium-page-content {
+            display: grid;
+            grid-template-columns: 1fr clamp(100px, 25vw, 220px);
+            align-items: start;
+            column-gap: clamp(20px, 5vw, 40px);
         }
 
-        @media (max-width: 600px) {
-            .premium-page-type-mirror .premium-page-content {
-                display: flex;
-                flex-direction: column;
-            }
-            .premium-page-type-mirror .premium-symbolic-media {
-                position: relative;
-                order: -1; /* Elevates above paragraph text */
-                width: 100%;
-                height: clamp(200px, 35vh, 300px);
-                margin-bottom: 32px;
-                border-radius: 8px;
-                overflow: hidden;
-            }
-            .premium-page-type-mirror .premium-symbolic-media img {
-                width: 100%; height: 100%; object-fit: cover;
-                opacity: 0.85; filter: grayscale(0.2);
-            }
+        .premium-page-type-mirror .premium-editorial-kicker { grid-column: 1; grid-row: 1; margin-bottom: clamp(16px, 4vw, 24px); }
+        .premium-page-type-mirror .premium-editorial-title { grid-column: 1; grid-row: 2; margin-bottom: clamp(16px, 4vw, 24px); }
+        .premium-page-type-mirror .premium-editorial-lead { grid-column: 1; grid-row: 3; margin-bottom: clamp(16px, 4vw, 24px); }
+        .premium-page-type-mirror .premium-editorial-rule { grid-column: 1; grid-row: 4; }
+
+        .premium-page-type-mirror .premium-reading-column {
+            display: contents;
         }
 
-        /* 10. Remember: Distilled Insight */
+        .premium-page-type-mirror .premium-symbolic-media {
+            grid-column: 2;
+            grid-row: 1 / 5;
+            width: 100%;
+            aspect-ratio: 3/4;
+            border-radius: 8px;
+            overflow: hidden;
+            margin: 0;
+            mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
+            -webkit-mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
+        }
+
+        .premium-page-type-mirror .premium-symbolic-media img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.9;
+            filter: contrast(1.05) brightness(0.95);
+        }
+
+        /* The main reading body drops below the header composition */
+        .premium-page-type-mirror .premium-reading-column > * {
+            grid-column: 1 / -1;
+        }
+
+        /* 10. Remember */
         .premium-page-type-remember .premium-reading-column p {
             font-size: 1.1em; text-align: center; margin-bottom: 2.5em;
         }
 
-        /* 11. Question: Open reflection */
+        /* 11. Question */
         .premium-page-type-question .premium-editorial-title,
         .premium-page-type-question .premium-editorial-lead { text-align: center; }
         .premium-page-type-question .premium-editorial-kicker { justify-content: center; }
@@ -3237,7 +3272,7 @@
             font-size: clamp(18px, 4.5vw, 22px); text-align: center; margin: 3em 0; line-height: 2.1;
         }
 
-        /* 12. Integrate: Closing thoughts */
+        /* 12. Integrate */
         .premium-page-type-integrate .premium-editorial-title { text-align: center; font-size: clamp(30px, 7vw, 44px); }
         .premium-page-type-integrate .premium-editorial-lead { text-align: center; }
         .premium-page-type-integrate .premium-editorial-kicker { justify-content: center; }
@@ -3250,7 +3285,6 @@
             }
         }
 
-        /* Mobile specific spacing refinements */
         @media (max-width: 600px) {
             .premium-editorial-kicker { margin-bottom: 20px; }
             .premium-editorial-title { margin-bottom: 20px; }
@@ -3348,7 +3382,7 @@
         </div>
 
 
-     <!-- =========================================================
+    <!-- =========================================================
     PREMIUM INNER WORLD
     Refined Editorial Reading Experience
     ========================================================= -->
@@ -3358,7 +3392,6 @@
         <header class="premium-header">
             <div class="premium-header-meta">
                 <span id="premium-section-label">دفتر درون</span>
-                <!-- Kept structural ID intact, handled via logic -->
                 <span id="premium-page-number"></span>
             </div>
             <div id="premium-story-progress" class="premium-story-progress" aria-hidden="true"></div>
@@ -3813,127 +3846,24 @@
                 );
             }
 
-
+            // --- Configuration --- //
+            // Local Asset, used as an atmospheric editorial visual in MIRROR section.
             const MEDIA_VISUAL_ASSET = "fantastic.webp";
 
-            // --- 12 Theme Mapping System ---
+            // --- 12 Theme Mapping System (Upgraded to pure SVG lines) ---
             const sectionThemes = {
-                discover: {
-                    icon: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M12 2.5l1.65 6.2L20 10.5l-6.35 1.8L12 18.5l-1.65-6.2L4 10.5l6.35-1.8L12 2.5z"/>
-                        <path d="M19 17l.6 2.4L22 20l-2.4.6L19 23l-.6-2.4L16 20l2.4-.6L19 17z"/>
-                    </svg>`,
-                    style: "discover"
-                },
-
-                recognize: {
-                    icon: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M2.5 12s3.4-6.5 9.5-6.5 9.5 6.5 9.5 6.5-3.4 6.5-9.5 6.5S2.5 12 2.5 12z"/>
-                        <circle cx="12" cy="12" r="2.8"/>
-                    </svg>`,
-                    style: "recognize"
-                },
-
-                scene: {
-                    icon: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
-                        <rect x="3" y="4" width="18" height="16" rx="2"/>
-                        <path d="M3 16l5-5 3.5 3.5 2.5-2.5 7 6.5"/>
-                        <circle cx="8.5" cy="8.5" r="1.5"/>
-                    </svg>`,
-                    style: "scene"
-                },
-
-                respond: {
-                    icon: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
-                        <circle cx="12" cy="12" r="8.5"/>
-                        <path d="M12 5.5v6.5l4 2"/>
-                    </svg>`,
-                    style: "respond"
-                },
-
-                test: {
-                    icon: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M12 4v16"/>
-                        <path d="M5 7h14"/>
-                        <path d="M7 7l-3 8h6L7 7z"/>
-                        <path d="M17 7l-3 8h6l-3-8z"/>
-                    </svg>`,
-                    style: "test"
-                },
-
-                reflect: {
-                    icon: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M5 19.5A2.5 2.5 0 0 1 7.5 17H20"/>
-                        <path d="M7.5 2H20v20H7.5A2.5 2.5 0 0 1 5 19.5v-15A2.5 2.5 0 0 1 7.5 2z"/>
-                        <path d="M9 7h7"/>
-                        <path d="M9 11h5"/>
-                    </svg>`,
-                    style: "reflect"
-                },
-
-                contextualize: {
-                    icon: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
-                        <circle cx="6" cy="12" r="2.5"/>
-                        <circle cx="18" cy="6" r="2.5"/>
-                        <circle cx="18" cy="18" r="2.5"/>
-                        <path d="M8.3 10.8l7.4-3.6"/>
-                        <path d="M8.3 13.2l7.4 3.6"/>
-                    </svg>`,
-                    style: "context"
-                },
-
-                translate: {
-                    icon: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M4 5h8"/>
-                        <path d="M8 5c0 5-2.2 8-5 10"/>
-                        <path d="M5 10c1.2 1.7 2.7 3 4.8 4"/>
-                        <path d="M14 17h7"/>
-                        <path d="M17.5 11l-4 10"/>
-                        <path d="M15.5 16h4"/>
-                    </svg>`,
-                    style: "translate"
-                },
-
-                mirror: {
-                    icon: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
-                        <rect x="5" y="2.5" width="14" height="19" rx="7"/>
-                        <path d="M12 3v18"/>
-                        <path d="M9 8c1.5-1 2.5-1 3 0"/>
-                        <path d="M15 8c-1.5-1-2.5-1-3 0"/>
-                    </svg>`,
-                    style: "mirror"
-                },
-
-                remember: {
-                    icon: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M8 4.5A4 4 0 0 1 12 2a4 4 0 0 1 4 2.5"/>
-                        <path d="M7 7h10"/>
-                        <path d="M8 7v4.5c0 1.7-.8 2.8-2.2 3.8A3.5 3.5 0 0 0 4 18h16a3.5 3.5 0 0 0-1.8-2.7c-1.4-1-2.2-2.1-2.2-3.8V7"/>
-                        <path d="M9 21h6"/>
-                        <path d="M12 18v3"/>
-                    </svg>`,
-                    style: "remember"
-                },
-
-                question: {
-                    icon: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
-                        <circle cx="12" cy="12" r="9"/>
-                        <path d="M9.5 9a2.7 2.7 0 1 1 4.7 1.8c-.9 1-2.2 1.5-2.2 3"/>
-                        <circle cx="12" cy="17.5" r=".7" fill="currentColor" stroke="none"/>
-                    </svg>`,
-                    style: "question"
-                },
-
-                integrate: {
-                    icon: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M9 15l6-6"/>
-                        <path d="M7.5 18.5l-2 2a4.2 4.2 0 0 1-6-6l3-3a4.2 4.2 0 0 1 6 0"/>
-                        <path d="M16.5 5.5l2-2a4.2 4.2 0 0 1 6 6l-3 3a4.2 4.2 0 0 1-6 0"/>
-                    </svg>`,
-                    style: "integrate"
-                },
-
-                // Fallbacks for structural resilience
+                discover: { icon: `<svg viewBox="0 0 24 24"><path d="M12 3v18M3 12h18M5.6 5.6l12.8 12.8M5.6 18.4L18.4 5.6"/></svg>`, style: "discover" },
+                recognize: { icon: `<svg viewBox="0 0 24 24"><path d="M2 12c2.5-5 7-8 10-8s7.5 3 10 8-7 8-10 8-7.5-3-10-8z"/><circle cx="12" cy="12" r="3"/></svg>`, style: "recognize" },
+                scene: { icon: `<svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M7 4v16M17 4v16M2 9h20M2 15h20"/></svg>`, style: "scene" },
+                respond: { icon: `<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M16 8l-3 9-5-1 3-9 5 1z"/></svg>`, style: "respond" },
+                test: { icon: `<svg viewBox="0 0 24 24"><path d="M12 2v20M8 6h8M6 12h12M8 18h8"/></svg>`, style: "test" },
+                reflect: { icon: `<svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V2H6.5A2.5 2.5 0 0 0 4 4.5v15z"/></svg>`, style: "reflect" },
+                contextualize: { icon: `<svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18M15 3v18"/></svg>`, style: "context" },
+                translate: { icon: `<svg viewBox="0 0 24 24"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>`, style: "translate" },
+                mirror: { icon: `<svg viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M4 12h16"/></svg>`, style: "mirror" },
+                remember: { icon: `<svg viewBox="0 0 24 24"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M15 2H9a1 1 0 0 0-1 1v2a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1z"/></svg>`, style: "remember" },
+                question: { icon: `<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9 9a3 3 0 1 1 5.8 1c0 2-3 3-3 3M12 17h.01"/></svg>`, style: "question" },
+                integrate: { icon: `<svg viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>`, style: "integrate" },
                 friction: { style: "recognize" },
                 context: { style: "context" }
             };
@@ -4168,21 +4098,6 @@
                 if (slides[newIndex]) slides[newIndex].className = 'premium-slide is-active';
             }
 
-            function renderPremiumSlides() {
-                const wrapper = document.getElementById('premium-slides-wrapper');
-                if (!wrapper) return;
-                wrapper.innerHTML = '';
-
-                premiumSlides.forEach((slide, index) => {
-                    const slideElement = document.createElement('article');
-                    slideElement.className = index === currentPremiumSlideIndex ? 'premium-slide is-active' : 'premium-slide';
-                    slideElement.dataset.index = String(index);
-                    slideElement.id = `premium-slide-${index}`;
-                    slideElement.innerHTML = buildPremiumSlideHTML(slide, index);
-                    wrapper.appendChild(slideElement);
-                });
-            }
-
             function cleanEmoji(text) {
                 if (!text) return '';
                 return text
@@ -4222,7 +4137,7 @@
 
             function renderAtmosphericMedia(type) {
                 const t = (type || '').toLowerCase();
-                // Displayed in MIRROR top-left as integrated composition
+                // Integrated gracefully via CSS Grid in the MIRROR section
                 if (t !== 'mirror') return '';
 
                 return `
